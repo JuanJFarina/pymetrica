@@ -21,7 +21,6 @@ def count_uninstantiated_loc(dir_path: str, classes: dict[str, int]) -> int:
                 source = f.read()
             tree = ast.parse(source)
             for node in ast.walk(tree):
-                print(f"Node: {node}\nFrom: {fname}")
                 if isinstance(node, ast.Call):
                     func = node.func
                     # Direct instantiation

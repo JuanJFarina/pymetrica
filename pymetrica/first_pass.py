@@ -52,9 +52,9 @@ def gather_loc_and_classes(dir_path: str) -> dict[str, Any]:
                     file_abs.add(node.lineno)
                     for dec in node.decorator_list:
                         file_abs.add(dec.lineno)
-                # Any call
-                if isinstance(node, ast.Call):
-                    file_abs.add(node.lineno)
+                # # Any call TODO this was removed because many calls may be done in one single line
+                # if isinstance(node, ast.Call):
+                #     file_abs.add(node.lineno)
 
             total_aloc += len(file_abs)
 
@@ -83,6 +83,6 @@ def gather_loc_and_classes(dir_path: str) -> dict[str, Any]:
                         if i < len(lines) and is_logical_line_of_code(lines[i])
                     )
                     if not is_abstract_base:
-                        classes[node.name] = loc
+                        classes[node.name] = loc - 1  # -1 to exclude class definition line
 
     return {"lloc": total_lloc, "aloc": total_aloc, "classes": classes}

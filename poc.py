@@ -134,10 +134,10 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     summary = gather_loc_and_classes(args.dir_path)
-    uninst = count_uninstantiated_loc(args.dir_path, summary["classes"])
-    print("Total logical LOC:", summary["lloc"])
-    print("Total abstract LOC:", summary["aloc"] + uninst)
-    print(
-        "Abstraction percentage:",
-        f"{(summary['aloc'] + uninst) / summary['lloc'] * 100:.2f}%",
-    )
+    # uninst = count_uninstantiated_loc(args.dir_path, summary["classes"])
+    # print("Total logical LOC:", summary["lloc"])
+    # print("Total abstract LOC:", summary["aloc"] + uninst)
+    # print(
+    #     "Abstraction percentage:",
+    #     f"{(summary['aloc'] + uninst) / summary['lloc'] * 100:.2f}%",
+    # )
