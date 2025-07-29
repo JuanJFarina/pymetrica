@@ -1,0 +1,45 @@
+[build-system]
+requires = [
+    "setuptools ~= 68.2",
+    "wheel ~= 0.41.2",
+    "setuptools-pipfile ~= 0.7.0",
+]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pymetrica"
+description = "Codebase metrics and analysis tool for Python projects"
+requires-python = ">=3.10"
+license = { file = "LICENSE.txt" }
+keywords = [
+    "code",
+    "metrics",
+    "python",
+    "pymetrica",
+    "analysis",
+    "statistics",
+    "maintainability",
+    "quality",
+    "design",
+    "complexity",
+]
+authors = [
+    { name = "Juan José Farina", email = "juanjosefarina.jjf@gmail.com" },
+]
+dynamic = ['version', 'readme']
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Programming Language :: Python",
+]
+
+[project.scripts]
+pymetrica = "pymetrica.main:main"
+
+[tool.setuptools.package-data]
+"*" = ["py.typed", "*.md"]
+
+[tool.setuptools.dynamic]
+version = { attr = "pymetrica.__version__" }
+readme = { file = ["README.md"], content-type = "text/markdown" }
+
+[tool.setuptools-pipfile]
