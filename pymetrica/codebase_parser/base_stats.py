@@ -4,7 +4,7 @@ from .codebase_parser import parse_codebase
 
 @click.command()
 @click.argument("dir_path")
-def base_stats(dir_path: str):
+def base_stats(dir_path: str) -> None:
     results = parse_codebase(dir_path)
     click.echo(
         f"root_folder_path: {results.root_folder_path}\n"

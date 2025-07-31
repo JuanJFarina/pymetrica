@@ -1,3 +1,4 @@
+```mermaid
 flowchart TD
     subgraph "CLI Layer"
         CLIParser["CLI Parser"]
@@ -48,3 +49,4 @@ flowchart TD
 
     ReportGen --- NoteReport
     NoteReport["Note: Abstract class for outputting reports. Output type selected via CLI."]
+```
