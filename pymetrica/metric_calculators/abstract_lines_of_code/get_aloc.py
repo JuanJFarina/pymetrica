@@ -9,3 +9,4 @@ def aloc(dir_path: str, aloc_calculator: AlocCalculator = AlocCalculator()) -> N
     codebase = parse_codebase(dir_path)
     aloc_result = aloc_calculator.calculate_metric(codebase)
     click.echo(aloc_result)
+    click.echo(codebase.lloc_number)
