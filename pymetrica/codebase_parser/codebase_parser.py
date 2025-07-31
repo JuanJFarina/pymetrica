@@ -6,6 +6,9 @@ from pymetrica.utils import is_comment_line, is_logical_line_of_code
 from pathlib import Path
 
 
+# TODO ignore folders inside .gitignore
+
+
 def parse_codebase(dir_path: str) -> Codebase:
     base = Path(dir_path).absolute()
     total_lloc = 0
