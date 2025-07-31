@@ -4,8 +4,15 @@ from typing import Any
 from pymetrica.models import Codebase
 from pymetrica.utils import is_logical_line_of_code
 
+from pydantic import BaseModel
 
-def gather_loc_and_classes(codebase: Codebase) -> dict[str, Any]:
+
+class PreliminaryResults(BaseModel):
+    aloc: int
+    classes: dict[str, int]
+
+
+def gather_loc_and_classes(codebase: Codebase) -> PreliminaryResults:
     """
     First pass:
       - Count total logical lines ('lloc').
@@ -79,4 +86,4 @@ def gather_loc_and_classes(codebase: Codebase) -> dict[str, Any]:
                 if not is_abstract_base:
                     classes[node.name] = loc - 1  # -1 to exclude class definition line
 
-    return {"aloc": total_aloc, "classes": classes}
+    return PreliminaryResults(aloc=total_aloc, classes=classes)
