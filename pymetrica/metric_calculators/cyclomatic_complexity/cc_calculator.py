@@ -1,0 +1,15 @@
+from .cc_metric import CCResults, CCMetric
+from pymetrica.models import Codebase, MetricCalculator
+
+
+class CCCalculator(MetricCalculator[CCResults]):
+    def calculate_metric(self: "CCCalculator", codebase: Codebase) -> CCMetric:
+        total_cc = 10
+        return CCMetric(
+            name="Cyclomatic Complexity",
+            description="Cyclomatic Complexity (CC) is a software metric used to measure the complexity of a program. It is calculated based on the control flow graph of the program, where nodes represent code blocks and edges represent control flow paths.",
+            results=CCResults(
+                cc_number=total_cc,
+                cc_lloc_ratio=total_cc / codebase.lloc_number * 100,
+            ),
+        )

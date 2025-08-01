@@ -12,10 +12,10 @@ class AlocCalculator(MetricCalculator[AlocResults]):
         )
         total_aloc: int = preliminary_results.aloc + uninstantiated_loc
         return AlocMetric(
-            name="aloc",
-            description="aloc",
+            name="Abstract Lines of Code",
+            description="Abstract Lines of Code (ALOC) is a software metric that measures the number of lines of code in a program that are not concrete operations but rather indirections or abstract constructs and definitions.",
             results=AlocResults(
-                aloc=total_aloc,
+                aloc_number=total_aloc,
                 aloc_percentage=total_aloc / codebase.lloc_number * 100,
             ),
         )

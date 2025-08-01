@@ -1,11 +1,12 @@
 import click
 from pymetrica.codebase_parser import parse_codebase
-from .aloc_calculator import AlocCalculator
+from .cc_calculator import CCCalculator
+
 
 @click.command()
 @click.argument("dir_path")
-def aloc(dir_path: str, aloc_calculator: AlocCalculator = AlocCalculator()) -> None:
+def cc(dir_path: str, cc_calculator: CCCalculator = CCCalculator()) -> None:
     codebase = parse_codebase(dir_path)
-    aloc_result = aloc_calculator.calculate_metric(codebase)
-    click.echo(aloc_result)
+    cc_result = cc_calculator.calculate_metric(codebase)
+    click.echo(cc_result)
     click.echo(f"Total logical lines of code in codebase: {codebase.lloc_number}")

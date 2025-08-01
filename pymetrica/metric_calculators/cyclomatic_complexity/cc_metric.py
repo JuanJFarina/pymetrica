@@ -2,9 +2,9 @@ from typing import Any
 from pymetrica.models import Metric, Results
 
 
-class AlocResults(Results):
-    aloc_number: int
-    aloc_percentage: float
+class CCResults(Results):
+    cc_number: int
+    cc_lloc_ratio: float
 
     def get_dict(self) -> dict[str, Any]:
         return super().get_dict()
@@ -16,4 +16,4 @@ class AlocResults(Results):
         return super().get_summary()
 
 
-class AlocMetric(Metric[AlocResults]): ...
+class CCMetric(Metric[CCResults]): ...
