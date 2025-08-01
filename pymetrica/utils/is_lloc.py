@@ -1,4 +1,4 @@
-PARENS = ["(", ")", "{", "}", "[", "]", ","]
+PARENS = ["(", ")", "{", "}", "[", "]", ",", ":"]
 
 
 def is_logical_line_of_code(line: str) -> bool:

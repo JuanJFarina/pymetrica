@@ -48,8 +48,11 @@ def parse_codebase(dir_path: str) -> Codebase:
         folders_number=sum(1 for p in base.rglob("*") if p.is_dir()),
         files_number=len(total_files),
         lloc_number=total_lloc,
+        lloc_file_ratio=(
+            f"{total_lloc / (len(total_files) or 1):.1f}:{1 if total_files else 0}"
+        ),
         comments_number=total_comments,
-        comment_line_ratio=(
+        comment_lloc_ratio=(
             f"{1 if total_comments else 0}:{total_lloc / (total_comments or 1):.1f}"
         ),
         classes_number=total_classes_definitions,

@@ -12,8 +12,9 @@ def base_stats(dir_path: str) -> None:
         f"folders_number: {results.folders_number}\n"
         f"files_number: {results.files_number}\n"
         f"lloc_number: {results.lloc_number}\n"
+        f"lloc_file_ratio: {results.lloc_file_ratio}\n"
         f"comments_number: {results.comments_number}\n"
-        f"comment_line_ratio: {results.comment_line_ratio}\n"
+        f"comment_line_ratio: {results.comment_lloc_ratio}\n"
         f"classes_number: {results.classes_number}\n"
         f"functions_number: {results.functions_number}"
     )
