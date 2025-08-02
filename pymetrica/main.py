@@ -1,9 +1,12 @@
-from pymetrica.metric_calculators import aloc
-from pymetrica.metric_calculators import cc
+from __future__ import annotations
+
+import click
+
+from .codebase_parser import base_stats
 from .run_all import run_all
 from .status import status
-from .codebase_parser import base_stats
-import click
+from pymetrica.metric_calculators import aloc
+from pymetrica.metric_calculators import cc
 
 
 @click.group()

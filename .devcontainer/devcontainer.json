@@ -11,7 +11,8 @@
         "ms-python.vscode-pylance",
         "ms-toolsai.jupyter",
         "eamodio.gitlens",
-        "charliermarsh.ruff"
+        "charliermarsh.ruff",
+        "redhat.vscode-yaml"
       ],
       "settings": {
         "python.defaultInterpreterPath": "/usr/local/bin/python"

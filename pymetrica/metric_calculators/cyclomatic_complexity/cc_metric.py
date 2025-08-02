@@ -1,5 +1,9 @@
+from __future__ import annotations
+
 from typing import Any
-from pymetrica.models import Metric, Results
+
+from pymetrica.models import Metric
+from pymetrica.models import Results
 
 
 class CCResults(Results):
@@ -16,4 +20,5 @@ class CCResults(Results):
         return super().get_summary()
 
 
-class CCMetric(Metric[CCResults]): ...
+class CCMetric(Metric[CCResults]):
+    ...

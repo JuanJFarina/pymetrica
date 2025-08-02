@@ -1,14 +1,20 @@
-from abc import ABC, abstractmethod
+from __future__ import annotations
 
-from pymetrica.models import Codebase, Metric, Results
-from typing import Generic, TypeVar
+from abc import ABC
+from abc import abstractmethod
+from typing import Generic
+from typing import TypeVar
 
-T = TypeVar("T", bound=Results)
+from pymetrica.models import Codebase
+from pymetrica.models import Metric
+from pymetrica.models import Results
+
+T = TypeVar('T', bound=Results)
 
 
 class MetricCalculator(ABC, Generic[T]):
     @abstractmethod
     def calculate_metric(self, codebase: Codebase) -> Metric[T]:
         raise NotImplementedError(
-            "Subclasses of MetricCalculator must implement this method."
+            'Subclasses of MetricCalculator must implement this method.',
         )

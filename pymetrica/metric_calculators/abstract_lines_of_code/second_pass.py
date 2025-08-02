@@ -1,5 +1,7 @@
-import os
+from __future__ import annotations
+
 import ast
+import os
 
 from pymetrica.models import Codebase
 
@@ -28,6 +30,6 @@ def count_uninstantiated_loc(codebase: Codebase, classes: dict[str, int]) -> int
                     if isinstance(val, ast.Name) and val.id in classes:
                         instantiated.add(val.id)
     print(
-        f"Classes never instantiated with their respective LOC: {[{cls: loc} for cls, loc in classes.items() if cls not in instantiated]}"
+        f'Classes never instantiated with their respective LOC: {[{cls: loc} for cls, loc in classes.items() if cls not in instantiated]}',
     )
     return sum(loc for cls, loc in classes.items() if cls not in instantiated)

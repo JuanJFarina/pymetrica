@@ -9,6 +9,12 @@ click = "*"
 
 [dev-packages]
 pytest = "*"
+pre-commit = "*"
 
 [requires]
 python_version = "3.10"
+
+[scripts]
+test = "pytest"
+install_hooks = "pre-commit install"
+lint = "pre-commit run --all-files"
