@@ -1,13 +1,15 @@
-from __future__ import annotations
+from typing import TypeVar
 
-from pymetrica.models import Metric
-from pymetrica.models import ReportGenerator
+from pymetrica.models import Metric, ReportGenerator, Results
+
+
+T = TypeVar("T", bound=Results)
 
 
 class BasicTerminalReport(ReportGenerator):
-    def generate_report(self, metrics: list[Metric]) -> None:
+    def generate_report(self, metrics: list[Metric[T]]) -> None:
         for metric in metrics:
-            print(f'Metric: {metric.name}')
-            print(f'Description: {metric.description}')
-            print(f'Value: {metric.value}')
-            print('-' * 20)
+            print(f"Metric: {metric.name}")
+            print(f"Description: {metric.description}")
+            print(f"Summary: {metric.results.get_summary()}")
+            print("-" * 20)

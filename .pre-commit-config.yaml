@@ -5,39 +5,33 @@ repos:
       - id: trailing-whitespace
       - id: end-of-file-fixer
       - id: check-yaml
-      - id: debug-statements
-      - id: double-quote-string-fixer
-      - id: requirements-txt-fixer
-  - repo: https://github.com/asottile/setup-cfg-fmt
-    rev: v2.8.0
-    hooks:
-      - id: setup-cfg-fmt
-  - repo: https://github.com/asottile/reorder-python-imports
-    rev: v3.15.0
-    hooks:
-      - id: reorder-python-imports
-        exclude: ^(pre_commit/resources/|testing/resources/python3_hooks_repo/)
-        args: [--py39-plus, --add-import, "from __future__ import annotations"]
+
   - repo: https://github.com/asottile/add-trailing-comma
     rev: v3.2.0
     hooks:
       - id: add-trailing-comma
-  - repo: https://github.com/asottile/pyupgrade
-    rev: v3.20.0
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.12.7
     hooks:
-      - id: pyupgrade
-        args: [--py39-plus]
-  - repo: https://github.com/hhatto/autopep8
-    rev: v2.3.2
-    hooks:
-      - id: autopep8
-  - repo: https://github.com/PyCQA/flake8
-    rev: 7.3.0
-    hooks:
-      - id: flake8
+      - id: ruff-format
+      - id: ruff
+        exclude: "tests/sample_codebase/sample_code.py"
+        args:
+          - "--exit-non-zero-on-fix"
+
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.17.0
+    rev: v1.17.1
     hooks:
       - id: mypy
-        additional_dependencies: [types-pyyaml]
-        exclude: ^testing/resources/
+        exclude: "tests/sample_codebase/sample_code.py"
+        additional_dependencies:
+          - "pydantic==2.11.7"
+          - "click==8.2.1"
+          - "pytest==8.4.1"
+
+  - repo: https://github.com/PyCQA/pylint
+    rev: v3.3.7
+    hooks:
+      - id: pylint
+        exclude: "tests/sample_codebase/sample_code.py"

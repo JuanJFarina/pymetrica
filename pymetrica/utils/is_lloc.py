@@ -1,5 +1,4 @@
-from __future__ import annotations
-PARENS = ['(', ')', '{', '}', '[', ']', ',', ':']
+PARENS = ["(", ")", "{", "}", "[", "]", ",", ":"]
 
 
 def is_logical_line_of_code(line: str) -> bool:
@@ -7,7 +6,7 @@ def is_logical_line_of_code(line: str) -> bool:
     stripped = line.strip()
     if not stripped:
         return False
-    if stripped.startswith('#'):
+    if stripped.startswith("#"):
         return False
     for char in stripped:
         if char not in PARENS:

@@ -1,16 +1,14 @@
-from __future__ import annotations
-
 import click
+
+from pymetrica.metric_calculators import aloc, cc
 
 from .codebase_parser import base_stats
 from .run_all import run_all
 from .status import status
-from pymetrica.metric_calculators import aloc
-from pymetrica.metric_calculators import cc
 
 
 @click.group()
-def main(): ...
+def main() -> None: ...
 
 
 main.add_command(status)

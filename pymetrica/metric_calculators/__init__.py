@@ -1,17 +1,12 @@
-from __future__ import annotations
-
-from .abstract_lines_of_code import aloc
-from .abstract_lines_of_code import AlocCalculator
-from .cyclomatic_complexity import cc
-from .cyclomatic_complexity import CCCalculator
-from .maintainability_index import MaintainabilityIndexCalculator
-from .maintainability_index import MIResults
+from .abstract_lines_of_code import AlocCalculator, aloc
+from .cyclomatic_complexity import CCCalculator, cc
+from .maintainability_index import MaintainabilityIndexCalculator, MIResults
 
 __all__ = [
-    'aloc',
-    'AlocCalculator',
-    'cc',
-    'CCCalculator',
-    'MaintainabilityIndexCalculator',
-    'MIResults',
+    "aloc",
+    "AlocCalculator",
+    "cc",
+    "CCCalculator",
+    "MaintainabilityIndexCalculator",
+    "MIResults",
 ]

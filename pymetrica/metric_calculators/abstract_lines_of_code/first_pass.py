@@ -1,7 +1,4 @@
-from __future__ import annotations
-
 import ast
-from typing import Any
 
 from pydantic import BaseModel
 
@@ -14,7 +11,7 @@ class PreliminaryResults(BaseModel):
     classes: dict[str, int]
 
 
-def gather_loc_and_classes(codebase: Codebase) -> PreliminaryResults:
+def gather_loc_and_classes(codebase: Codebase) -> PreliminaryResults:  # pylint: disable=too-many-locals, too-many-branches
     """
     First pass:
       - Count total logical lines ('lloc').
@@ -26,13 +23,11 @@ def gather_loc_and_classes(codebase: Codebase) -> PreliminaryResults:
     total_aloc = 0
     classes: dict[str, int] = {}
 
-    for file in codebase.files:
+    for file in codebase.files:  # pylint: disable=too-many-nested-blocks
         tree = ast.parse(file.code)
 
         # Count logical lines in file
-        file_lloc = sum(
-            1 for l in file.code_lines if is_logical_line_of_code(l)
-        )
+        file_lloc = sum(1 for line in file.code_lines if is_logical_line_of_code(line))
         total_lloc += file_lloc
 
         # Collect abstract lines
@@ -44,7 +39,7 @@ def gather_loc_and_classes(codebase: Codebase) -> PreliminaryResults:
             # __all__ assignments
             if isinstance(node, ast.Assign):
                 for tgt in node.targets:
-                    if isinstance(tgt, ast.Name) and tgt.id == '__all__':
+                    if isinstance(tgt, ast.Name) and tgt.id == "__all__":
                         file_abs.add(node.lineno)
             # Function defs and decorators
             if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
@@ -65,8 +60,13 @@ def gather_loc_and_classes(codebase: Codebase) -> PreliminaryResults:
         # Measure classes
         for node in tree.body:
             if isinstance(node, ast.ClassDef):
-                start, end = node.lineno, getattr(
-                    node, 'end_lineno', node.lineno,
+                start, end = (
+                    node.lineno,
+                    getattr(
+                        node,
+                        "end_lineno",
+                        node.lineno,
+                    ),
                 )
                 # Check inheritance
                 bases: list[str] = []
@@ -76,11 +76,11 @@ def gather_loc_and_classes(codebase: Codebase) -> PreliminaryResults:
                     else:
                         try:
                             bases.append(ast.unparse(b))
-                        except:
+                        except:  # noqa: E722  # pylint: disable=bare-except
                             pass
                 # Treat ABC, ABCMeta, Protocol, and Enum as abstract
                 is_abstract_base = any(
-                    base in ('ABC', 'ABCMeta', 'Protocol', 'Enum') for base in bases
+                    base in ("ABC", "ABCMeta", "Protocol", "Enum") for base in bases
                 )
                 # Count LOC
                 loc = sum(

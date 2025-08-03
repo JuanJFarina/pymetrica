@@ -1,4 +1,4 @@
-from __future__ import annotations
+# pylint: skip-file
 
 
 class SomeAsyncContext:
@@ -25,11 +25,11 @@ async def process_items(items):
 def compute(x):
     match x:
         case 0:
-            return 'zero'
+            return "zero"
         case 1 | 2:
-            return 'one or two'
+            return "one or two"
         case _:
-            return 'other'
+            return "other"
 
 
 def main():
@@ -47,9 +47,9 @@ def main():
             count += 1
 
     except ValueError:
-        print('ValueError!')
+        print("ValueError!")
     except Exception as e:
-        print('Other error:', e)
+        print("Other error:", e)
 
 
 squares = [n * n for n in range(5) if n > 2]

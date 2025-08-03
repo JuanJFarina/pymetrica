@@ -1,7 +1,6 @@
-from __future__ import annotations
+# pylint: disable=invalid-name
 
 import ast
-
 
 # This has been based on Radon's implementation and updated to support
 # modern python features.

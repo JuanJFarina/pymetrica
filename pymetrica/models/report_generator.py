@@ -1,19 +1,14 @@
-from __future__ import annotations
-
-from abc import ABC
-from abc import abstractmethod
+from abc import ABC, abstractmethod
 from typing import TypeVar
 
-from .metric import Metric
-from .metric import Results
+from .metric import Metric, Results
 
-
-T = TypeVar('T', bound=Results)
+T = TypeVar("T", bound=Results)
 
 
 class ReportGenerator(ABC):
     @abstractmethod
     def generate_report(self, metrics: list[Metric[T]]) -> None:
         raise NotImplementedError(
-            'Subclasses of ReportGenerator must implement this method.',
+            "Subclasses of ReportGenerator must implement this method.",
         )

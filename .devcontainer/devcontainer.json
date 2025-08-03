@@ -12,7 +12,8 @@
         "ms-toolsai.jupyter",
         "eamodio.gitlens",
         "charliermarsh.ruff",
-        "redhat.vscode-yaml"
+        "redhat.vscode-yaml",
+        "tamasfe.even-better-toml"
       ],
       "settings": {
         "python.defaultInterpreterPath": "/usr/local/bin/python"

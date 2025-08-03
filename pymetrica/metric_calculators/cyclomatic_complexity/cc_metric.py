@@ -1,9 +1,6 @@
-from __future__ import annotations
-
 from typing import Any
 
-from pymetrica.models import Metric
-from pymetrica.models import Results
+from pymetrica.models import Metric, Results
 
 
 class CCResults(Results):
@@ -11,14 +8,13 @@ class CCResults(Results):
     cc_lloc_ratio: float
 
     def get_dict(self) -> dict[str, Any]:
-        return super().get_dict()
+        return self.get_dict()
 
     def get_json(self) -> str:
-        return super().get_json()
+        return self.get_json()
 
     def get_summary(self) -> str:
-        return super().get_summary()
+        return self.get_summary()
 
 
-class CCMetric(Metric[CCResults]):
-    ...
+class CCMetric(Metric[CCResults]): ...

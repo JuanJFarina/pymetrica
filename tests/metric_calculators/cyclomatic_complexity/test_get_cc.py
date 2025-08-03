@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 from pymetrica.metric_calculators import CCCalculator
 from pymetrica.models import Codebase
 
