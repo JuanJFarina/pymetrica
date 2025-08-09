@@ -8,7 +8,7 @@ T = TypeVar("T", bound=Results)
 
 class ReportGenerator(ABC):
     @abstractmethod
-    def generate_report(self, metrics: list[Metric[T]]) -> None:
+    def generate_report(self, metrics: list[Metric[T]]) -> str:
         raise NotImplementedError(
             "Subclasses of ReportGenerator must implement this method.",
         )

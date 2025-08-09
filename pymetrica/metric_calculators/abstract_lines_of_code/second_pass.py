@@ -26,8 +26,4 @@ def count_uninstantiated_loc(codebase: Codebase, classes: dict[str, int]) -> int
                     val = func.value
                     if isinstance(val, ast.Name) and val.id in classes:
                         instantiated.add(val.id)
-    print(
-        "Classes never instantiated with their respective LOC: "
-        f"{[{cls: loc} for cls, loc in classes.items() if cls not in instantiated]}",
-    )
     return sum(loc for cls, loc in classes.items() if cls not in instantiated)
