@@ -14,7 +14,10 @@ class CCResults(Results):
         return self.get_json()
 
     def get_summary(self) -> str:
-        return "Unimplemented summary"
+        return (
+            f"\nCyclomatic Complexity: {self.cc_number}\n"
+            f"Ratio complejidad por LLOC: {self.cc_number}"
+        )
 
 
 class CCMetric(Metric[CCResults]): ...

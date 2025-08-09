@@ -1,7 +1,7 @@
 import ast
+import math
 
-from pymetrica.models.codebase import Codebase
-from pymetrica.models.metric_calculator import MetricCalculator
+from pymetrica.models import Codebase, MetricCalculator
 
 from .hv_metric import HalsteadVolumeMetric, HalsteadVolumeResults
 from .hv_visitor import HalsteadVolumeVisitor
@@ -12,14 +12,26 @@ class HalsteadVolumeCalculator(MetricCalculator[HalsteadVolumeResults]):
         self: "HalsteadVolumeCalculator",
         codebase: Codebase,
     ) -> HalsteadVolumeMetric:
+        visitor = HalsteadVolumeVisitor()
+
         for code_file in codebase.files:
             tree = ast.parse(code_file.code)
-            visitor = HalsteadVolumeVisitor()
             visitor.visit(tree)
-            # halstead_volume += visitor.complexity
+
+        unique_operators = len(set(visitor.operators))
+        unique_operands = len(set(visitor.operands))
+        operators = len(visitor.operators)
+        operands = len(visitor.operands)
+
+        if unique_operators + unique_operands == 0:
+            halstead_volume = 0.0
+        else:
+            vocabulary = unique_operators + unique_operands
+            length = operators + operands
+            halstead_volume = length * math.log2(vocabulary)
 
         return HalsteadVolumeMetric(
             name="Halstead Volume",
             description=(""),
-            results=HalsteadVolumeResults(hv_number=0),
+            results=HalsteadVolumeResults(hv_number=halstead_volume),
         )

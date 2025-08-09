@@ -14,7 +14,7 @@ class AlocResults(Results):
         return self.get_json()
 
     def get_summary(self) -> str:
-        return "Unimplemented summary"
+        return f"\nALOC number: {self.aloc_number}\nALOC percentage: {self.aloc_percentage}"
 
 
 class AlocMetric(Metric[AlocResults]): ...
