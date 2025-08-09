@@ -14,7 +14,7 @@ class CCResults(Results):
         return self.get_json()
 
     def get_summary(self) -> str:
-        return self.get_summary()
+        return "Unimplemented summary"
 
 
 class CCMetric(Metric[CCResults]): ...
