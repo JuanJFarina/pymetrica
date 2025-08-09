@@ -13,4 +13,5 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 COPY . .
 RUN pip install --editable . && \
     pip install pipenv && \
-    pipenv install --dev
+    pipenv install --dev && \
+    pipenv run install_hooks
