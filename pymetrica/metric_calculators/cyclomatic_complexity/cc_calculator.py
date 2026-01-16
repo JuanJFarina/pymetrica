@@ -1,4 +1,5 @@
 import ast
+import logging
 
 from pymetrica.models.codebase import Codebase
 from pymetrica.models.metric_calculator import MetricCalculator
@@ -17,13 +18,16 @@ class CCCalculator(MetricCalculator[CCResults]):
             visitor.visit(tree)
             total_complexity += visitor.complexity
 
+        logging.info(f"CCCalculator.calculate_metric.{total_complexity = }")
+        logging.info(f"CCCalculator.calculate_metric.{codebase.lloc_number = }")
+
         return CCMetric(
             name="Cyclomatic Complexity",
             description=(
                 "Cyclomatic Complexity (CC) is a software metric used to "
                 "measure the complexity of a program. It is calculated based "
                 "on the control flow graph of the program, where nodes "
-                "represent code blocks and edges represent control flow paths."
+                "represent code blocks and edges represent control flow paths. "
             ),
             results=CCResults(
                 cc_number=total_complexity,

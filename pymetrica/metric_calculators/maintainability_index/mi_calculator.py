@@ -35,6 +35,8 @@ class MaintainabilityIndexCalculator(MetricCalculator[MaintainabilityIndexResult
                 "The Maintainability Index is a software metric that measures how "
                 "maintainable the code is, based on various factors such as "
                 "cyclomatic complexity, lines of code, and Halstead volume."
+                "Higher scores indicate better maintainability, with scores "
+                "below 20 suggesting very low maintainability."
             ),
             results=MaintainabilityIndexResults(
                 maintainability_index=mi_classic,

@@ -16,7 +16,7 @@ class CCResults(Results):
     def get_summary(self) -> str:
         return (
             f"\nCyclomatic Complexity: {self.cc_number}\n"
-            f"Ratio complejidad por LLOC: {self.cc_number}"
+            f"Complexity over LLOC ratio: {self.cc_lloc_ratio}"
         )
 
 
