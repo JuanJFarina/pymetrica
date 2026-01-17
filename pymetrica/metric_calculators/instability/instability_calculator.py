@@ -41,8 +41,6 @@ class InstabilityCalculator(MetricCalculator[InstabilityResults]):
                 files_by_layer,
             )
 
-        print(f"{layers_instability = }")
-
         return Metric(
             name="Instability",
             description=(
