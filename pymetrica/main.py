@@ -5,6 +5,7 @@ from pymetrica.metric_calculators import (
     cc,
     halstead_volume,
     maintainability_index,
+    instability,
 )
 
 from .codebase_parser import base_stats
@@ -23,3 +24,4 @@ main.add_command(aloc)
 main.add_command(cc)
 main.add_command(halstead_volume)
 main.add_command(maintainability_index)
+main.add_command(instability)

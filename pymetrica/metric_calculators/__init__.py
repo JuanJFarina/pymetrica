@@ -6,12 +6,20 @@ from .maintainability_index import (
     MaintainabilityIndexResults,
     maintainability_index,
 )
+from .instability import (
+    InstabilityCalculator,
+    InstabilityResults,
+    instability,
+)
 
 __all__ = [
     "aloc",
     "AlocCalculator",
     "cc",
     "CCCalculator",
+    "InstabilityCalculator",
+    "InstabilityResults",
+    "instability",
     "HalsteadVolumeCalculator",
     "halstead_volume",
     "MaintainabilityIndexCalculator",

@@ -36,8 +36,8 @@ def parse_codebase(dir_path: str) -> Codebase:
         )
         total_files.append(
             Code(
-                filepath=str(base),
-                filename=base.name,
+                filepath=str(path),
+                filename=path.name,
                 lloc_number=file_lloc,
                 comments_number=file_comments,
                 code_lines=lines,

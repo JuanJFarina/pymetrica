@@ -1,8 +1,6 @@
 import ast
-import logging
 
-from pymetrica.models.codebase import Codebase
-from pymetrica.models.metric_calculator import MetricCalculator
+from pymetrica.models import Codebase, MetricCalculator
 
 from .cc_metric import CCMetric, CCResults
 from .cc_visitor import CCVisitor
@@ -17,9 +15,6 @@ class CCCalculator(MetricCalculator[CCResults]):
             visitor = CCVisitor()
             visitor.visit(tree)
             total_complexity += visitor.complexity
-
-        logging.info(f"CCCalculator.calculate_metric.{total_complexity = }")
-        logging.info(f"CCCalculator.calculate_metric.{codebase.lloc_number = }")
 
         return CCMetric(
             name="Cyclomatic Complexity",

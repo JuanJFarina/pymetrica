@@ -1,9 +1,7 @@
 import math
 from pymetrica.models import Codebase, Metric, MetricCalculator
-from pymetrica.metric_calculators.cyclomatic_complexity.cc_calculator import (
+from pymetrica.metric_calculators import (
     CCCalculator,
-)
-from pymetrica.metric_calculators.halstead_volume.hv_calculator import (
     HalsteadVolumeCalculator,
 )
 

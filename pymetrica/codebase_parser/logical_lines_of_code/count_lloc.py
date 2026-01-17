@@ -1,6 +1,6 @@
 import os
 
-from pymetrica.utils.is_lloc import is_logical_line_of_code
+from pymetrica.utils import is_logical_line_of_code
 
 
 def count_logical_lines_of_code(root: str, file_name: str) -> int:
