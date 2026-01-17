@@ -1,11 +1,15 @@
 import math
 from pymetrica.models import Codebase, Metric, MetricCalculator
-from pymetrica.metric_calculators import (
+
+# the following imports need to be more specific to avoid cyclic imports
+from pymetrica.metric_calculators.cyclomatic_complexity import (
     CCCalculator,
+)
+from pymetrica.metric_calculators.halstead_volume import (
     HalsteadVolumeCalculator,
 )
 
-from .mi_results import MaintainabilityIndexResults
+from .mi_metric import MaintainabilityIndexResults
 
 
 class MaintainabilityIndexCalculator(MetricCalculator[MaintainabilityIndexResults]):

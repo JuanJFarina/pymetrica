@@ -1,6 +1,6 @@
 import ast
 from os import sep
-from pymetrica.models import Code
+from pymetrica.models.code import Code
 
 
 Layer = str

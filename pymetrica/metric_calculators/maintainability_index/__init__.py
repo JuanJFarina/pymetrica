@@ -1,5 +1,5 @@
 from .mi_calculator import MaintainabilityIndexCalculator
-from .mi_results import MaintainabilityIndexMetric, MaintainabilityIndexResults
+from .mi_metric import MaintainabilityIndexMetric, MaintainabilityIndexResults
 from .get_mi import maintainability_index
 
 __all__ = [

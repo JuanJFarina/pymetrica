@@ -1,10 +1,10 @@
+from os import sep
 from pathlib import Path
-from .instability_logic import calculate_instability
+
 from pymetrica.models import Code, Codebase, Metric, MetricCalculator
 
-from os import sep
-
-from .instability_results import InstabilityResults
+from .instability_logic import calculate_instability
+from .instability_metric import InstabilityResults
 
 Layer = str
 Files = list[Code]
@@ -25,12 +25,12 @@ class InstabilityCalculator(MetricCalculator[InstabilityResults]):
             if dir.is_dir() and dir.name != "__pycache__"
         ]
 
-        files_by_layer = {layer: [] for layer in layers}
+        files_by_layer: dict[Layer, Files] = {layer: [] for layer in layers}
 
         for file in codebase.files:
             for layer in layers:
                 if layer in str(file.filepath):
-                    files_by_layer.get(layer).append(file)
+                    files_by_layer.get(layer, []).append(file)
                     break
 
         layers_instability = dict[Layer, float]()
