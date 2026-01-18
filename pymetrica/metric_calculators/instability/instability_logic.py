@@ -31,6 +31,9 @@ def calculate_instability(
         efferent_coupling += instability_visitor.efferent_imports
         afferent_coupling += instability_visitor.afferent_imports
 
+    if efferent_coupling == 0:
+        return 0
+
     return efferent_coupling / (efferent_coupling + afferent_coupling)
 
 
