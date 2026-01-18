@@ -11,7 +11,7 @@ Files = list[Code]
 
 
 def get_layer_name(layer_path: str) -> str:
-    return layer_path.rsplit(sep)[-2] + "." + layer_path.rsplit(sep)[-1]
+    return layer_path.rsplit(sep)[-1]
 
 
 class InstabilityCalculator(MetricCalculator[InstabilityResults]):
@@ -24,6 +24,8 @@ class InstabilityCalculator(MetricCalculator[InstabilityResults]):
             for dir in Path(codebase.root_folder_path).iterdir()
             if dir.is_dir() and dir.name != "__pycache__"
         ]
+
+        layers.append(codebase.root_folder_path)
 
         files_by_layer: dict[Layer, Files] = {layer: [] for layer in layers}
 
