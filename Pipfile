@@ -10,9 +10,11 @@ click = ">=8.2.1"
 [dev-packages]
 pytest = ">=8.4.1"
 pre-commit = ">=4.2.0"
+fastapi = ">=0.128.0"
+uvicorn = ">=0.40.0"
 
 [requires]
-python_version = "3.10"
+python_version = ">=3.10"
 
 [scripts]
 test = "pytest"

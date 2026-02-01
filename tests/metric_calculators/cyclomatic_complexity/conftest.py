@@ -11,3 +11,8 @@ def cc_calculator() -> CCCalculator:
 @pytest.fixture
 def cc_result() -> int:
     return 23
+
+
+@pytest.fixture
+def big_codebase_cc_result() -> int:
+    return 2

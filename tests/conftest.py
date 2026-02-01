@@ -7,3 +7,8 @@ from pymetrica.models import Codebase
 @pytest.fixture
 def codebase() -> Codebase:
     return parse_codebase("./tests/sample_codebase")
+
+
+@pytest.fixture
+def big_codebase() -> Codebase:
+    return parse_codebase("./tests/bigger_codebase")
