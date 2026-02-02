@@ -1,4 +1,5 @@
 import math
+import logging
 from pymetrica.models import Codebase, Metric, MetricCalculator
 
 # the following imports need to be more specific to avoid cyclic imports
@@ -22,11 +23,32 @@ class MaintainabilityIndexCalculator(MetricCalculator[MaintainabilityIndexResult
         cc_metric = cc_calculator.calculate_metric(codebase)
         hv_metric = hv_calculator.calculate_metric(codebase)
 
+        print(
+            f"MaintainabilityIndexCalculator.calculate_metric.{hv_metric.results.hv_number = }"
+        )
+        print(
+            f"MaintainabilityIndexCalculator.calculate_metric.{cc_metric.results.cc_number = }"
+        )
+        print(
+            f"MaintainabilityIndexCalculator.calculate_metric.{codebase.lloc_number = }"
+        )
+
+        print(
+            "MaintainabilityIndexCalculator.calculate_metric.mi_classic = 171 "
+            f"- {1.3 * math.log(hv_metric.results.hv_number)} "
+            f"- {0.23 * cc_metric.results.cc_number} "
+            f"- {4.05 * math.log(codebase.lloc_number)}"
+        )
+
         mi_classic = (
             171
-            - 5.2 * math.log(hv_metric.results.hv_number)
+            - 1.3
+            * math.log(
+                hv_metric.results.hv_number
+            )  # softened to 1/4 of traditional weight
             - 0.23 * cc_metric.results.cc_number
-            - 16.2 * math.log(codebase.lloc_number)
+            - 4.05
+            * math.log(codebase.lloc_number)  # softened to 1/4 of traditional weight
         )
 
         mi_scaled = max(0, (mi_classic / 171) * 100)

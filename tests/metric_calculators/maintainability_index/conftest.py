@@ -10,9 +10,9 @@ def mi_calculator() -> MaintainabilityIndexCalculator:
 
 @pytest.fixture
 def mi_result() -> tuple[float, float]:
-    return 71.8509609747319, 42.01810583317655
+    return 142.24524024368299, 83.18435101969766
 
 
 @pytest.fixture
 def big_codebase_mi_result() -> tuple[float, float]:
-    return 79.83713530709466, 46.688383220523185
+    return 147.86428382677366, 86.47034141916589
