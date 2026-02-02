@@ -25,3 +25,6 @@ main.add_command(cc)
 main.add_command(halstead_volume)
 main.add_command(maintainability_index)
 main.add_command(instability)
+
+if __name__ == "__main__":
+    main()
