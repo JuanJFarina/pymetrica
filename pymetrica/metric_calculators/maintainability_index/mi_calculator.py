@@ -35,17 +35,17 @@ class MaintainabilityIndexCalculator(MetricCalculator[MaintainabilityIndexResult
 
         print(
             "MaintainabilityIndexCalculator.calculate_metric.mi_classic = 171 "
-            f"- {1.3 * math.log(hv_metric.results.hv_number)} "
+            f"- {2.6 * math.log(hv_metric.results.hv_number)} "
             f"- {0.0575 * cc_metric.results.cc_number} "
             f"- {4.05 * math.log(codebase.lloc_number)}"
         )
 
         mi_classic = (
             171
-            - 1.3
+            - 2.6
             * math.log(
                 hv_metric.results.hv_number
-            )  # softened to 1/4 of traditional weight
+            )  # softened to 1/2 of traditional weight
             - 0.0575
             * cc_metric.results.cc_number  # softened to 1/4 of traditional weight
             - 4.05
