@@ -1,12 +1,21 @@
 import click
 
+from .diagram_generator import create_diagram
+
 from .codebase_parser import parse_codebase
 
 
 @click.command()
+@click.option(
+    "--diagram",
+    is_flag=True,
+    help="Whether to generate a diagram of the codebase structure.",
+)
 @click.argument("dir_path")
-def base_stats(dir_path: str) -> None:
+def base_stats(dir_path: str, diagram: bool = False) -> None:
     results = parse_codebase(dir_path)
+    if diagram:
+        create_diagram(results)
     click.echo(
         f"root_folder_path: {results.root_folder_path}\n"
         f"root_folder_name: {results.root_folder_name}\n"
