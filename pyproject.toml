@@ -74,4 +74,5 @@ disable = [
     "missing-function-docstring",
     "too-few-public-methods",
     "fixme",
+    "logging-fstring-interpolation",
 ]

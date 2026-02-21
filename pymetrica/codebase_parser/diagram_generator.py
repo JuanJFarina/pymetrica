@@ -3,14 +3,17 @@ from collections.abc import Generator
 from datetime import datetime
 import logging
 from pathlib import Path
+from typing import TypeAlias
 
 from pymetrica.models import Codebase
 
 
-LayerName, ComponentName, Dependency = str, str, str
-Dependencies = set[Dependency]
-Components = dict[ComponentName, Dependencies]
-Layers = dict[LayerName, Components]
+LayerName: TypeAlias = str
+ComponentName: TypeAlias = str
+Dependency: TypeAlias = str
+Dependencies: TypeAlias = set[Dependency]
+Components: TypeAlias = dict[ComponentName, Dependencies]
+Layers: TypeAlias = dict[LayerName, Components]
 
 
 def create_diagram(codebase: Codebase) -> None:
@@ -29,7 +32,7 @@ def create_diagram(codebase: Codebase) -> None:
         if is_root_file(file.filepath, codebase.root_folder_path):
             continue
         for layer in layers.keys():
-            if is_component(file.filepath, layer):  # type: ignore
+            if is_component(file.filepath, layer):
                 layers[layer][file.filepath] = set()
         dependencies_visitor.current_layer = file.filepath.rsplit("/")[-2]
         dependencies_visitor.current_component = file.filepath
@@ -37,33 +40,33 @@ def create_diagram(codebase: Codebase) -> None:
 
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     filename = f"architecture_diagram_{timestamp}.mmd"
-    with open(filename, "w") as f:
+    with open(filename, "w") as f:  # pylint: disable=unspecified-encoding
         f.write("graph TD\n")
         for layer_name, components in layers.items():
             f.write(
-                f"  subgraph {layer_name.replace(codebase.root_folder_path + '/', '')}\n"
+                f"  subgraph {layer_name.replace(codebase.root_folder_path + '/', '')}\n",
             )
             for component_name, dependencies in components.items():
                 f.write(
-                    f"    {component_name.replace(codebase.root_folder_path + '/', '')}\n"
+                    f"    {component_name.replace(codebase.root_folder_path + '/', '')}\n",
                 )
             f.write("  end\n")
         for layer_name, components in layers.items():
             for component_name, dependencies in components.items():
                 for dep in dependencies:
                     f.write(
-                        f"  {component_name.replace(codebase.root_folder_path + '/', '')} --> {dep.replace(codebase.root_folder_path + '/', '')}\n"
+                        f"  {component_name.replace(codebase.root_folder_path + '/', '')} --> {dep.replace(codebase.root_folder_path + '/', '')}\n",  # pylint: disable=line-too-long
                     )
 
 
 def iterdir_generator(path: str) -> Generator[str, None, None]:
-    for dir in Path(path).iterdir():
+    for directory in Path(path).iterdir():
         if (
-            dir.is_dir()
-            and dir.name != "__pycache__"
-            and dir.name.startswith(".") is False
+            directory.is_dir()
+            and directory.name != "__pycache__"
+            and directory.name.startswith(".") is False
         ):
-            yield str(dir)
+            yield str(directory)
 
 
 def is_root_file(file_path: str, root_folder_path: str) -> bool:
@@ -106,21 +109,22 @@ class DependenciesVisitor(ast.NodeVisitor):
         ):
             imported_layer = split_module_name[0]
         if imported_layer in self.layers_names and imported_layer != self.current_layer:
-            full_layer_name = [
+            full_layer_name_list = [
                 layer
                 for layer in self.layers.keys()
                 if layer.rsplit("/")[-1] == self.current_layer
             ]
-            if not full_layer_name:
+            if not full_layer_name_list:
                 return
-            full_layer_name = full_layer_name[0]
+            full_layer_name = full_layer_name_list[0]
             full_imported_layer_name = [
                 layer
                 for layer in self.layers.keys()
                 if layer.rsplit("/")[-1] == imported_layer
             ][0]
             subdirectory_path = self.current_component.replace(
-                self.root_folder, ""
+                self.root_folder,
+                "",
             ).split("/", 1)[-1]
             if subdirectory_path.count("/") == 1:
                 clean_current_component = self.root_folder + "/" + subdirectory_path
@@ -132,15 +136,14 @@ class DependenciesVisitor(ast.NodeVisitor):
             try:
                 if self.layers[full_layer_name].get(clean_current_component):
                     self.layers[full_layer_name][clean_current_component].add(
-                        full_imported_layer_name
+                        full_imported_layer_name,
                     )
                 else:
                     self.layers[full_layer_name].update({
-                        clean_current_component: {full_imported_layer_name}
+                        clean_current_component: {full_imported_layer_name},
                     })
             except KeyError as e:
                 logging.info(
-                    f"DependenciesVisitor.visit_ImportFrom.KeyError.{clean_current_component = }"
+                    f"DependenciesVisitor.visit_ImportFrom.KeyError.{clean_current_component = }",
                 )
                 logging.info(f"DependenciesVisitor.visit_ImportFrom.KeyError: {e = }")
-                pass

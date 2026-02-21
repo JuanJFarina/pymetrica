@@ -24,13 +24,13 @@ class MaintainabilityIndexCalculator(MetricCalculator[MaintainabilityIndexResult
         hv_metric = hv_calculator.calculate_metric(codebase)
 
         logging.info(
-            f"MaintainabilityIndexCalculator.calculate_metric.{hv_metric.results.hv_number = }"
+            f"MaintainabilityIndexCalculator.calculate_metric.{hv_metric.results.hv_number = }",
         )
         logging.info(
-            f"MaintainabilityIndexCalculator.calculate_metric.{cc_metric.results.cc_number = }"
+            f"MaintainabilityIndexCalculator.calculate_metric.{cc_metric.results.cc_number = }",
         )
         logging.info(
-            f"MaintainabilityIndexCalculator.calculate_metric.{codebase.lloc_number = }"
+            f"MaintainabilityIndexCalculator.calculate_metric.{codebase.lloc_number = }",
         )
 
         mi_classic = (
