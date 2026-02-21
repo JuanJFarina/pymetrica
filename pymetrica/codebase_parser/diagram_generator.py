@@ -5,6 +5,8 @@ import logging
 from pathlib import Path
 from typing import TypeAlias
 
+from os import sep
+
 from pymetrica.models import Codebase
 
 
@@ -34,7 +36,7 @@ def create_diagram(codebase: Codebase) -> None:
         for layer in layers.keys():
             if is_component(file.filepath, layer):
                 layers[layer][file.filepath] = set()
-        dependencies_visitor.current_layer = file.filepath.rsplit("/")[-2]
+        dependencies_visitor.current_layer = file.filepath.rsplit(sep)[-2]
         dependencies_visitor.current_component = file.filepath
         dependencies_visitor.visit(ast.parse(file.code))
 
@@ -44,18 +46,18 @@ def create_diagram(codebase: Codebase) -> None:
         f.write("graph TD\n")
         for layer_name, components in layers.items():
             f.write(
-                f"  subgraph {layer_name.replace(codebase.root_folder_path + '/', '')}\n",
+                f"  subgraph {layer_name.replace(codebase.root_folder_path + sep, '')}\n",
             )
             for component_name, dependencies in components.items():
                 f.write(
-                    f"    {component_name.replace(codebase.root_folder_path + '/', '')}\n",
+                    f"    {component_name.replace(codebase.root_folder_path + sep, '')}\n",
                 )
             f.write("  end\n")
         for layer_name, components in layers.items():
             for component_name, dependencies in components.items():
                 for dep in dependencies:
                     f.write(
-                        f"  {component_name.replace(codebase.root_folder_path + '/', '')} --> {dep.replace(codebase.root_folder_path + '/', '')}\n",  # pylint: disable=line-too-long
+                        f"  {component_name.replace(codebase.root_folder_path + sep, '')} --> {dep.replace(codebase.root_folder_path + sep, '')}\n",  # pylint: disable=line-too-long
                     )
 
 
@@ -71,14 +73,14 @@ def iterdir_generator(path: str) -> Generator[str, None, None]:
 
 def is_root_file(file_path: str, root_folder_path: str) -> bool:
     relative_path = file_path.replace(root_folder_path, "")
-    if relative_path.count("/") == 1:
+    if relative_path.count(sep) == 1:
         return True
     return False
 
 
 def is_component(file_path: str, layer_name: str) -> bool:
     relative_path = file_path.replace(layer_name, "")
-    if relative_path.count("/") == 1 and is_python_file_not_dunder(file_path):
+    if relative_path.count(sep) == 1 and is_python_file_not_dunder(file_path):
         return True
     return False
 
@@ -90,14 +92,13 @@ def is_python_file_not_dunder(file_path: str) -> bool:
 class DependenciesVisitor(ast.NodeVisitor):
     def __init__(self, layers: Layers) -> None:
         self.layers = layers
-        self.layers_names = [layer.rsplit("/")[-1] for layer in layers.keys()]
-        self.root_folder = list(layers.keys())[0].rsplit("/", 1)[0]
+        self.layers_names = [layer.rsplit(sep)[-1] for layer in layers.keys()]
+        self.root_folder = list(layers.keys())[0].rsplit(sep, 1)[0]
         self.current_layer: str = ""
         self.current_component: str = ""
 
     def visit_ImportFrom(self, node: ast.ImportFrom) -> None:  # pylint: disable=invalid-name
         module_name = node.module if node.module else "relative import"
-        print(f"DependenciesVisitor.visit_ImportFrom.{module_name = }")
         split_module_name = module_name.rsplit(".")
         if len(split_module_name) >= 2:
             imported_layer = split_module_name[1]
@@ -112,7 +113,7 @@ class DependenciesVisitor(ast.NodeVisitor):
             full_layer_name_list = [
                 layer
                 for layer in self.layers.keys()
-                if layer.rsplit("/")[-1] == self.current_layer
+                if layer.rsplit(sep)[-1] == self.current_layer
             ]
             if not full_layer_name_list:
                 return
@@ -120,18 +121,18 @@ class DependenciesVisitor(ast.NodeVisitor):
             full_imported_layer_name = [
                 layer
                 for layer in self.layers.keys()
-                if layer.rsplit("/")[-1] == imported_layer
+                if layer.rsplit(sep)[-1] == imported_layer
             ][0]
             subdirectory_path = self.current_component.replace(
                 self.root_folder,
                 "",
-            ).split("/", 1)[-1]
-            if subdirectory_path.count("/") == 1:
-                clean_current_component = self.root_folder + "/" + subdirectory_path
+            ).split(sep, 1)[-1]
+            if subdirectory_path.count(sep) == 1:
+                clean_current_component = self.root_folder + sep + subdirectory_path
             else:
-                clean_subdirectory_path = subdirectory_path.rsplit("/", 1)[0]
+                clean_subdirectory_path = subdirectory_path.rsplit(sep, 1)[0]
                 clean_current_component = (
-                    self.root_folder + "/" + clean_subdirectory_path
+                    self.root_folder + sep + clean_subdirectory_path
                 )
             try:
                 if self.layers[full_layer_name].get(clean_current_component):
