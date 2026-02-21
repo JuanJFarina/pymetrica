@@ -1,13 +1,13 @@
 import ast
 from collections.abc import Generator
 from datetime import datetime
-import logging
 from pathlib import Path
 from typing import TypeAlias
 
 from os import sep
 
 from pymetrica.models import Codebase
+from pymetrica.utils import log
 
 
 LayerName: TypeAlias = str
@@ -146,7 +146,7 @@ class DependenciesVisitor(ast.NodeVisitor):
                         clean_current_component: {full_imported_layer_name},
                     })
             except KeyError as e:
-                logging.info(
+                log.warning(
                     f"DependenciesVisitor.visit_ImportFrom.KeyError.{clean_current_component = }",
                 )
-                logging.info(f"DependenciesVisitor.visit_ImportFrom.KeyError: {e = }")
+                log.warning(f"DependenciesVisitor.visit_ImportFrom.KeyError: {e = }")

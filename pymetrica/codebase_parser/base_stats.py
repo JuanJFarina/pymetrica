@@ -1,5 +1,7 @@
 import click
 
+from pymetrica.utils import run_profiler
+
 from .diagram_generator import create_diagram
 
 from .codebase_parser import parse_codebase
@@ -12,6 +14,7 @@ from .codebase_parser import parse_codebase
     help="Whether to generate a diagram of the codebase structure.",
 )
 @click.argument("dir_path")
+@run_profiler
 def base_stats(dir_path: str, diagram: bool = False) -> None:
     results = parse_codebase(dir_path)
     if diagram:

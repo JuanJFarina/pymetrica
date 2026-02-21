@@ -1,5 +1,4 @@
 import math
-import logging
 from pymetrica.models import Codebase, Metric, MetricCalculator
 
 # the following imports need to be more specific to avoid cyclic imports
@@ -9,6 +8,8 @@ from pymetrica.metric_calculators.cyclomatic_complexity import (
 from pymetrica.metric_calculators.halstead_volume import (
     HalsteadVolumeCalculator,
 )
+
+from pymetrica.utils import log
 
 from .mi_metric import MaintainabilityIndexResults
 
@@ -23,13 +24,13 @@ class MaintainabilityIndexCalculator(MetricCalculator[MaintainabilityIndexResult
         cc_metric = cc_calculator.calculate_metric(codebase)
         hv_metric = hv_calculator.calculate_metric(codebase)
 
-        logging.info(
+        log.info(
             f"MaintainabilityIndexCalculator.calculate_metric.{hv_metric.results.hv_number = }",
         )
-        logging.info(
+        log.info(
             f"MaintainabilityIndexCalculator.calculate_metric.{cc_metric.results.cc_number = }",
         )
-        logging.info(
+        log.info(
             f"MaintainabilityIndexCalculator.calculate_metric.{codebase.lloc_number = }",
         )
 

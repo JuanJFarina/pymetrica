@@ -2,6 +2,7 @@ import click
 
 from pymetrica.codebase_parser import parse_codebase
 from pymetrica.report_generators import REPORTS_MAPPING
+from pymetrica.utils import run_profiler
 
 from .hv_calculator import HalsteadVolumeCalculator
 
@@ -9,6 +10,7 @@ from .hv_calculator import HalsteadVolumeCalculator
 @click.command()
 @click.argument("dir_path")
 @click.option("-rt", "--report-type", type=str, default="BASIC_TERMINAL")
+@run_profiler
 def halstead_volume(
     dir_path: str,
     report_type: str,

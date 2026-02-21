@@ -2,6 +2,7 @@ import click
 
 from pymetrica.codebase_parser import parse_codebase
 from pymetrica.report_generators import REPORTS_MAPPING
+from pymetrica.utils import run_profiler
 
 from .mi_calculator import MaintainabilityIndexCalculator
 
@@ -9,6 +10,7 @@ from .mi_calculator import MaintainabilityIndexCalculator
 @click.command()
 @click.argument("dir_path")
 @click.option("-rt", "--report-type", type=str, default="BASIC_TERMINAL")
+@run_profiler
 def maintainability_index(
     dir_path: str,
     report_type: str,

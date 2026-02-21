@@ -6,6 +6,7 @@ name = "pypi"
 [packages]
 pydantic = ">=2.11.7"
 click = ">=8.2.1"
+loguru = ">=0.7.3"
 
 [dev-packages]
 pytest = ">=8.4.1"

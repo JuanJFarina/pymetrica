@@ -2,6 +2,7 @@ import click
 
 from pymetrica.codebase_parser import parse_codebase
 from pymetrica.report_generators import REPORTS_MAPPING
+from pymetrica.utils import run_profiler
 
 from .cc_calculator import CCCalculator
 
@@ -9,6 +10,7 @@ from .cc_calculator import CCCalculator
 @click.command()
 @click.argument("dir_path")
 @click.option("-rt", "--report-type", type=str, default="BASIC_TERMINAL")
+@run_profiler
 def cc(
     dir_path: str,
     report_type: str,
