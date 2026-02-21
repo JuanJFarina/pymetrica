@@ -36,7 +36,9 @@ def create_diagram(codebase: Codebase) -> None:
         for layer in layers.keys():
             if is_component(file.filepath, layer):
                 layers[layer][file.filepath] = set()
-        dependencies_visitor.current_layer = file.filepath.rsplit(sep)[-2]
+        dependencies_visitor.current_layer = sep.join(
+            file.filepath.replace(codebase.root_folder_path + sep, "").split(sep)[:1],
+        )
         dependencies_visitor.current_component = file.filepath
         dependencies_visitor.visit(ast.parse(file.code))
 
@@ -130,7 +132,7 @@ class DependenciesVisitor(ast.NodeVisitor):
             if subdirectory_path.count(sep) == 1:
                 clean_current_component = self.root_folder + sep + subdirectory_path
             else:
-                clean_subdirectory_path = subdirectory_path.rsplit(sep, 1)[0]
+                clean_subdirectory_path = sep.join(subdirectory_path.split(sep, 2)[:2])
                 clean_current_component = (
                     self.root_folder + sep + clean_subdirectory_path
                 )
