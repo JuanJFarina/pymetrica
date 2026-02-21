@@ -23,13 +23,13 @@ class MaintainabilityIndexCalculator(MetricCalculator[MaintainabilityIndexResult
         cc_metric = cc_calculator.calculate_metric(codebase)
         hv_metric = hv_calculator.calculate_metric(codebase)
 
-        print(
+        logging.info(
             f"MaintainabilityIndexCalculator.calculate_metric.{hv_metric.results.hv_number = }"
         )
-        print(
+        logging.info(
             f"MaintainabilityIndexCalculator.calculate_metric.{cc_metric.results.cc_number = }"
         )
-        print(
+        logging.info(
             f"MaintainabilityIndexCalculator.calculate_metric.{codebase.lloc_number = }"
         )
 

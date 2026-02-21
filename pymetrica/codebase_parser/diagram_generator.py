@@ -1,13 +1,14 @@
 import ast
 from collections.abc import Generator
 from datetime import datetime
+import logging
 from pathlib import Path
 
 from pymetrica.models import Codebase
 
 
 LayerName, ComponentName, Dependency = str, str, str
-Dependencies = list[Dependency]
+Dependencies = set[Dependency]
 Components = dict[ComponentName, Dependencies]
 Layers = dict[LayerName, Components]
 
@@ -19,42 +20,49 @@ def create_diagram(codebase: Codebase) -> None:
 
     for layer_name in layers.keys():
         layers[layer_name].update({
-            str(dir): [] for dir in iterdir_generator(layer_name)
+            str(dir): set() for dir in iterdir_generator(layer_name)
         })
 
     dependencies_visitor = DependenciesVisitor(layers)
 
     for file in codebase.files:
-        print(f"create_diagram.{file.filepath = }")
         if is_root_file(file.filepath, codebase.root_folder_path):
             continue
         for layer in layers.keys():
             if is_component(file.filepath, layer):  # type: ignore
-                layers[layer][file.filepath] = []
+                layers[layer][file.filepath] = set()
         dependencies_visitor.current_layer = file.filepath.rsplit("/")[-2]
         dependencies_visitor.current_component = file.filepath
         dependencies_visitor.visit(ast.parse(file.code))
-
-    print(f"create_diagram.{layers = }")
 
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     filename = f"architecture_diagram_{timestamp}.mmd"
     with open(filename, "w") as f:
         f.write("graph TD\n")
         for layer_name, components in layers.items():
-            f.write(f"  subgraph {layer_name}\n")
+            f.write(
+                f"  subgraph {layer_name.replace(codebase.root_folder_path + '/', '')}\n"
+            )
             for component_name, dependencies in components.items():
-                f.write(f"    {component_name}\n")
+                f.write(
+                    f"    {component_name.replace(codebase.root_folder_path + '/', '')}\n"
+                )
             f.write("  end\n")
         for layer_name, components in layers.items():
             for component_name, dependencies in components.items():
                 for dep in dependencies:
-                    f.write(f"  {component_name} --> {dep}\n")
+                    f.write(
+                        f"  {component_name.replace(codebase.root_folder_path + '/', '')} --> {dep.replace(codebase.root_folder_path + '/', '')}\n"
+                    )
 
 
 def iterdir_generator(path: str) -> Generator[str, None, None]:
     for dir in Path(path).iterdir():
-        if dir.is_dir() and dir.name != "__pycache__":
+        if (
+            dir.is_dir()
+            and dir.name != "__pycache__"
+            and dir.name.startswith(".") is False
+        ):
             yield str(dir)
 
 
@@ -80,12 +88,23 @@ class DependenciesVisitor(ast.NodeVisitor):
     def __init__(self, layers: Layers) -> None:
         self.layers = layers
         self.layers_names = [layer.rsplit("/")[-1] for layer in layers.keys()]
+        self.root_folder = list(layers.keys())[0].rsplit("/", 1)[0]
         self.current_layer: str = ""
         self.current_component: str = ""
 
     def visit_ImportFrom(self, node: ast.ImportFrom) -> None:  # pylint: disable=invalid-name
         module_name = node.module if node.module else "relative import"
-        imported_layer = module_name.rsplit(".")[-1]
+        print(f"DependenciesVisitor.visit_ImportFrom.{module_name = }")
+        split_module_name = module_name.rsplit(".")
+        if len(split_module_name) >= 2:
+            imported_layer = split_module_name[1]
+        else:
+            imported_layer = split_module_name[0]
+        if (
+            split_module_name[0] in self.layers_names
+            and split_module_name[0] != self.current_layer
+        ):
+            imported_layer = split_module_name[0]
         if imported_layer in self.layers_names and imported_layer != self.current_layer:
             full_layer_name = [
                 layer
@@ -100,6 +119,28 @@ class DependenciesVisitor(ast.NodeVisitor):
                 for layer in self.layers.keys()
                 if layer.rsplit("/")[-1] == imported_layer
             ][0]
-            self.layers[full_layer_name][self.current_component].extend([
-                full_imported_layer_name
-            ])
+            subdirectory_path = self.current_component.replace(
+                self.root_folder, ""
+            ).split("/", 1)[-1]
+            if subdirectory_path.count("/") == 1:
+                clean_current_component = self.root_folder + "/" + subdirectory_path
+            else:
+                clean_subdirectory_path = subdirectory_path.rsplit("/", 1)[0]
+                clean_current_component = (
+                    self.root_folder + "/" + clean_subdirectory_path
+                )
+            try:
+                if self.layers[full_layer_name].get(clean_current_component):
+                    self.layers[full_layer_name][clean_current_component].add(
+                        full_imported_layer_name
+                    )
+                else:
+                    self.layers[full_layer_name].update({
+                        clean_current_component: {full_imported_layer_name}
+                    })
+            except KeyError as e:
+                logging.info(
+                    f"DependenciesVisitor.visit_ImportFrom.KeyError.{clean_current_component = }"
+                )
+                logging.info(f"DependenciesVisitor.visit_ImportFrom.KeyError: {e = }")
+                pass

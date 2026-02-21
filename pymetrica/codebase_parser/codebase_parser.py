@@ -2,6 +2,8 @@ import ast
 import os
 from pathlib import Path
 
+import logging
+
 from pymetrica.models import Code, Codebase
 from pymetrica.utils import is_comment_line, is_logical_line_of_code
 
@@ -19,7 +21,12 @@ def parse_codebase(dir_path: str) -> Codebase:
     for path in base.rglob("*.py"):
         source = path.read_text(encoding="utf-8")
         lines = source.splitlines(keepends=True)
-        tree = ast.parse(source)
+        try:
+            tree = ast.parse(source)
+        except SyntaxError as e:
+            logging.info(f"parse_codebase.SyntaxError.{path = }")
+            logging.info(f"parse_codebase.SyntaxError: {e = }")
+            continue
         total_classes_definitions += sum(
             isinstance(n, ast.ClassDef) for n in ast.walk(tree)
         )
