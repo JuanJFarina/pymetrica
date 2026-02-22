@@ -21,10 +21,10 @@ try:
     log_level = LogLevelAdapter.validate_python(LOG_LEVEL)
     logger.info(f"Environment log level set to: {log_level.value}")
 except ValueError:
+    log_level = LogLevel.INFO
     logger.warning(
-        f"Invalid environment log level '{LOG_LEVEL}' provided. Defaulting to 'INFO'.",
+        f"Invalid environment log level '{LOG_LEVEL}' provided. Defaulting to '{log_level.value}'.",
     )
-    log_level = LogLevel.DEBUG
 
 
 class CustomLogger:
