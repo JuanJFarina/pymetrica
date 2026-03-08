@@ -1,11 +1,20 @@
 from typing import Any
 
+from pydantic import BaseModel
+
 from pymetrica.models import Metric, Results
+
+
+class LayerAloc(BaseModel):
+    name: str
+    aloc_number: int
+    aloc_percentage: float
 
 
 class AlocResults(Results):
     aloc_number: int
     aloc_percentage: float
+    aloc_result_per_layer: list[LayerAloc]
 
     def get_dict(self) -> dict[str, Any]:
         return self.get_dict()
@@ -14,7 +23,16 @@ class AlocResults(Results):
         return self.get_json()
 
     def get_summary(self) -> str:
-        return f"\nALOC number: {self.aloc_number}\nALOC percentage: {self.aloc_percentage}"
+        summary = (
+            f"\nTotal ALOC: "
+            f"{self.aloc_number} ({self.aloc_percentage}% of total LLOC)\n"
+        )
+        for layer in self.aloc_result_per_layer:
+            summary += (
+                f"  Layer {layer.name} ALOC: "
+                f"{layer.aloc_number} ({layer.aloc_percentage}%)\n"
+            )
+        return summary
 
 
 class AlocMetric(Metric[AlocResults]): ...

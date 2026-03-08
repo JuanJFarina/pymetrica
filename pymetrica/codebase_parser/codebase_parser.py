@@ -8,13 +8,14 @@ from pymetrica.utils import is_comment_line, is_logical_line_of_code, log
 # TODO ignore folders inside .gitignore
 
 
-def parse_codebase(dir_path: str) -> Codebase:
+def parse_codebase(dir_path: str) -> Codebase:  # pylint: disable=too-many-locals
     base = Path(dir_path).absolute()
     total_lloc = 0
     total_comments = 0
     total_classes_definitions = 0
     total_functions_definitions = 0
-    total_files: list[Code] = []
+    layers = get_layers_from_path(base)
+    root_files = list[Code]()
 
     for path in base.rglob("*.py"):
         source = path.read_text(encoding="utf-8")
@@ -39,7 +40,13 @@ def parse_codebase(dir_path: str) -> Codebase:
         total_comments += (
             file_comments := sum(1 for line in lines if is_comment_line(line))
         )
-        total_files.append(
+        list_reference = None
+        for layer in layers.keys():
+            if str(path).startswith(layer):
+                list_reference = layers[layer]
+        if not list_reference:
+            list_reference = root_files
+        list_reference.append(
             Code(
                 filepath=str(path),
                 filename=path.name,
@@ -50,14 +57,16 @@ def parse_codebase(dir_path: str) -> Codebase:
             ),
         )
 
+    total_files = sum(len(files) for files in layers.values()) + len(root_files)
+
     return Codebase(
         root_folder_path=str(Path(dir_path).absolute()),
         root_folder_name=os.path.basename(dir_path),
         folders_number=sum(1 for p in base.rglob("*") if p.is_dir()),
-        files_number=len(total_files),
+        files_number=total_files,
         lloc_number=total_lloc,
         lloc_file_ratio=(
-            f"{total_lloc / (len(total_files) or 1):.1f}:{1 if total_files else 0}"
+            f"{total_lloc / (total_files or 1):.1f}:{1 if total_files else 0}"
         ),
         comments_number=total_comments,
         comment_lloc_ratio=(
@@ -65,5 +74,14 @@ def parse_codebase(dir_path: str) -> Codebase:
         ),
         classes_number=total_classes_definitions,
         functions_number=total_functions_definitions,
-        files=total_files,
+        layers=layers,
+        root_files=root_files,
     )
+
+
+def get_layers_from_path(base: Path) -> dict[str, list[Code]]:
+    return {
+        str(dir): list[Code]()
+        for dir in base.iterdir()
+        if dir.is_dir() and dir.name != "__pycache__"
+    }

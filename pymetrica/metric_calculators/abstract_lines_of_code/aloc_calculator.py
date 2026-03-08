@@ -1,6 +1,6 @@
 from pymetrica.models import Codebase, MetricCalculator
 
-from .aloc_metric import AlocMetric, AlocResults
+from .aloc_metric import AlocMetric, AlocResults, LayerAloc
 from .first_pass import gather_loc_and_classes
 from .second_pass import count_uninstantiated_loc
 
@@ -24,5 +24,12 @@ class AlocCalculator(MetricCalculator[AlocResults]):
             results=AlocResults(
                 aloc_number=total_aloc,
                 aloc_percentage=total_aloc / codebase.lloc_number * 100,
+                aloc_result_per_layer=[
+                    LayerAloc(
+                        name="Total",
+                        aloc_number=total_aloc,
+                        aloc_percentage=total_aloc / codebase.lloc_number * 100,
+                    ),
+                ],
             ),
         )
