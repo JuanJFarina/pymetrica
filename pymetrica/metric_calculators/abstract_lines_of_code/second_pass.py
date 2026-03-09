@@ -1,9 +1,9 @@
 import ast
 
-from pymetrica.models import Codebase
+from pymetrica.models import Code
 
 
-def count_uninstantiated_loc(codebase: Codebase, classes: dict[str, int]) -> int:
+def count_uninstantiated_loc(files: list[Code], classes: dict[str, int]) -> int:
     """
     Second pass:
       - Detect instantiation by:
@@ -13,7 +13,7 @@ def count_uninstantiated_loc(codebase: Codebase, classes: dict[str, int]) -> int
     Returns sum of LOC for classes never instantiated.
     """
     instantiated: set[str] = set()
-    for file in codebase.files:
+    for file in files:
         tree = ast.parse(file.code)
         for node in ast.walk(tree):
             if isinstance(node, ast.Call):

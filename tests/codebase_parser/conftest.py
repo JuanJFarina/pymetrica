@@ -42,12 +42,73 @@ def expected_small_codebase(small_codebase_files: list[Code]) -> Codebase:
         comment_lloc_ratio="1:40.0",
         classes_number=1,
         functions_number=5,
-        files=small_codebase_files,
+        layers={},
+        root_files=small_codebase_files,
     )
 
 
-@pytest.fixture(name="big_codebase_files")
-def _big_codebase_files() -> list[Code]:
+@pytest.fixture(name="big_codebase_layers")
+def _big_codebase_layers() -> dict[str, list[Code]]:
+    return {
+        "/workspaces/pymetrica/tests/sample_codebases/big_codebase/exception_handlers": [
+            Code(
+                filepath="/workspaces/pymetrica/tests/sample_codebases/big_codebase/exception_handlers/codebase_exception.py",
+                filename="codebase_exception.py",
+                lloc_number=4,
+                comments_number=0,
+                code_lines=[],
+                code="",
+            ),
+            Code(
+                filepath="/workspaces/pymetrica/tests/sample_codebases/big_codebase/exception_handlers/__init__.py",
+                filename="__init__.py",
+                lloc_number=2,
+                comments_number=0,
+                code_lines=[],
+                code="",
+            ),
+        ],
+        "/workspaces/pymetrica/tests/sample_codebases/big_codebase/middlewares": [
+            Code(
+                filepath="/workspaces/pymetrica/tests/sample_codebases/big_codebase/middlewares/logging_middleware.py",
+                filename="logging_middleware.py",
+                lloc_number=13,
+                comments_number=0,
+                code_lines=[],
+                code="",
+            ),
+            Code(
+                filepath="/workspaces/pymetrica/tests/sample_codebases/big_codebase/middlewares/__init__.py",
+                filename="__init__.py",
+                lloc_number=2,
+                comments_number=0,
+                code_lines=[],
+                code="",
+            ),
+        ],
+        "/workspaces/pymetrica/tests/sample_codebases/big_codebase/routes": [
+            Code(
+                filepath="/workspaces/pymetrica/tests/sample_codebases/big_codebase/routes/routes.py",
+                filename="routes.py",
+                lloc_number=5,
+                comments_number=0,
+                code_lines=[],
+                code="",
+            ),
+            Code(
+                filepath="/workspaces/pymetrica/tests/sample_codebases/big_codebase/routes/__init__.py",
+                filename="__init__.py",
+                lloc_number=2,
+                comments_number=0,
+                code_lines=[],
+                code="",
+            ),
+        ],
+    }
+
+
+@pytest.fixture(name="big_codebase_root_files")
+def _big_codebase_root_files() -> list[Code]:
     return [
         Code(
             filepath="/workspaces/pymetrica/tests/sample_codebases/big_codebase/main.py",
@@ -65,59 +126,14 @@ def _big_codebase_files() -> list[Code]:
             code_lines=[],
             code="",
         ),
-        Code(
-            filepath="/workspaces/pymetrica/tests/sample_codebases/big_codebase/exception_handlers/codebase_exception.py",
-            filename="codebase_exception.py",
-            lloc_number=4,
-            comments_number=0,
-            code_lines=[],
-            code="",
-        ),
-        Code(
-            filepath="/workspaces/pymetrica/tests/sample_codebases/big_codebase/exception_handlers/__init__.py",
-            filename="__init__.py",
-            lloc_number=2,
-            comments_number=0,
-            code_lines=[],
-            code="",
-        ),
-        Code(
-            filepath="/workspaces/pymetrica/tests/sample_codebases/big_codebase/middlewares/logging_middleware.py",
-            filename="logging_middleware.py",
-            lloc_number=13,
-            comments_number=0,
-            code_lines=[],
-            code="",
-        ),
-        Code(
-            filepath="/workspaces/pymetrica/tests/sample_codebases/big_codebase/middlewares/__init__.py",
-            filename="__init__.py",
-            lloc_number=2,
-            comments_number=0,
-            code_lines=[],
-            code="",
-        ),
-        Code(
-            filepath="/workspaces/pymetrica/tests/sample_codebases/big_codebase/routes/routes.py",
-            filename="routes.py",
-            lloc_number=5,
-            comments_number=0,
-            code_lines=[],
-            code="",
-        ),
-        Code(
-            filepath="/workspaces/pymetrica/tests/sample_codebases/big_codebase/routes/__init__.py",
-            filename="__init__.py",
-            lloc_number=2,
-            comments_number=0,
-            code_lines=[],
-            code="",
-        ),
     ]
 
 
 @pytest.fixture
-def expected_big_codebase(big_codebase_files: list[Code]) -> Codebase:
+def expected_big_codebase(
+    big_codebase_layers: dict[str, list[Code]],
+    big_codebase_root_files: list[Code],
+) -> Codebase:
     return Codebase(
         root_folder_path="/workspaces/pymetrica/tests/sample_codebases/big_codebase",
         root_folder_name="big_codebase",
@@ -129,7 +145,8 @@ def expected_big_codebase(big_codebase_files: list[Code]) -> Codebase:
         comment_lloc_ratio="0:39.0",
         classes_number=2,
         functions_number=3,
-        files=big_codebase_files,
+        layers=big_codebase_layers,
+        root_files=big_codebase_root_files,
     )
 
 

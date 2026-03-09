@@ -7,9 +7,9 @@ from .second_pass import count_uninstantiated_loc
 
 class AlocCalculator(MetricCalculator[AlocResults]):
     def calculate_metric(self: "AlocCalculator", codebase: Codebase) -> AlocMetric:
-        preliminary_results = gather_loc_and_classes(codebase)
+        preliminary_results = gather_loc_and_classes(codebase.files)
         uninstantiated_loc = count_uninstantiated_loc(
-            codebase,
+            codebase.files,
             preliminary_results.classes,
         )
         total_aloc: int = preliminary_results.aloc + uninstantiated_loc
