@@ -131,3 +131,39 @@ def expected_big_codebase(big_codebase_files: list[Code]) -> Codebase:
         functions_number=3,
         files=big_codebase_files,
     )
+
+
+@pytest.fixture
+def small_codebase_diagram() -> str:
+    return """graph TD
+
+  subgraph /workspaces/pymetrica/tests/sample_codebases/small_codebase
+
+  end
+
+"""
+
+
+@pytest.fixture
+def big_codebase_diagram() -> str:
+    return """graph TD
+
+  subgraph exception_handlers
+
+    exception_handlers/codebase_exception.py
+
+  end
+
+  subgraph middlewares
+
+    middlewares/logging_middleware.py
+
+  end
+
+  subgraph routes
+
+    routes/routes.py
+
+  end
+
+"""
