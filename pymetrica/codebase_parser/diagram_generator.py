@@ -1,5 +1,5 @@
 import ast
-from collections.abc import Generator
+from collections.abc import Callable, Generator
 from datetime import datetime
 from pathlib import Path
 from typing import TypeAlias
@@ -18,10 +18,14 @@ Components: TypeAlias = dict[ComponentName, Dependencies]
 Layers: TypeAlias = dict[LayerName, Components]
 
 
-def create_diagram(codebase: Codebase) -> None:
+def create_diagram(codebase: Codebase, write: bool = True) -> None:
     layers: Layers = {
         str(dir): Components() for dir in iterdir_generator(codebase.root_folder_path)
     }
+
+    if len(layers) == 0:
+        log.warning(f"create_diagram.{codebase.root_folder_path = }")
+        layers = {codebase.root_folder_path: Components()}
 
     for layer_name in layers.keys():
         layers[layer_name].update({
@@ -43,24 +47,34 @@ def create_diagram(codebase: Codebase) -> None:
         dependencies_visitor.visit(ast.parse(file.code))
 
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    filename = f"architecture_diagram_{timestamp}.mmd"
-    with open(filename, "w") as f:  # pylint: disable=unspecified-encoding
-        f.write("graph TD\n")
-        for layer_name, components in layers.items():
-            f.write(
-                f"  subgraph {layer_name.replace(codebase.root_folder_path + sep, '')}\n",
+    if write:
+        with open(f"architecture_diagram_{timestamp}.mmd", "w") as f:  # pylint: disable=unspecified-encoding
+            write_diagram(codebase, layers, f.write)
+    else:
+        write_diagram(codebase, layers, print)
+
+
+def write_diagram(
+    codebase: Codebase,
+    layers: Layers,
+    write_function: Callable[..., None | int],
+) -> None:
+    write_function("graph TD\n")
+    for layer_name, components in layers.items():
+        write_function(
+            f"  subgraph {layer_name.replace(codebase.root_folder_path + sep, '')}\n",
+        )
+        for component_name, dependencies in components.items():
+            write_function(
+                f"    {component_name.replace(codebase.root_folder_path + sep, '')}\n",
             )
-            for component_name, dependencies in components.items():
-                f.write(
-                    f"    {component_name.replace(codebase.root_folder_path + sep, '')}\n",
+        write_function("  end\n")
+    for layer_name, components in layers.items():
+        for component_name, dependencies in components.items():
+            for dep in dependencies:
+                write_function(
+                    f"  {component_name.replace(codebase.root_folder_path + sep, '')} --> {dep.replace(codebase.root_folder_path + sep, '')}\n",  # pylint: disable=line-too-long
                 )
-            f.write("  end\n")
-        for layer_name, components in layers.items():
-            for component_name, dependencies in components.items():
-                for dep in dependencies:
-                    f.write(
-                        f"  {component_name.replace(codebase.root_folder_path + sep, '')} --> {dep.replace(codebase.root_folder_path + sep, '')}\n",  # pylint: disable=line-too-long
-                    )
 
 
 def iterdir_generator(path: str) -> Generator[str, None, None]:
