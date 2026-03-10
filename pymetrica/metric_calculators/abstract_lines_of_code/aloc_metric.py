@@ -25,12 +25,12 @@ class AlocResults(Results):
     def get_summary(self) -> str:
         summary = (
             f"\nTotal ALOC: "
-            f"{self.aloc_number} ({self.aloc_percentage}% of total LLOC)\n"
+            f"{self.aloc_number} ({self.aloc_percentage:0.2f}% of total LLOC)\n"
         )
         for layer in self.aloc_result_per_layer:
             summary += (
                 f"  Layer {layer.name} ALOC: "
-                f"{layer.aloc_number} ({layer.aloc_percentage}%)\n"
+                f"{layer.aloc_number} ({layer.aloc_percentage:0.2f}%)\n"
             )
         return summary
 

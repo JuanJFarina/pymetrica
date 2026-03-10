@@ -42,12 +42,8 @@ def parse_codebase(dir_path: str) -> Codebase:  # pylint: disable=too-many-local
         )
         list_reference = None
         for layer in layers.keys():
-            log.info(f"parse_codebase.{str(path) = }")
-            log.info(f"parse_codebase.{layer = }")
             if str(path).startswith(layer):
                 list_reference = layers[layer]
-                log.info(f"parse_codebase.{str(path).startswith(layer) = }")
-                log.info(f"parse_codebase.{list_reference = }")
                 break
         if list_reference is None:
             list_reference = root_files

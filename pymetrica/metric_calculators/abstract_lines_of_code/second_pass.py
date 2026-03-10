@@ -3,7 +3,7 @@ import ast
 from pymetrica.models import Code
 
 
-def count_uninstantiated_loc(files: list[Code], classes: dict[str, int]) -> int:
+def called_classes(files: list[Code], classes: dict[str, int]) -> set[str]:
     """
     Second pass:
       - Detect instantiation by:
@@ -12,7 +12,7 @@ def count_uninstantiated_loc(files: list[Code], classes: dict[str, int]) -> int:
       - Any class appearing as ast.Name in call.func or ast.Attribute.value qualifies.
     Returns sum of LOC for classes never instantiated.
     """
-    instantiated: set[str] = set()
+    called: set[str] = set()
     for file in files:
         tree = ast.parse(file.code)
         for node in ast.walk(tree):
@@ -20,10 +20,13 @@ def count_uninstantiated_loc(files: list[Code], classes: dict[str, int]) -> int:
                 func = node.func
                 # Direct instantiation
                 if isinstance(func, ast.Name) and func.id in classes:
-                    instantiated.add(func.id)
+                    called.add(func.id)
                 # Method call on class (ClassName.method(...))
                 elif isinstance(func, ast.Attribute):
                     val = func.value
                     if isinstance(val, ast.Name) and val.id in classes:
-                        instantiated.add(val.id)
-    return sum(loc for cls, loc in classes.items() if cls not in instantiated)
+                        called.add(val.id)
+                for arg in node.args:
+                    if isinstance(arg, ast.Name) and arg.id in classes:
+                        called.add(arg.id)
+    return called

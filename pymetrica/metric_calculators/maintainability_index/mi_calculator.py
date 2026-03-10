@@ -9,7 +9,6 @@ from pymetrica.metric_calculators.halstead_volume import (
     HalsteadVolumeCalculator,
 )
 
-from pymetrica.utils import log
 
 from .mi_metric import MaintainabilityIndexResults
 
@@ -23,16 +22,6 @@ class MaintainabilityIndexCalculator(MetricCalculator[MaintainabilityIndexResult
         hv_calculator = HalsteadVolumeCalculator()
         cc_metric = cc_calculator.calculate_metric(codebase)
         hv_metric = hv_calculator.calculate_metric(codebase)
-
-        log.info(
-            f"MaintainabilityIndexCalculator.calculate_metric.{hv_metric.results.hv_number = }",
-        )
-        log.info(
-            f"MaintainabilityIndexCalculator.calculate_metric.{cc_metric.results.cc_number = }",
-        )
-        log.info(
-            f"MaintainabilityIndexCalculator.calculate_metric.{codebase.lloc_number = }",
-        )
 
         mi_classic = (
             171
