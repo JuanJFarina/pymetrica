@@ -14,15 +14,15 @@ class HalsteadVolumeCalculator(MetricCalculator[HalsteadVolumeResults]):
         codebase: Codebase,
     ) -> HalsteadVolumeMetric:
         layer_results = list[LayerHV]()
-        layer = codebase.layers.copy()
-        layer.update({"root": codebase.root_files})
+        layers = codebase.layers.copy()
+        layers.update({"root": codebase.root_files})
 
         codebase_unique_operators = set()
         codebase_unique_operands = set()
         codebase_operators = 0
         codebase_operands = 0
 
-        for layer_name, layer_files in layer.items():
+        for layer_name, layer_files in layers.items():
             total_hv = 0
 
             for code_file in layer_files:
