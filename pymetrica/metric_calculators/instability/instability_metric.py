@@ -15,7 +15,7 @@ class InstabilityResults(Results):
     def get_summary(self) -> str:
         summary = "\nInstability for:\n"
         for layer, instability in self.instability.items():
-            summary += f"{layer}: {instability}\n"
+            summary += f"  {layer}: {instability}\n"
         return summary
 
 

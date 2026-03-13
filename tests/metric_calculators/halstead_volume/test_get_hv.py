@@ -8,7 +8,8 @@ def test_get_hv(
     hv_result: int,
 ) -> None:
     metric = hv_calculator.calculate_metric(codebase)
-    assert metric.results.hv_number == hv_result
+    print(metric.results)
+    assert metric.results == hv_result
 
 
 def test_get_hv_big(
@@ -17,4 +18,5 @@ def test_get_hv_big(
     big_codebase_hv_result: int,
 ) -> None:
     metric = hv_calculator.calculate_metric(big_codebase)
-    assert metric.results.hv_number == big_codebase_hv_result
+    print(metric.results)
+    assert metric.results == big_codebase_hv_result
