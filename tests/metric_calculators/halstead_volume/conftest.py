@@ -12,13 +12,13 @@ def hv_calculator() -> HalsteadVolumeCalculator:
     return HalsteadVolumeCalculator()
 
 
-@pytest.fixture
-def small_codebase_layer_hv() -> list[LayerHV]:
+@pytest.fixture(name="small_codebase_layer_hv")
+def _small_codebase_layer_hv() -> list[LayerHV]:
     return [
         LayerHV(
             name="root",
             hv_number=704.5342159112735,
-        )
+        ),
     ]
 
 
@@ -30,8 +30,8 @@ def hv_result(small_codebase_layer_hv: list[LayerHV]) -> HalsteadVolumeResults:
     )
 
 
-@pytest.fixture
-def big_codebase_layer_hv() -> list[LayerHV]:
+@pytest.fixture(name="big_codebase_layer_hv")
+def _big_codebase_layer_hv() -> list[LayerHV]:
     return [
         LayerHV(name="exception_handlers", hv_number=47.86313713864835),
         LayerHV(name="middlewares", hv_number=88.75488750216347),

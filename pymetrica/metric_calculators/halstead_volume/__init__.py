@@ -1,10 +1,10 @@
 from .hv_calculator import HalsteadVolumeCalculator
 from .hv_metric import HalsteadVolumeMetric, HalsteadVolumeResults
-from .get_hv import halstead_volume
+from .get_hv import hv
 
 __all__ = [
     "HalsteadVolumeCalculator",
     "HalsteadVolumeMetric",
     "HalsteadVolumeResults",
-    "halstead_volume",
+    "hv",
 ]

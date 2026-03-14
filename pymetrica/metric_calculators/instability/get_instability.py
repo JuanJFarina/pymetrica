@@ -9,7 +9,7 @@ from .instability_calculator import InstabilityCalculator
 @click.command()
 @click.argument("dir_path")
 @click.option("-rt", "--report-type", type=str, default="BASIC_TERMINAL")
-def instability(
+def li(
     dir_path: str,
     report_type: str,
     instability_calculator: InstabilityCalculator = InstabilityCalculator(),

@@ -9,15 +9,12 @@ def test_get_hv(
     hv_result: HalsteadVolumeResults,
 ) -> None:
     metric = hv_calculator.calculate_metric(codebase)
-    print(metric.results)
     assert metric.results == hv_result
     assert len(metric.results.hv_per_layer) == 1
-    for layer_result, expected_layer_result in zip(
-        metric.results.hv_per_layer,
-        hv_result.hv_per_layer,
-    ):
-        assert layer_result.name == expected_layer_result.name
-        assert layer_result.hv_number == expected_layer_result.hv_number
+    assert metric.results.hv_per_layer[0].name == hv_result.hv_per_layer[0].name
+    assert (
+        metric.results.hv_per_layer[0].hv_number == hv_result.hv_per_layer[0].hv_number
+    )
 
 
 def test_get_hv_big(
@@ -26,12 +23,37 @@ def test_get_hv_big(
     big_codebase_hv_result: HalsteadVolumeResults,
 ) -> None:
     metric = hv_calculator.calculate_metric(big_codebase)
-    print(metric.results)
     assert metric.results == big_codebase_hv_result
     assert len(metric.results.hv_per_layer) == 4
-    for layer_result, expected_layer_result in zip(
-        metric.results.hv_per_layer,
-        big_codebase_hv_result.hv_per_layer,
-    ):
-        assert layer_result.name == expected_layer_result.name
-        assert layer_result.hv_number == expected_layer_result.hv_number
+    assert (
+        metric.results.hv_per_layer[0].name
+        == big_codebase_hv_result.hv_per_layer[0].name
+    )
+    assert (
+        metric.results.hv_per_layer[0].hv_number
+        == big_codebase_hv_result.hv_per_layer[0].hv_number
+    )
+    assert (
+        metric.results.hv_per_layer[1].name
+        == big_codebase_hv_result.hv_per_layer[1].name
+    )
+    assert (
+        metric.results.hv_per_layer[1].hv_number
+        == big_codebase_hv_result.hv_per_layer[1].hv_number
+    )
+    assert (
+        metric.results.hv_per_layer[2].name
+        == big_codebase_hv_result.hv_per_layer[2].name
+    )
+    assert (
+        metric.results.hv_per_layer[2].hv_number
+        == big_codebase_hv_result.hv_per_layer[2].hv_number
+    )
+    assert (
+        metric.results.hv_per_layer[3].name
+        == big_codebase_hv_result.hv_per_layer[3].name
+    )
+    assert (
+        metric.results.hv_per_layer[3].hv_number
+        == big_codebase_hv_result.hv_per_layer[3].hv_number
+    )

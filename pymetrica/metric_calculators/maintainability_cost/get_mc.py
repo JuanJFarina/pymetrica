@@ -4,19 +4,19 @@ from pymetrica.codebase_parser import parse_codebase
 from pymetrica.report_generators import REPORTS_MAPPING
 from pymetrica.utils import run_profiler
 
-from .mi_calculator import MaintainabilityIndexCalculator
+from .mc_calculator import MaintainabilityCostCalculator
 
 
 @click.command()
 @click.argument("dir_path")
 @click.option("-rt", "--report-type", type=str, default="BASIC_TERMINAL")
 @run_profiler
-def maintainability_index(
+def mc(
     dir_path: str,
     report_type: str,
-    mi_calculator: MaintainabilityIndexCalculator = MaintainabilityIndexCalculator(),
+    mc_calculator: MaintainabilityCostCalculator = MaintainabilityCostCalculator(),
 ) -> None:
     codebase = parse_codebase(dir_path)
-    mi_metric = mi_calculator.calculate_metric(codebase)
+    mc_metric = mc_calculator.calculate_metric(codebase)
     report_generator = REPORTS_MAPPING[report_type]()
-    click.echo(report_generator.generate_report([mi_metric]))
+    click.echo(report_generator.generate_report([mc_metric]))

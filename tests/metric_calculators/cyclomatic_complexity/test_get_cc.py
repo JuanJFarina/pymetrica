@@ -11,13 +11,18 @@ def test_get_cc(
     metric = cc_calculator.calculate_metric(codebase)
     assert metric.results == cc_result
     assert len(metric.results.cc_result_per_layer) == 1
-    for layer_result, expected_layer_result in zip(
-        metric.results.cc_result_per_layer,
-        cc_result.cc_result_per_layer,
-    ):
-        assert layer_result.name == expected_layer_result.name
-        assert layer_result.cc_number == expected_layer_result.cc_number
-        assert layer_result.cc_lloc_ratio == expected_layer_result.cc_lloc_ratio
+    assert (
+        metric.results.cc_result_per_layer[0].name
+        == cc_result.cc_result_per_layer[0].name
+    )
+    assert (
+        metric.results.cc_result_per_layer[0].cc_number
+        == cc_result.cc_result_per_layer[0].cc_number
+    )
+    assert (
+        metric.results.cc_result_per_layer[0].cc_lloc_ratio
+        == cc_result.cc_result_per_layer[0].cc_lloc_ratio
+    )
 
 
 def test_get_cc_big(
@@ -28,10 +33,51 @@ def test_get_cc_big(
     metric = cc_calculator.calculate_metric(big_codebase)
     assert metric.results == big_codebase_cc_result
     assert len(metric.results.cc_result_per_layer) == 4
-    for layer_result, expected_layer_result in zip(
-        metric.results.cc_result_per_layer,
-        big_codebase_cc_result.cc_result_per_layer,
-    ):
-        assert layer_result.name == expected_layer_result.name
-        assert layer_result.cc_number == expected_layer_result.cc_number
-        assert layer_result.cc_lloc_ratio == expected_layer_result.cc_lloc_ratio
+    assert (
+        metric.results.cc_result_per_layer[0].name
+        == big_codebase_cc_result.cc_result_per_layer[0].name
+    )
+    assert (
+        metric.results.cc_result_per_layer[0].cc_number
+        == big_codebase_cc_result.cc_result_per_layer[0].cc_number
+    )
+    assert (
+        metric.results.cc_result_per_layer[0].cc_lloc_ratio
+        == big_codebase_cc_result.cc_result_per_layer[0].cc_lloc_ratio
+    )
+    assert (
+        metric.results.cc_result_per_layer[1].name
+        == big_codebase_cc_result.cc_result_per_layer[1].name
+    )
+    assert (
+        metric.results.cc_result_per_layer[1].cc_number
+        == big_codebase_cc_result.cc_result_per_layer[1].cc_number
+    )
+    assert (
+        metric.results.cc_result_per_layer[1].cc_lloc_ratio
+        == big_codebase_cc_result.cc_result_per_layer[1].cc_lloc_ratio
+    )
+    assert (
+        metric.results.cc_result_per_layer[2].name
+        == big_codebase_cc_result.cc_result_per_layer[2].name
+    )
+    assert (
+        metric.results.cc_result_per_layer[2].cc_number
+        == big_codebase_cc_result.cc_result_per_layer[2].cc_number
+    )
+    assert (
+        metric.results.cc_result_per_layer[2].cc_lloc_ratio
+        == big_codebase_cc_result.cc_result_per_layer[2].cc_lloc_ratio
+    )
+    assert (
+        metric.results.cc_result_per_layer[3].name
+        == big_codebase_cc_result.cc_result_per_layer[3].name
+    )
+    assert (
+        metric.results.cc_result_per_layer[3].cc_number
+        == big_codebase_cc_result.cc_result_per_layer[3].cc_number
+    )
+    assert (
+        metric.results.cc_result_per_layer[3].cc_lloc_ratio
+        == big_codebase_cc_result.cc_result_per_layer[3].cc_lloc_ratio
+    )

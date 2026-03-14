@@ -7,7 +7,7 @@ class InstabilityResults(Results):
     instability: dict[str, float]
 
     def get_dict(self) -> dict[str, float]:
-        return self.get_dict()
+        return self.instability
 
     def get_json(self) -> str:
         return json.dumps(self.get_dict())

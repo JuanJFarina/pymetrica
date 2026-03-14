@@ -12,14 +12,14 @@ def cc_calculator() -> CCCalculator:
     return CCCalculator()
 
 
-@pytest.fixture
-def small_codebase_layer_cc() -> list[LayerCC]:
+@pytest.fixture(name="small_codebase_layer_cc")
+def _small_codebase_layer_cc() -> list[LayerCC]:
     return [
         LayerCC(
             name="root",
             cc_number=22,
             cc_lloc_ratio=55.00000000000001,
-        )
+        ),
     ]
 
 
@@ -32,8 +32,8 @@ def cc_result(small_codebase_layer_cc: list[LayerCC]) -> CCResults:
     )
 
 
-@pytest.fixture
-def big_codebase_layer_cc() -> list[LayerCC]:
+@pytest.fixture(name="big_codebase_layer_cc")
+def _big_codebase_layer_cc() -> list[LayerCC]:
     return [
         LayerCC(name="exception_handlers", cc_number=0, cc_lloc_ratio=0.0),
         LayerCC(name="middlewares", cc_number=0, cc_lloc_ratio=0.0),

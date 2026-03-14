@@ -17,15 +17,14 @@ class CCResults(Results):
     cc_result_per_layer: list[LayerCC]
 
     def get_dict(self) -> dict[str, Any]:
-        return self.get_dict()
+        return self.model_dump(exclude={"cc_result_per_layer"})
 
     def get_json(self) -> str:
         return self.get_json()
 
     def get_summary(self) -> str:
         summary = (
-            "\nTotal CC: "
-            f"{self.cc_number} ({self.cc_lloc_ratio:0.2f} LLOC per CC)\n"
+            f"\nTotal CC: {self.cc_number} ({self.cc_lloc_ratio:0.2f} LLOC per CC)\n"
         )
         for layer in self.cc_result_per_layer:
             summary += (

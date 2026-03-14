@@ -9,7 +9,7 @@ from .hv_visitor import HalsteadVolumeVisitor
 
 
 class HalsteadVolumeCalculator(MetricCalculator[HalsteadVolumeResults]):
-    def calculate_metric(
+    def calculate_metric(  # pylint: disable=too-many-locals
         self: "HalsteadVolumeCalculator",
         codebase: Codebase,
     ) -> HalsteadVolumeMetric:
@@ -17,13 +17,13 @@ class HalsteadVolumeCalculator(MetricCalculator[HalsteadVolumeResults]):
         layers = codebase.layers.copy()
         layers.update({"root": codebase.root_files})
 
-        codebase_unique_operators = set()
-        codebase_unique_operands = set()
+        codebase_unique_operators = set[str]()
+        codebase_unique_operands = set[str]()
         codebase_operators = 0
         codebase_operands = 0
 
         for layer_name, layer_files in layers.items():
-            total_hv = 0
+            total_hv = 0.0
 
             for code_file in layer_files:
                 tree = ast.parse(code_file.code)
@@ -55,13 +55,13 @@ class HalsteadVolumeCalculator(MetricCalculator[HalsteadVolumeResults]):
                 ),
             )
 
-        codebase_unique_operators = len(codebase_unique_operators)
-        codebase_unique_operands = len(codebase_unique_operands)
+        count_of_unique_operators = len(codebase_unique_operators)
+        count_of_unique_operands = len(codebase_unique_operands)
 
-        if codebase_unique_operators + codebase_unique_operands == 0:
+        if count_of_unique_operators + count_of_unique_operands == 0:
             codebase_halstead_volume = 0.0
         else:
-            vocabulary = codebase_unique_operators + codebase_unique_operands
+            vocabulary = count_of_unique_operators + count_of_unique_operands
             length = codebase_operators + codebase_operands
             codebase_halstead_volume = length * math.log2(vocabulary)
 

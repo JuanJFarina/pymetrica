@@ -15,7 +15,7 @@ class HalsteadVolumeResults(Results):
     hv_per_layer: list[LayerHV]
 
     def get_dict(self) -> dict[str, Any]:
-        return self.get_dict()
+        return self.model_dump(exclude={"hv_per_layer"})
 
     def get_json(self) -> str:
         return self.get_json()

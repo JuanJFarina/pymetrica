@@ -39,7 +39,7 @@ def create_diagram(codebase: Codebase, write: bool = True) -> None:
             continue
         for layer in layers.keys():
             if is_component(file.filepath, layer):
-                layers[layer][file.filepath] = list()
+                layers[layer][file.filepath] = []
         dependencies_visitor.current_layer = sep.join(
             file.filepath.replace(codebase.root_folder_path + sep, "").split(sep)[:1],
         )

@@ -11,7 +11,7 @@ from .hv_calculator import HalsteadVolumeCalculator
 @click.argument("dir_path")
 @click.option("-rt", "--report-type", type=str, default="BASIC_TERMINAL")
 @run_profiler
-def halstead_volume(
+def hv(
     dir_path: str,
     report_type: str,
     hv_calculator: HalsteadVolumeCalculator = HalsteadVolumeCalculator(),

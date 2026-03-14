@@ -17,7 +17,7 @@ class AlocResults(Results):
     aloc_result_per_layer: list[LayerAloc]
 
     def get_dict(self) -> dict[str, Any]:
-        return self.get_dict()
+        return self.model_dump(exclude={"aloc_result_per_layer"})
 
     def get_json(self) -> str:
         return self.get_json()

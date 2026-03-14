@@ -1,15 +1,15 @@
 from .abstract_lines_of_code import AlocCalculator, aloc
 from .cyclomatic_complexity import CCCalculator, cc
-from .halstead_volume import HalsteadVolumeCalculator, halstead_volume
-from .maintainability_index import (
-    MaintainabilityIndexCalculator,
-    MaintainabilityIndexResults,
-    maintainability_index,
+from .halstead_volume import HalsteadVolumeCalculator, hv
+from .maintainability_cost import (
+    MaintainabilityCostCalculator,
+    MaintainabilityCostResults,
+    mc,
 )
 from .instability import (
     InstabilityCalculator,
     InstabilityResults,
-    instability,
+    li,
 )
 
 __all__ = [
@@ -19,10 +19,10 @@ __all__ = [
     "CCCalculator",
     "InstabilityCalculator",
     "InstabilityResults",
-    "instability",
+    "li",
     "HalsteadVolumeCalculator",
-    "halstead_volume",
-    "MaintainabilityIndexCalculator",
-    "MaintainabilityIndexResults",
-    "maintainability_index",
+    "hv",
+    "MaintainabilityCostCalculator",
+    "MaintainabilityCostResults",
+    "mc",
 ]

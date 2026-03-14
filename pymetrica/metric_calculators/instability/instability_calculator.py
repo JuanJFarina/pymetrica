@@ -3,7 +3,7 @@ from os import sep
 from pymetrica.models import Code, Codebase, Metric, MetricCalculator
 
 from .instability_logic import calculate_instability
-from .instability_metric import InstabilityResults
+from .instability_metric import InstabilityMetric, InstabilityResults
 
 Layer = str
 Files = list[Code]
@@ -24,12 +24,18 @@ class InstabilityCalculator(MetricCalculator[InstabilityResults]):
         layers_instability = dict[Layer, float]()
 
         for layer in files_by_layer.keys():
+            if layer == codebase.root_folder_path:
+                layers_instability["root"] = calculate_instability(
+                    layer,
+                    files_by_layer,
+                )
+                continue
             layers_instability[get_layer_name(layer)] = calculate_instability(
                 layer,
                 files_by_layer,
             )
 
-        return Metric(
+        return InstabilityMetric(
             name="Instability",
             description=(
                 "The Instability metric measures the coupling and stability of each layer. "
