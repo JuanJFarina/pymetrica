@@ -13,7 +13,7 @@ from pymetrica.utils import log
 LayerName: TypeAlias = str
 ComponentName: TypeAlias = str
 Dependency: TypeAlias = str
-Dependencies: TypeAlias = set[Dependency]
+Dependencies: TypeAlias = list[Dependency]
 Components: TypeAlias = dict[ComponentName, Dependencies]
 Layers: TypeAlias = dict[LayerName, Components]
 
@@ -29,7 +29,7 @@ def create_diagram(codebase: Codebase, write: bool = True) -> None:
 
     for layer_name in layers.keys():
         layers[layer_name].update({
-            str(dir): set() for dir in iterdir_generator(layer_name)
+            str(dir): [] for dir in iterdir_generator(layer_name)
         })
 
     dependencies_visitor = DependenciesVisitor(layers)
@@ -39,7 +39,7 @@ def create_diagram(codebase: Codebase, write: bool = True) -> None:
             continue
         for layer in layers.keys():
             if is_component(file.filepath, layer):
-                layers[layer][file.filepath] = set()
+                layers[layer][file.filepath] = list()
         dependencies_visitor.current_layer = sep.join(
             file.filepath.replace(codebase.root_folder_path + sep, "").split(sep)[:1],
         )
@@ -59,6 +59,7 @@ def write_diagram(
     layers: Layers,
     write_function: Callable[..., None | int],
 ) -> None:
+    write_function('%%{init: {"themeCSS": ".edgeLabel {font-size: 30px;}"}}%%\n\n')
     write_function("graph TD\n")
     for layer_name, components in layers.items():
         write_function(
@@ -71,10 +72,18 @@ def write_diagram(
         write_function("  end\n")
     for layer_name, components in layers.items():
         for component_name, dependencies in components.items():
-            for dep in dependencies:
+            dependencies_count = count_dependencies(dependencies)
+            for dep, count in dependencies_count.items():
                 write_function(
-                    f"  {component_name.replace(codebase.root_folder_path + sep, '')} --> {dep.replace(codebase.root_folder_path + sep, '')}\n",  # pylint: disable=line-too-long
+                    f"  {component_name.replace(codebase.root_folder_path + sep, '')} -- {count} --> {dep.replace(codebase.root_folder_path + sep, '')}\n",  # pylint: disable=line-too-long
                 )
+
+
+def count_dependencies(dependencies: Dependencies) -> dict[str, int]:
+    dependencies_count = dict[str, int]()
+    for dep in dependencies:
+        dependencies_count[dep] = dependencies_count.get(dep, 0) + 1
+    return dependencies_count
 
 
 def iterdir_generator(path: str) -> Generator[str, None, None]:
@@ -152,12 +161,12 @@ class DependenciesVisitor(ast.NodeVisitor):
                 )
             try:
                 if self.layers[full_layer_name].get(clean_current_component):
-                    self.layers[full_layer_name][clean_current_component].add(
+                    self.layers[full_layer_name][clean_current_component].append(
                         full_imported_layer_name,
                     )
                 else:
                     self.layers[full_layer_name].update({
-                        clean_current_component: {full_imported_layer_name},
+                        clean_current_component: [full_imported_layer_name],
                     })
             except KeyError as e:
                 log.warning(

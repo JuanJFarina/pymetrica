@@ -9,7 +9,6 @@ def test_small_create_diagram(codebase: Codebase, small_codebase_diagram: str) -
     with redirect_stdout(output):
         create_diagram(codebase, False)
     diagram = output.getvalue()
-
     assert diagram == small_codebase_diagram
 
 
@@ -18,5 +17,6 @@ def test_big_create_diagram(big_codebase: Codebase, big_codebase_diagram: str) -
     with redirect_stdout(output):
         create_diagram(big_codebase, False)
     diagram = output.getvalue()
-
+    print(diagram)
+    print(big_codebase_diagram)
     assert diagram == big_codebase_diagram

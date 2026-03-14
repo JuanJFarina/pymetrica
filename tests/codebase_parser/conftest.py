@@ -152,7 +152,10 @@ def expected_big_codebase(
 
 @pytest.fixture
 def small_codebase_diagram() -> str:
-    return """graph TD
+    return """%%{init: {"themeCSS": ".edgeLabel {font-size: 30px;}"}}%%
+
+
+graph TD
 
   subgraph /workspaces/pymetrica/tests/sample_codebases/small_codebase
 
@@ -163,7 +166,10 @@ def small_codebase_diagram() -> str:
 
 @pytest.fixture
 def big_codebase_diagram() -> str:
-    return """graph TD
+    return """%%{init: {"themeCSS": ".edgeLabel {font-size: 30px;}"}}%%
+
+
+graph TD
 
   subgraph exception_handlers
 
