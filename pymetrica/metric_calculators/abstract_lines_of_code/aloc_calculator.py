@@ -46,9 +46,9 @@ class AlocCalculator(MetricCalculator[AlocResults]):
 
         total_aloc = sum(layer.aloc_number for layer in layer_results)
         return AlocMetric(
-            name="Abstract Lines of Code",
+            name="Abstract Lines Of Code",
             description=(
-                "Abstract Lines of Code (ALOC) is a software metric that "
+                "Abstract Lines Of Code (ALOC) is a software metric that "
                 "measures the number of lines of code in a program that are "
                 "not concrete operations but rather indirections or abstract "
                 "constructs and definitions."

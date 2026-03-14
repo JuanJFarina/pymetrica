@@ -18,7 +18,7 @@ def _small_codebase_layer_cc() -> list[LayerCC]:
         LayerCC(
             name="root",
             cc_number=22,
-            cc_lloc_ratio=55.00000000000001,
+            lloc_per_cc=1.8181818181818181,
         ),
     ]
 
@@ -27,7 +27,7 @@ def _small_codebase_layer_cc() -> list[LayerCC]:
 def cc_result(small_codebase_layer_cc: list[LayerCC]) -> CCResults:
     return CCResults(
         cc_number=23,
-        cc_lloc_ratio=57.49999999999999,
+        lloc_per_cc=1.7391304347826086,
         cc_result_per_layer=small_codebase_layer_cc,
     )
 
@@ -35,10 +35,10 @@ def cc_result(small_codebase_layer_cc: list[LayerCC]) -> CCResults:
 @pytest.fixture(name="big_codebase_layer_cc")
 def _big_codebase_layer_cc() -> list[LayerCC]:
     return [
-        LayerCC(name="exception_handlers", cc_number=0, cc_lloc_ratio=0.0),
-        LayerCC(name="middlewares", cc_number=0, cc_lloc_ratio=0.0),
-        LayerCC(name="routes", cc_number=0, cc_lloc_ratio=0.0),
-        LayerCC(name="root", cc_number=1, cc_lloc_ratio=9.090909090909092),
+        LayerCC(name="exception_handlers", cc_number=0, lloc_per_cc=0.0),
+        LayerCC(name="middlewares", cc_number=0, lloc_per_cc=0.0),
+        LayerCC(name="routes", cc_number=0, lloc_per_cc=0.0),
+        LayerCC(name="root", cc_number=1, lloc_per_cc=11.0),
     ]
 
 
@@ -46,6 +46,6 @@ def _big_codebase_layer_cc() -> list[LayerCC]:
 def big_codebase_cc_result(big_codebase_layer_cc: list[LayerCC]) -> CCResults:
     return CCResults(
         cc_number=2,
-        cc_lloc_ratio=5.128205128205128,
+        lloc_per_cc=19.5,
         cc_result_per_layer=big_codebase_layer_cc,
     )

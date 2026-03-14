@@ -8,12 +8,12 @@ from pymetrica.models import Metric, Results
 class LayerCC(BaseModel):
     name: str
     cc_number: int
-    cc_lloc_ratio: float
+    lloc_per_cc: float
 
 
 class CCResults(Results):
     cc_number: int
-    cc_lloc_ratio: float
+    lloc_per_cc: float
     cc_result_per_layer: list[LayerCC]
 
     def get_dict(self) -> dict[str, Any]:
@@ -24,12 +24,12 @@ class CCResults(Results):
 
     def get_summary(self) -> str:
         summary = (
-            f"\nTotal CC: {self.cc_number} ({self.cc_lloc_ratio:0.2f} LLOC per CC)\n"
+            f"\nTotal CC: {self.cc_number} ({self.lloc_per_cc:0.2f} LLOC per CC)\n"
         )
         for layer in self.cc_result_per_layer:
             summary += (
                 f"  Layer {layer.name} CC: "
-                f"{layer.cc_number} ({layer.cc_lloc_ratio:0.2f} LLOC per CC)\n"
+                f"{layer.cc_number} ({layer.lloc_per_cc:0.2f} LLOC per CC)\n"
             )
         return summary
 

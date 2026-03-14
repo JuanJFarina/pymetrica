@@ -20,8 +20,8 @@ def test_get_cc(
         == cc_result.cc_result_per_layer[0].cc_number
     )
     assert (
-        metric.results.cc_result_per_layer[0].cc_lloc_ratio
-        == cc_result.cc_result_per_layer[0].cc_lloc_ratio
+        metric.results.cc_result_per_layer[0].lloc_per_cc
+        == cc_result.cc_result_per_layer[0].lloc_per_cc
     )
 
 
@@ -42,8 +42,8 @@ def test_get_cc_big(
         == big_codebase_cc_result.cc_result_per_layer[0].cc_number
     )
     assert (
-        metric.results.cc_result_per_layer[0].cc_lloc_ratio
-        == big_codebase_cc_result.cc_result_per_layer[0].cc_lloc_ratio
+        metric.results.cc_result_per_layer[0].lloc_per_cc
+        == big_codebase_cc_result.cc_result_per_layer[0].lloc_per_cc
     )
     assert (
         metric.results.cc_result_per_layer[1].name
@@ -54,8 +54,8 @@ def test_get_cc_big(
         == big_codebase_cc_result.cc_result_per_layer[1].cc_number
     )
     assert (
-        metric.results.cc_result_per_layer[1].cc_lloc_ratio
-        == big_codebase_cc_result.cc_result_per_layer[1].cc_lloc_ratio
+        metric.results.cc_result_per_layer[1].lloc_per_cc
+        == big_codebase_cc_result.cc_result_per_layer[1].lloc_per_cc
     )
     assert (
         metric.results.cc_result_per_layer[2].name
@@ -66,8 +66,8 @@ def test_get_cc_big(
         == big_codebase_cc_result.cc_result_per_layer[2].cc_number
     )
     assert (
-        metric.results.cc_result_per_layer[2].cc_lloc_ratio
-        == big_codebase_cc_result.cc_result_per_layer[2].cc_lloc_ratio
+        metric.results.cc_result_per_layer[2].lloc_per_cc
+        == big_codebase_cc_result.cc_result_per_layer[2].lloc_per_cc
     )
     assert (
         metric.results.cc_result_per_layer[3].name
@@ -78,6 +78,6 @@ def test_get_cc_big(
         == big_codebase_cc_result.cc_result_per_layer[3].cc_number
     )
     assert (
-        metric.results.cc_result_per_layer[3].cc_lloc_ratio
-        == big_codebase_cc_result.cc_result_per_layer[3].cc_lloc_ratio
+        metric.results.cc_result_per_layer[3].lloc_per_cc
+        == big_codebase_cc_result.cc_result_per_layer[3].lloc_per_cc
     )

@@ -26,11 +26,17 @@ instability_calculator: InstabilityCalculator = InstabilityCalculator()
 
 
 @click.command()
+@click.option(
+    "--long-report",
+    is_flag=True,
+    help="Whether to generate a long summary report for each metric.",
+)
 @click.argument("dir_path")
 @click.option("-rt", "--report-type", type=str, default="BASIC_TERMINAL")
 def run_all(
     dir_path: str,
     report_type: str,
+    long_report: bool = False,
 ) -> None:
     results = parse_codebase(dir_path)
     metrics = [
@@ -41,4 +47,7 @@ def run_all(
         instability_calculator.calculate_metric(results),
     ]
     report_generator = REPORTS_MAPPING[report_type]()
+    if long_report:
+        click.echo(report_generator.generate_report(metrics))
+        return
     click.echo(report_generator.generate_short_report(metrics))

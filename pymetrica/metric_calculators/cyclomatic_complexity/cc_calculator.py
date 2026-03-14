@@ -16,26 +16,26 @@ class CCCalculator(MetricCalculator[CCResults]):
         codebase_complexity = 1
 
         for layer_name, layer_files in layers.items():
-            total_complexity = 0
-            total_lloc = 0
+            layer_complexity = 0
+            layer_lloc = 0
 
             for code_file in layer_files:
                 tree = ast.parse(code_file.code)
                 visitor = CCVisitor()
                 visitor.visit(tree)
-                total_complexity += visitor.complexity
-                total_lloc += code_file.lloc_number
+                layer_complexity += visitor.complexity
+                layer_lloc += code_file.lloc_number
 
             layer_results.append(
                 LayerCC(
                     name=layer_name.rsplit(os.sep, 1)[-1],
-                    cc_number=total_complexity,
-                    cc_lloc_ratio=total_complexity / total_lloc * 100
-                    if total_lloc > 0
+                    cc_number=layer_complexity,
+                    lloc_per_cc=layer_lloc / layer_complexity
+                    if layer_complexity > 0
                     else 0,
                 ),
             )
-            codebase_complexity += total_complexity
+            codebase_complexity += layer_complexity
 
         return CCMetric(
             name="Cyclomatic Complexity",
@@ -47,7 +47,9 @@ class CCCalculator(MetricCalculator[CCResults]):
             ),
             results=CCResults(
                 cc_number=codebase_complexity,
-                cc_lloc_ratio=codebase_complexity / codebase.lloc_number * 100,
+                lloc_per_cc=codebase.lloc_number / codebase_complexity
+                if codebase_complexity > 0
+                else 0,
                 cc_result_per_layer=layer_results,
             ),
         )

@@ -2,6 +2,7 @@ import click
 
 from pymetrica.codebase_parser import parse_codebase
 from pymetrica.report_generators import REPORTS_MAPPING
+from pymetrica.utils.profiler import run_profiler
 
 from .instability_calculator import InstabilityCalculator
 
@@ -9,6 +10,7 @@ from .instability_calculator import InstabilityCalculator
 @click.command()
 @click.argument("dir_path")
 @click.option("-rt", "--report-type", type=str, default="BASIC_TERMINAL")
+@run_profiler
 def li(
     dir_path: str,
     report_type: str,
