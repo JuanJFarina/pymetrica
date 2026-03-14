@@ -2,7 +2,7 @@ import ast
 
 from pydantic import BaseModel
 
-from pymetrica.models import Codebase
+from pymetrica.models import Code
 from pymetrica.utils import is_logical_line_of_code
 
 
@@ -11,7 +11,7 @@ class PreliminaryResults(BaseModel):
     classes: dict[str, int]
 
 
-def gather_loc_and_classes(codebase: Codebase) -> PreliminaryResults:  # pylint: disable=too-many-locals, too-many-branches
+def gather_loc_and_classes(files: list[Code]) -> PreliminaryResults:  # pylint: disable=too-many-locals, too-many-branches
     """
     First pass:
       - Count total logical lines ('lloc').
@@ -23,7 +23,7 @@ def gather_loc_and_classes(codebase: Codebase) -> PreliminaryResults:  # pylint:
     total_aloc = 0
     classes: dict[str, int] = {}
 
-    for file in codebase.files:  # pylint: disable=too-many-nested-blocks
+    for file in files:  # pylint: disable=too-many-nested-blocks
         tree = ast.parse(file.code)
 
         # Count logical lines in file

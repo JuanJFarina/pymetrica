@@ -14,4 +14,11 @@ class Codebase(BaseModel):
     comment_lloc_ratio: str
     classes_number: int
     functions_number: int
-    files: list[Code]
+    layers: dict[str, list[Code]]
+    root_files: list[Code]
+
+    @property
+    def files(self) -> list[Code]:
+        return self.root_files + [
+            file for layer in self.layers.values() for file in layer
+        ]

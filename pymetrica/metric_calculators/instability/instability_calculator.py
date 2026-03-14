@@ -1,5 +1,4 @@
 from os import sep
-from pathlib import Path
 
 from pymetrica.models import Code, Codebase, Metric, MetricCalculator
 
@@ -19,21 +18,8 @@ class InstabilityCalculator(MetricCalculator[InstabilityResults]):
         self: "InstabilityCalculator",
         codebase: Codebase,
     ) -> Metric[InstabilityResults]:
-        layers = [
-            str(dir)
-            for dir in Path(codebase.root_folder_path).iterdir()
-            if dir.is_dir() and dir.name != "__pycache__"
-        ]
-
-        layers.append(codebase.root_folder_path)
-
-        files_by_layer: dict[Layer, Files] = {layer: [] for layer in layers}
-
-        for file in codebase.files:
-            for layer in layers:
-                if layer in str(file.filepath):
-                    files_by_layer.get(layer, []).append(file)
-                    break
+        codebase.layers.update({codebase.root_folder_path: codebase.root_files})
+        files_by_layer: dict[Layer, Files] = codebase.layers.copy()
 
         layers_instability = dict[Layer, float]()
 
