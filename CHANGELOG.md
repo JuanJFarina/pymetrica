@@ -2,6 +2,13 @@
 
 
 
+## v1.0.2 (2026-03-15)
+
+### Fix
+
+* fix(config): reduce weight of codebase size ([`c782a96`](https://github.com/JuanJFarina/pymetrica/commit/c782a96289dfb108b5e999a1aface1277f99ed1d))
+
+
 ## v1.0.1 (2026-03-15)
 
 ### Fix
