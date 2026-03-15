@@ -1,206 +1,339 @@
-# pymetrica
+# Pymetrica
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
+[![Tests Status](https://img.shields.io/github/actions/workflow/status/JuanJFarina/pymetrica/build.yml?branch=main)](https://github.com/JuanJFarina/pymetrica/actions)
+[![PyPI version](https://img.shields.io/pypi/v/pymetrica)](https://pypi.org/project/pymetrica/)
+[![Python](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org)
 
-Pymetrica is a comprehensive Python CLI tool for analyzing codebase metrics. It parses Python projects and computes various software quality metrics including logical lines of code (LLOC), cyclomatic complexity, abstract lines of code (ALOC), Halstead volume, maintainability index, and instability metrics.
+[![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen)](https://github.com/pre-commit/pre-commit)
+[![Ruff](https://img.shields.io/badge/lint-ruff-ccff00)](https://github.com/astral-sh/ruff)
+[![Pylint](https://img.shields.io/badge/lint-pylint-yellowgreen)](https://pylint.pycqa.org/)
+[![Type Checked](https://img.shields.io/badge/type%20checked-mypy-blue)](http://mypy-lang.org/)
 
-## Features
+[![GitHub stars](https://img.shields.io/github/stars/JuanJFarina/pymetrica)](https://github.com/JuanJFarina/pymetrica/stargazers)
+[![Downloads](https://img.shields.io/pypi/dm/pymetrica)](https://pypi.org/project/pymetrica/)
+[![License](https://img.shields.io/github/license/JuanJFarina/pymetrica)](https://github.com/JuanJFarina/pymetrica/blob/main/LICENSE)
 
-- **Multiple Metrics**: Calculate LLOC, cyclomatic complexity, ALOC, Halstead volume, maintainability index, and instability
-- **Architecture Diagrams**: Generate Mermaid diagrams of codebase structure and dependencies
-- **CLI Interface**: Easy-to-use command-line interface with multiple commands
-- **Extensible Architecture**: Built with builder and strategy patterns for easy extension
-- **Comprehensive Parsing**: Parses Python codebases, counting files, classes, functions, comments, and more
-- **Report Generation**: Multiple report formats (currently supports basic terminal output)
-- **Type-Safe**: Full type annotations and Pydantic models
+**Pymetrica** is a static analysis tool that computes **software engineering metrics for Python codebases**.
 
-## Installation
+It parses Python source code using the **AST (Abstract Syntax Tree)** and evaluates classical metrics used to assess **complexity, maintainability, and architectural stability**.
 
-### From Source
+The tool provides a modular architecture, a CLI interface, and extensible reporting to help developers understand the structural quality of their Python projects.
+
+Repository:
+[https://github.com/JuanJFarina/pymetrica](https://github.com/JuanJFarina/pymetrica)
+
+---
+
+# Example
+
+Analyze a Python project:
 
 ```bash
-git clone https://github.com/yourusername/pymetrica.git
+pymetrica run-all path/to/project
+```
+
+Example output:
+
+```
+Metric: Abstract Lines Of Code
+aloc_number: 67
+aloc_percentage: 14.89
+
+Metric: Cyclomatic Complexity
+cc_number: 156
+lloc_per_cc: 2.89
+
+Metric: Halstead Volume
+hv_number: 5423.67
+
+Metric: Maintainability Cost
+maintainability_cost: 24.67
+```
+
+Pymetrica can also analyze **architecture layers and dependencies** within the codebase.
+
+---
+
+# Contents
+
+* Features
+* Why Pymetrica
+* Metrics
+* Installation
+* Quick Start
+* CLI Commands
+* Architecture Overview
+* Architecture Diagram Generation
+* Testing
+* Contributing
+* License
+
+---
+
+# Features
+
+* Static analysis of Python projects using the AST
+* Logical Lines of Code (LLOC) analysis
+* Comment density statistics
+* Layered architecture detection based on directories
+* Multiple classical software engineering metrics
+* CLI interface for fast inspection of codebases
+* Optional Mermaid architecture diagrams
+* Extensible metric and reporting system
+
+---
+
+# Why Pymetrica?
+
+Several tools compute Python complexity metrics (such as **radon**, **lizard**, or **SonarQube integrations**). Pymetrica focuses on a different goal: **architecture-aware metric analysis**.
+
+Unlike many static analysis tools, Pymetrica:
+
+* groups metrics by **codebase layers** derived from directory structure
+* computes **cross-layer coupling and instability metrics**
+* produces **architecture diagrams** alongside metric results
+* provides a modular framework for implementing new metrics
+
+This makes it useful not only for measuring complexity, but also for analyzing **architectural quality** in Python projects.
+
+---
+
+# Metrics
+
+Pymetrica implements several classical software engineering metrics.
+
+## Abstract Lines of Code (ALOC)
+
+Measures the amount of **abstraction and indirection** in the codebase by counting abstract constructs such as definitions and structural components.
+
+High ALOC ratios may indicate excessive abstraction or over-engineering.
+
+---
+
+## Cyclomatic Complexity (CC)
+
+Measures the **number of independent execution paths** in a program.
+
+Calculated by analyzing control flow structures including:
+
+* conditionals
+* loops
+* exception handling
+* boolean logic
+
+Higher values correspond to more complex and harder-to-maintain code.
+
+---
+
+## Halstead Volume (HV)
+
+Measures implementation complexity based on **operators and operands** used in the program.
+
+Derived from:
+
+* program vocabulary
+* program length
+* token frequency
+
+---
+
+## Maintainability Cost (MC)
+
+A composite metric derived from:
+
+* Cyclomatic Complexity
+* Halstead Volume
+* Logical Lines of Code
+
+It estimates the **expected maintenance effort** required for the codebase.
+
+Lower scores indicate better maintainability.
+
+---
+
+## Instability (LI)
+
+Measures **package coupling and architectural stability** based on import dependencies.
+
+Instability is defined as:
+
+```
+Instability = Efferent Coupling / (Afferent Coupling + Efferent Coupling)
+```
+
+Values range from:
+
+* **0 → Stable**
+* **1 → Unstable**
+
+---
+
+# Installation
+
+Requires **Python 3.10 or newer**.
+
+Install from source:
+
+```bash
+git clone https://github.com/JuanJFarina/pymetrica
 cd pymetrica
-pip install .
+pip install -e .
 ```
 
-### Development Setup
+After installation the CLI command becomes available:
 
-```bash
-pip install pipenv
-pipenv install --dev
-pipenv shell
+```
+pymetrica
 ```
 
-## Usage
+---
 
-### Basic Commands
+# Quick Start
+
+Analyze a Python project:
 
 ```bash
-# Check tool status
+pymetrica run-all path/to/project
+```
+
+For an initial overview of a codebase:
+
+```bash
+pymetrica base-stats path/to/project
+```
+
+---
+
+# CLI Commands
+
+```
 pymetrica status
-
-# Parse and display basic codebase statistics
-pymetrica base-stats /path/to/your/python/project
-
-# Parse codebase statistics and generate architecture diagram
-pymetrica base-stats /path/to/your/python/project --diagram
-
-# Run all metrics on a codebase
-pymetrica run-all /path/to/your/python/project
+pymetrica base-stats
+pymetrica aloc
+pymetrica cc
+pymetrica hv
+pymetrica mc
+pymetrica li
+pymetrica run-all
 ```
 
-### Individual Metrics
-
-```bash
-# Cyclomatic complexity
-pymetrica cc /path/to/your/python/project
-
-# Abstract lines of code
-pymetrica aloc /path/to/your/python/project
-
-# Halstead volume
-pymetrica halstead-volume /path/to/your/python/project
-
-# Maintainability index
-pymetrica maintainability-index /path/to/your/python/project
-
-# Instability
-pymetrica instability /path/to/your/python/project
-```
-
-### Report Types
-
-Currently supports basic terminal output. Use the `--report-type` option:
-
-```bash
-pymetrica cc /path/to/project --report-type BASIC_TERMINAL
-```
-
-## Metrics Explained
-
-### Logical Lines of Code (LLOC)
-Counts the number of logical lines of code, excluding comments and blank lines.
-
-### Cyclomatic Complexity
-Measures the complexity of code by counting the number of linearly independent paths through a program's source code.
-
-### Abstract Lines of Code (ALOC)
-Represents the number of lines that would be left if all comments, blank lines, and unnecessary code were removed.
-
-### Halstead Volume
-A software metric introduced by Maurice Howard Halstead. It measures the size of a program based on the number of operators and operands.
-
-### Maintainability Index
-A software metric that measures how maintainable (easy to support and change) the source code is.
-
-### Instability
-Measures how stable a module is based on its dependencies (afferent and efferent couplings).
-
-## Architecture Diagrams
-
-Pymetrica can generate visual architecture diagrams of your Python codebase using Mermaid.js format. The diagrams show:
-
-- **Layer Structure**: Directory-based layers and their components
-- **Dependencies**: Import relationships between different parts of the codebase
-- **Component Organization**: How files are organized within layers
-
-To generate a diagram, use the `--diagram` flag with the `base-stats` command:
-
-```bash
-pymetrica base-stats --diagram /path/to/project
-```
-
-This creates a `.mmd` (Mermaid) file that can be viewed in any Mermaid-compatible viewer or converted to other formats like PNG, SVG, or PDF.
-
-## Architecture
-
-Pymetrica follows a clean, layered architecture:
+Typical usage pattern:
 
 ```
-CLI Layer → File Parsing Layer → Metrics Calculator Layer → Report Generator Layer
+pymetrica <command> DIR_PATH
 ```
 
-### Key Components
+---
 
-- **CLI Layer**: Entry point via `pymetrica.main:main`, with commands for different operations
-- **File Parsing Layer**: `pymetrica.codebase_parser` parses directories into a Codebase model
-- **Metrics Calculators**: Builder-pattern implementations in `pymetrica.metric_calculators`
-- **Report Generators**: Strategy-pattern implementations in `pymetrica.report_generators`
-- **Models**: Pydantic-based classes in `pymetrica.models` for data structures
-- **Utilities**: Helpers in `pymetrica.utils` for detecting logical lines and comments
+# Architecture Overview
 
-## Development
-
-### Running Tests
-
-```bash
-pipenv run test
-```
-
-### Linting and Formatting
-
-```bash
-pipenv run lint
-```
-
-### Installing Pre-commit Hooks
-
-```bash
-pipenv run install_hooks
-```
-
-## Project Structure
+Pymetrica is built around a modular analysis pipeline.
 
 ```
-pymetrica/
-├── __init__.py
-├── __main__.py
-├── codebase_parser/
-│   ├── __init__.py
-│   ├── base_stats.py
-│   ├── codebase_parser.py
-│   ├── diagram_generator.py
-│   └── logical_lines_of_code/
-├── metric_calculators/
-│   ├── __init__.py
-│   ├── abstract_lines_of_code/
-│   ├── cyclomatic_complexity/
-│   ├── halstead_volume/
-│   ├── maintainability_index/
-│   └── instability/
-├── models/
-│   ├── __init__.py
-│   ├── code.py
-│   ├── codebase.py
-│   ├── metric.py
-│   ├── metric_calculator.py
-│   └── report_generator.py
-├── report_generators/
-│   ├── __init__.py
-│   ├── basic_terminal_report.py
-│   └── reports_mapping.py
-├── utils/
-│   ├── __init__.py
-│   ├── is_comment.py
-│   └── is_lloc.py
-└── run_all.py
+Codebase Parsing
+        ↓
+Code Representation
+        ↓
+Metric Calculators
+        ↓
+Results
+        ↓
+Report Generators
 ```
 
-## Contributing
+Core components include:
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests for new functionality
-5. Ensure all tests pass
-6. Submit a pull request
+### Parser
 
-## License
+Recursively scans `.py` files and builds a structured representation of the codebase.
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+Extracted information includes:
 
-## Author
+* logical lines of code
+* comment lines
+* classes and functions
+* directory structure
 
-Juan José Farina - [juanjosefarina.jjf@gmail.com](mailto:juanjosefarina.jjf@gmail.com)
+Files containing syntax errors are automatically skipped.
+
+---
+
+### Data Models
+
+Core data structures are implemented using **Pydantic** models.
+
+Main models include:
+
+* `Code` – representation of a Python file
+* `Codebase` – full project structure
+* `Metric` – container for metric metadata and results
+* `Results` – structured metric outputs
+
+---
+
+### Metric Calculators
+
+Each metric is implemented as a subclass of an abstract `MetricCalculator`.
+
+This design makes it easy to extend the system with additional metrics.
+
+---
+
+### Reporting
+
+Metrics are rendered through pluggable report generators.
+
+Currently supported:
+
+* terminal summaries
+* detailed reports
+
+Future formats may include JSON, Markdown, or CI-friendly outputs.
+
+---
+
+# Architecture Diagram Generation
+
+Pymetrica can generate **Mermaid diagrams** representing the layered architecture of a codebase.
+
+```
+pymetrica base-stats --diagram path/to/project
+```
+
+This creates a `.mmd` file that can be rendered using:
+
+* Mermaid Live Editor
+* VSCode Mermaid extensions
+* documentation pipelines
+
+---
+
+# Testing
+
+Tests are implemented using **pytest** and mirror the project structure.
+
+Run tests with:
+
+```
+pytest
+```
+
+---
+
+# Contributing
+
+Contributions are welcome.
+
+If you want to:
+
+* implement a new metric
+* improve the parser
+* extend reporting capabilities
+
+feel free to open an issue or submit a pull request.
+
+---
+
+# License
+
+MIT License.
