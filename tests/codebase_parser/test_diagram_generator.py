@@ -1,5 +1,6 @@
 import io
 from contextlib import redirect_stdout
+
 from pymetrica.codebase_parser.diagram_generator import create_diagram
 from pymetrica.models import Codebase
 

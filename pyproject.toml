@@ -53,6 +53,11 @@ check_untyped_defs = true
 fix = true
 preview = true
 
+[tool.ruff.lint]
+ignore = [
+    "EXE002", # ignores warnings on __init__.py files without shebangs
+]
+
 [tool.ruff.format]
 quote-style = "double"
 indent-style = "space"
@@ -63,7 +68,7 @@ line-ending = "auto"
 fail-under = 10
 jobs = 4
 limit-inference-results = 100
-py-version = ">=3.10"
+py-version = "3.10"
 suggestion-mode = true
 
 [tool.pylint."messages control"]

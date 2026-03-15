@@ -1,7 +1,7 @@
 import ast
 from os import sep
-from pymetrica.models.code import Code
 
+from pymetrica.models.code import Code
 
 Layer = str
 Files = list[Code]
@@ -16,10 +16,10 @@ def calculate_instability(
     files_by_layer: dict[Layer, Files],
 ) -> float:
     analyzed_layer = clean_layer_name(analyzed_layer)
-    all_layers = [clean_layer_name(layer) for layer in files_by_layer.keys()]
+    all_layers = [clean_layer_name(layer) for layer in files_by_layer]
     efferent_coupling = 0
     afferent_coupling = 0
-    for layer in files_by_layer.keys():
+    for layer in files_by_layer:  # noqa: PLC0206
         instability_visitor = InstabilityVisitor(
             analyzed_layer,
             clean_layer_name(layer),
@@ -62,7 +62,6 @@ class InstabilityVisitor(ast.NodeVisitor):
                 if layer != self.analyzed_layer and layer in module_name:
                     self.efferent_imports += 1
                     break
-        if not self.look_for_efferent:
-            if self.analyzed_layer in module_name:
-                self.afferent_imports += 1
+        if not self.look_for_efferent and self.analyzed_layer in module_name:
+            self.afferent_imports += 1
         self.generic_visit(node)

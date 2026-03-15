@@ -4,8 +4,8 @@ from pymetrica.metric_calculators import (
     aloc,
     cc,
     hv,
-    mc,
     li,
+    mc,
 )
 
 from .codebase_parser import base_stats

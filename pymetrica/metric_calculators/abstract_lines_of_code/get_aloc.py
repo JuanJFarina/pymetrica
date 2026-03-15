@@ -6,6 +6,8 @@ from pymetrica.utils import run_profiler
 
 from .aloc_calculator import AlocCalculator
 
+aloc_calculator: AlocCalculator = AlocCalculator()
+
 
 @click.command()
 @click.argument("dir_path")
@@ -14,7 +16,6 @@ from .aloc_calculator import AlocCalculator
 def aloc(
     dir_path: str,
     report_type: str,
-    aloc_calculator: AlocCalculator = AlocCalculator(),
 ) -> None:
     codebase = parse_codebase(dir_path)
     aloc_metric = aloc_calculator.calculate_metric(codebase)

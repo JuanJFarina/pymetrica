@@ -6,6 +6,8 @@ from pymetrica.utils import run_profiler
 
 from .hv_calculator import HalsteadVolumeCalculator
 
+hv_calculator: HalsteadVolumeCalculator = HalsteadVolumeCalculator()
+
 
 @click.command()
 @click.argument("dir_path")
@@ -14,7 +16,6 @@ from .hv_calculator import HalsteadVolumeCalculator
 def hv(
     dir_path: str,
     report_type: str,
-    hv_calculator: HalsteadVolumeCalculator = HalsteadVolumeCalculator(),
 ) -> None:
     codebase = parse_codebase(dir_path)
     hv_metric = hv_calculator.calculate_metric(codebase)

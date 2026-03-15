@@ -1,4 +1,5 @@
 import click
+
 from .utils import run_profiler
 
 

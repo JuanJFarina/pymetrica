@@ -2,8 +2,8 @@ import pytest
 
 from pymetrica.metric_calculators import AlocCalculator
 from pymetrica.metric_calculators.abstract_lines_of_code.aloc_metric import (
-    LayerAloc,
     AlocResults,
+    LayerAloc,
 )
 
 

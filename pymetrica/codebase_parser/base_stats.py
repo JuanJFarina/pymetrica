@@ -2,9 +2,8 @@ import click
 
 from pymetrica.utils import run_profiler
 
-from .diagram_generator import create_diagram
-
 from .codebase_parser import parse_codebase
+from .diagram_generator import create_diagram
 
 
 @click.command()
