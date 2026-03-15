@@ -16,7 +16,12 @@ Components: TypeAlias = dict[ComponentName, Dependencies]
 Layers: TypeAlias = dict[LayerName, Components]
 
 
-def create_diagram(codebase: Codebase, write: bool = True) -> None:
+def create_diagram(
+    codebase: Codebase,
+    *,
+    filename: str | None = None,
+    write: bool = True,
+) -> None:
     layers: Layers = {
         str(dir): Components() for dir in iterdir_generator(codebase.root_folder_path)
     }
@@ -46,6 +51,10 @@ def create_diagram(codebase: Codebase, write: bool = True) -> None:
 
     timestamp = datetime.now(tz=timezone.utc).strftime("%Y%m%d_%H%M%S")
     if write:
+        if filename:
+            with open(filename, "w") as f:  # pylint: disable=unspecified-encoding
+                write_diagram(codebase, layers, f.write)
+            return
         with open(f"architecture_diagram_{timestamp}.mmd", "w") as f:  # pylint: disable=unspecified-encoding
             write_diagram(codebase, layers, f.write)
     else:

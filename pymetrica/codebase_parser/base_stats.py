@@ -13,11 +13,16 @@ from .diagram_generator import create_diagram
     help="Whether to generate a diagram of the codebase structure.",
 )
 @click.argument("dir_path")
+@click.argument("diagram_filename", default=None)
 @run_profiler
-def base_stats(dir_path: str, diagram: bool = False) -> None:
+def base_stats(
+    dir_path: str,
+    diagram: bool = False,
+    diagram_filename: str | None = None,
+) -> None:
     results = parse_codebase(dir_path)
     if diagram:
-        create_diagram(results)
+        create_diagram(results, filename=diagram_filename)
     click.echo(
         f"root_folder_path: {results.root_folder_path}\n"
         f"root_folder_name: {results.root_folder_name}\n"
