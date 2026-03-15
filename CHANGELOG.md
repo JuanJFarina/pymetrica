@@ -10,6 +10,8 @@
 
 ### Fix
 
+* fix(config): add heuristic tests for diagram generation ([`5c96ea2`](https://github.com/JuanJFarina/pymetrica/commit/5c96ea2e977d5265004486b3b601ff50e5332f3d))
+
 * fix(config): update diagram tests ([`eaf047b`](https://github.com/JuanJFarina/pymetrica/commit/eaf047bfd4a23d1578e3220e7b22ff8900f2ab24))
 
 * fix(config): increase size of layer labels ([`ef27241`](https://github.com/JuanJFarina/pymetrica/commit/ef27241b1bd089189127e0aa9bf4431d0c797464))
