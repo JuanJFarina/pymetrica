@@ -3,7 +3,7 @@ import ast
 from pydantic import BaseModel
 
 from pymetrica.models import Code
-from pymetrica.utils import is_logical_line_of_code
+from pymetrica.utils import is_logical_line_of_code, log
 
 
 class PreliminaryResults(BaseModel):
@@ -77,7 +77,9 @@ def gather_loc_and_classes(files: list[Code]) -> PreliminaryResults:  # pylint: 
                         try:
                             bases.append(ast.unparse(b))
                         except:  # noqa: E722  # pylint: disable=bare-except
-                            pass
+                            log.warning(
+                                f"gather_loc_and_classes.unparse_failed.{ast.dump(b) = }",
+                            )
                 # Treat ABC, ABCMeta, Protocol, and Enum as abstract
                 is_abstract_base = any(
                     base in ("ABC", "ABCMeta", "Protocol", "Enum") for base in bases

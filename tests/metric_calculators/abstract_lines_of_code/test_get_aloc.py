@@ -12,18 +12,13 @@ def test_get_aloc(
     assert metric.results.aloc_number == aloc_result.aloc_number
     assert metric.results.aloc_percentage == aloc_result.aloc_percentage
     assert len(metric.results.aloc_result_per_layer) == 1
-    assert (
-        metric.results.aloc_result_per_layer[0].name
-        == aloc_result.aloc_result_per_layer[0].name
-    )
-    assert (
-        metric.results.aloc_result_per_layer[0].aloc_number
-        == aloc_result.aloc_result_per_layer[0].aloc_number
-    )
-    assert (
-        metric.results.aloc_result_per_layer[0].aloc_percentage
-        == aloc_result.aloc_result_per_layer[0].aloc_percentage
-    )
+    for idx, file in enumerate(metric.results.aloc_result_per_layer):
+        assert file.name == aloc_result.aloc_result_per_layer[idx].name
+        assert file.aloc_number == aloc_result.aloc_result_per_layer[idx].aloc_number
+        assert (
+            file.aloc_percentage
+            == aloc_result.aloc_result_per_layer[idx].aloc_percentage
+        )
 
 
 def test_get_aloc_big(
@@ -35,51 +30,15 @@ def test_get_aloc_big(
     assert metric.results.aloc_number == big_codebase_aloc_result.aloc_number
     assert metric.results.aloc_percentage == big_codebase_aloc_result.aloc_percentage
     assert len(metric.results.aloc_result_per_layer) == 4
-    assert (
-        metric.results.aloc_result_per_layer[0].name
-        == big_codebase_aloc_result.aloc_result_per_layer[0].name
-    )
-    assert (
-        metric.results.aloc_result_per_layer[0].aloc_number
-        == big_codebase_aloc_result.aloc_result_per_layer[0].aloc_number
-    )
-    assert (
-        metric.results.aloc_result_per_layer[0].aloc_percentage
-        == big_codebase_aloc_result.aloc_result_per_layer[0].aloc_percentage
-    )
-    assert (
-        metric.results.aloc_result_per_layer[1].name
-        == big_codebase_aloc_result.aloc_result_per_layer[1].name
-    )
-    assert (
-        metric.results.aloc_result_per_layer[1].aloc_number
-        == big_codebase_aloc_result.aloc_result_per_layer[1].aloc_number
-    )
-    assert (
-        metric.results.aloc_result_per_layer[1].aloc_percentage
-        == big_codebase_aloc_result.aloc_result_per_layer[1].aloc_percentage
-    )
-    assert (
-        metric.results.aloc_result_per_layer[2].name
-        == big_codebase_aloc_result.aloc_result_per_layer[2].name
-    )
-    assert (
-        metric.results.aloc_result_per_layer[2].aloc_number
-        == big_codebase_aloc_result.aloc_result_per_layer[2].aloc_number
-    )
-    assert (
-        metric.results.aloc_result_per_layer[2].aloc_percentage
-        == big_codebase_aloc_result.aloc_result_per_layer[2].aloc_percentage
-    )
-    assert (
-        metric.results.aloc_result_per_layer[3].name
-        == big_codebase_aloc_result.aloc_result_per_layer[3].name
-    )
-    assert (
-        metric.results.aloc_result_per_layer[3].aloc_number
-        == big_codebase_aloc_result.aloc_result_per_layer[3].aloc_number
-    )
-    assert (
-        metric.results.aloc_result_per_layer[3].aloc_percentage
-        == big_codebase_aloc_result.aloc_result_per_layer[3].aloc_percentage
-    )
+    metric.results.aloc_result_per_layer.sort(key=lambda x: x.name)
+    big_codebase_aloc_result.aloc_result_per_layer.sort(key=lambda x: x.name)
+    for idx, file in enumerate(metric.results.aloc_result_per_layer):
+        assert file.name == big_codebase_aloc_result.aloc_result_per_layer[idx].name
+        assert (
+            file.aloc_number
+            == big_codebase_aloc_result.aloc_result_per_layer[idx].aloc_number
+        )
+        assert (
+            file.aloc_percentage
+            == big_codebase_aloc_result.aloc_result_per_layer[idx].aloc_percentage
+        )

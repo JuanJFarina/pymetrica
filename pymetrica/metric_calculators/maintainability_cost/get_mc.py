@@ -6,6 +6,8 @@ from pymetrica.utils import run_profiler
 
 from .mc_calculator import MaintainabilityCostCalculator
 
+mc_calculator: MaintainabilityCostCalculator = MaintainabilityCostCalculator()
+
 
 @click.command()
 @click.argument("dir_path")
@@ -14,7 +16,6 @@ from .mc_calculator import MaintainabilityCostCalculator
 def mc(
     dir_path: str,
     report_type: str,
-    mc_calculator: MaintainabilityCostCalculator = MaintainabilityCostCalculator(),
 ) -> None:
     codebase = parse_codebase(dir_path)
     mc_metric = mc_calculator.calculate_metric(codebase)

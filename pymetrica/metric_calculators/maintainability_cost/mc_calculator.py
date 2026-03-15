@@ -1,5 +1,4 @@
 import os
-from pymetrica.models import Codebase, Metric, MetricCalculator
 
 # the following imports need to be more specific to avoid cyclic imports
 from pymetrica.metric_calculators.cyclomatic_complexity import (
@@ -8,7 +7,7 @@ from pymetrica.metric_calculators.cyclomatic_complexity import (
 from pymetrica.metric_calculators.halstead_volume import (
     HalsteadVolumeCalculator,
 )
-
+from pymetrica.models import Codebase, Metric, MetricCalculator
 
 from .mc_metric import LayerMC, MaintainabilityCostMetric, MaintainabilityCostResults
 
@@ -29,12 +28,12 @@ class MaintainabilityCostCalculator(MetricCalculator[MaintainabilityCostResults]
         for layer_name, layer_files in layers.items():
             layer_name = layer_name.rsplit(os.sep, 1)[-1]
             layer_lloc = sum(file.lloc_number for file in layer_files)
-            layer_cc = [
+            layer_cc = [  # noqa: RUF015
                 result.cc_number
                 for result in cc_metric.results.cc_result_per_layer
                 if result.name == layer_name
             ][0]
-            layer_hv = [
+            layer_hv = [  # noqa: RUF015
                 result.hv_number
                 for result in hv_metric.results.hv_per_layer
                 if result.name == layer_name

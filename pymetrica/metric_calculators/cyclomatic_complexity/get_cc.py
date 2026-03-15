@@ -6,6 +6,8 @@ from pymetrica.utils import run_profiler
 
 from .cc_calculator import CCCalculator
 
+cc_calculator: CCCalculator = CCCalculator()
+
 
 @click.command()
 @click.argument("dir_path")
@@ -14,7 +16,6 @@ from .cc_calculator import CCCalculator
 def cc(
     dir_path: str,
     report_type: str,
-    cc_calculator: CCCalculator = CCCalculator(),
 ) -> None:
     codebase = parse_codebase(dir_path)
     cc_metric = cc_calculator.calculate_metric(codebase)

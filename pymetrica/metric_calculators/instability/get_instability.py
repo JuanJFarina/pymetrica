@@ -6,6 +6,8 @@ from pymetrica.utils.profiler import run_profiler
 
 from .instability_calculator import InstabilityCalculator
 
+instability_calculator: InstabilityCalculator = InstabilityCalculator()
+
 
 @click.command()
 @click.argument("dir_path")
@@ -14,7 +16,6 @@ from .instability_calculator import InstabilityCalculator
 def li(
     dir_path: str,
     report_type: str,
-    instability_calculator: InstabilityCalculator = InstabilityCalculator(),
 ) -> None:
     codebase = parse_codebase(dir_path)
     instability_metric = instability_calculator.calculate_metric(codebase)

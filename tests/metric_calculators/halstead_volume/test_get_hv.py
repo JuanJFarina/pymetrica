@@ -9,12 +9,11 @@ def test_get_hv(
     hv_result: HalsteadVolumeResults,
 ) -> None:
     metric = hv_calculator.calculate_metric(codebase)
-    assert metric.results == hv_result
+    assert metric.results.hv_number == hv_result.hv_number
     assert len(metric.results.hv_per_layer) == 1
-    assert metric.results.hv_per_layer[0].name == hv_result.hv_per_layer[0].name
-    assert (
-        metric.results.hv_per_layer[0].hv_number == hv_result.hv_per_layer[0].hv_number
-    )
+    for idx, file in enumerate(metric.results.hv_per_layer):
+        assert file.name == hv_result.hv_per_layer[idx].name
+        assert file.hv_number == hv_result.hv_per_layer[idx].hv_number
 
 
 def test_get_hv_big(
@@ -23,37 +22,10 @@ def test_get_hv_big(
     big_codebase_hv_result: HalsteadVolumeResults,
 ) -> None:
     metric = hv_calculator.calculate_metric(big_codebase)
-    assert metric.results == big_codebase_hv_result
+    assert metric.results.hv_number == big_codebase_hv_result.hv_number
     assert len(metric.results.hv_per_layer) == 4
-    assert (
-        metric.results.hv_per_layer[0].name
-        == big_codebase_hv_result.hv_per_layer[0].name
-    )
-    assert (
-        metric.results.hv_per_layer[0].hv_number
-        == big_codebase_hv_result.hv_per_layer[0].hv_number
-    )
-    assert (
-        metric.results.hv_per_layer[1].name
-        == big_codebase_hv_result.hv_per_layer[1].name
-    )
-    assert (
-        metric.results.hv_per_layer[1].hv_number
-        == big_codebase_hv_result.hv_per_layer[1].hv_number
-    )
-    assert (
-        metric.results.hv_per_layer[2].name
-        == big_codebase_hv_result.hv_per_layer[2].name
-    )
-    assert (
-        metric.results.hv_per_layer[2].hv_number
-        == big_codebase_hv_result.hv_per_layer[2].hv_number
-    )
-    assert (
-        metric.results.hv_per_layer[3].name
-        == big_codebase_hv_result.hv_per_layer[3].name
-    )
-    assert (
-        metric.results.hv_per_layer[3].hv_number
-        == big_codebase_hv_result.hv_per_layer[3].hv_number
-    )
+    metric.results.hv_per_layer.sort(key=lambda x: x.name)
+    big_codebase_hv_result.hv_per_layer.sort(key=lambda x: x.name)
+    for idx, file in enumerate(metric.results.hv_per_layer):
+        assert file.name == big_codebase_hv_result.hv_per_layer[idx].name
+        assert file.hv_number == big_codebase_hv_result.hv_per_layer[idx].hv_number

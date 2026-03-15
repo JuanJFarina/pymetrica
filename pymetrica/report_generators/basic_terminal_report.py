@@ -3,7 +3,6 @@ from typing import TypeVar
 
 from pymetrica.models import Metric, ReportGenerator, Results
 
-
 T = TypeVar("T", bound=Results)
 
 

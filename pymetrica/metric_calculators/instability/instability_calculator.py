@@ -23,7 +23,7 @@ class InstabilityCalculator(MetricCalculator[InstabilityResults]):
 
         layers_instability = dict[Layer, float]()
 
-        for layer in files_by_layer.keys():
+        for layer in files_by_layer:
             if layer == codebase.root_folder_path:
                 layers_instability["root"] = calculate_instability(
                     layer,

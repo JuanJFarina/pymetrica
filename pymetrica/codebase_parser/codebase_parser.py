@@ -41,7 +41,7 @@ def parse_codebase(dir_path: str) -> Codebase:  # pylint: disable=too-many-local
             file_comments := sum(1 for line in lines if is_comment_line(line))
         )
         list_reference = None
-        for layer in layers.keys():
+        for layer in layers:
             if str(path).startswith(layer):
                 list_reference = layers[layer]
                 break

@@ -1,9 +1,8 @@
-import sys
 import os
+import sys
 from enum import Enum
 
 from loguru import logger
-
 from pydantic import TypeAdapter
 
 

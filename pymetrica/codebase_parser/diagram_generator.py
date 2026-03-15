@@ -1,14 +1,12 @@
 import ast
 from collections.abc import Callable, Generator
-from datetime import datetime
+from datetime import datetime, timezone
+from os import sep
 from pathlib import Path
 from typing import TypeAlias
 
-from os import sep
-
 from pymetrica.models import Codebase
 from pymetrica.utils import log
-
 
 LayerName: TypeAlias = str
 ComponentName: TypeAlias = str
@@ -27,7 +25,7 @@ def create_diagram(codebase: Codebase, write: bool = True) -> None:
         log.warning(f"create_diagram.{codebase.root_folder_path = }")
         layers = {codebase.root_folder_path: Components()}
 
-    for layer_name in layers.keys():
+    for layer_name in layers:
         layers[layer_name].update({
             str(dir): [] for dir in iterdir_generator(layer_name)
         })
@@ -37,7 +35,7 @@ def create_diagram(codebase: Codebase, write: bool = True) -> None:
     for file in codebase.files:
         if is_root_file(file.filepath, codebase.root_folder_path):
             continue
-        for layer in layers.keys():
+        for layer in layers:
             if is_component(file.filepath, layer):
                 layers[layer][file.filepath] = []
         dependencies_visitor.current_layer = sep.join(
@@ -46,7 +44,7 @@ def create_diagram(codebase: Codebase, write: bool = True) -> None:
         dependencies_visitor.current_component = file.filepath
         dependencies_visitor.visit(ast.parse(file.code))
 
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    timestamp = datetime.now(tz=timezone.utc).strftime("%Y%m%d_%H%M%S")
     if write:
         with open(f"architecture_diagram_{timestamp}.mmd", "w") as f:  # pylint: disable=unspecified-encoding
             write_diagram(codebase, layers, f.write)
@@ -98,16 +96,12 @@ def iterdir_generator(path: str) -> Generator[str, None, None]:
 
 def is_root_file(file_path: str, root_folder_path: str) -> bool:
     relative_path = file_path.replace(root_folder_path, "")
-    if relative_path.count(sep) == 1:
-        return True
-    return False
+    return relative_path.count(sep) == 1
 
 
 def is_component(file_path: str, layer_name: str) -> bool:
     relative_path = file_path.replace(layer_name, "")
-    if relative_path.count(sep) == 1 and is_python_file_not_dunder(file_path):
-        return True
-    return False
+    return relative_path.count(sep) == 1 and is_python_file_not_dunder(file_path)
 
 
 def is_python_file_not_dunder(file_path: str) -> bool:
@@ -117,8 +111,8 @@ def is_python_file_not_dunder(file_path: str) -> bool:
 class DependenciesVisitor(ast.NodeVisitor):
     def __init__(self, layers: Layers) -> None:
         self.layers = layers
-        self.layers_names = [layer.rsplit(sep)[-1] for layer in layers.keys()]
-        self.root_folder = list(layers.keys())[0].rsplit(sep, 1)[0]
+        self.layers_names = [layer.rsplit(sep)[-1] for layer in layers]
+        self.root_folder = next(iter(layers.keys())).rsplit(sep, 1)[0]
         self.current_layer: str = ""
         self.current_component: str = ""
 
@@ -137,7 +131,7 @@ class DependenciesVisitor(ast.NodeVisitor):
         if imported_layer in self.layers_names and imported_layer != self.current_layer:
             full_layer_name_list = [
                 layer
-                for layer in self.layers.keys()
+                for layer in self.layers
                 if layer.rsplit(sep)[-1] == self.current_layer
             ]
             if not full_layer_name_list:
@@ -145,9 +139,9 @@ class DependenciesVisitor(ast.NodeVisitor):
             full_layer_name = full_layer_name_list[0]
             full_imported_layer_name = [
                 layer
-                for layer in self.layers.keys()
+                for layer in self.layers
                 if layer.rsplit(sep)[-1] == imported_layer
-            ][0]
+            ]
             subdirectory_path = self.current_component.replace(
                 self.root_folder,
                 "",
@@ -162,11 +156,11 @@ class DependenciesVisitor(ast.NodeVisitor):
             try:
                 if self.layers[full_layer_name].get(clean_current_component):
                     self.layers[full_layer_name][clean_current_component].append(
-                        full_imported_layer_name,
+                        full_imported_layer_name,  # type: ignore[arg-type]
                     )
                 else:
                     self.layers[full_layer_name].update({
-                        clean_current_component: [full_imported_layer_name],
+                        clean_current_component: [full_imported_layer_name],  # type: ignore[list-item]  # pylint: disable=line-too-long
                     })
             except KeyError as e:
                 log.warning(

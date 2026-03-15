@@ -13,11 +13,12 @@ pytest = ">=8.4.1"
 pre-commit = ">=4.2.0"
 fastapi = ">=0.128.0"
 uvicorn = ">=0.40.0"
+pytest-cov = ">=7.0.0"
 
 [requires]
-python_version = "3.10"
+python_version = ">=3.10"
 
 [scripts]
-test = "pytest"
+test = "pytest -v --cov --cov-report=xml:coverage-report.xml"
 install_hooks = "pre-commit install"
 lint = "pre-commit run --all-files"
