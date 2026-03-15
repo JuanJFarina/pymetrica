@@ -6,6 +6,10 @@
 
 ### Fix
 
+* fix(config): fix type checking issue with invariant generic for results ([`01b3d70`](https://github.com/JuanJFarina/pymetrica/commit/01b3d704d9d2222b661f45b84b2631c3cfd246d1))
+
+* fix(config): improve mc metric to have more balanced output between raw line mc and codebase size ([`eff0bb8`](https://github.com/JuanJFarina/pymetrica/commit/eff0bb861a85c5e03cf23f7fa7091bd5b6f5f00b))
+
 * fix(config): reduce weight of codebase size ([`c782a96`](https://github.com/JuanJFarina/pymetrica/commit/c782a96289dfb108b5e999a1aface1277f99ed1d))
 
 
