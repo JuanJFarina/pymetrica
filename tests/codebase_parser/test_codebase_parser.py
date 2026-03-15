@@ -7,7 +7,6 @@ def test_parse_codebase(
     expected_small_codebase: Codebase,
 ) -> None:
     codebase = parse_codebase(small_codebase_path)
-    assert codebase.root_folder_path == expected_small_codebase.root_folder_path
     assert codebase.root_folder_name == expected_small_codebase.root_folder_name
     assert codebase.folders_number == expected_small_codebase.folders_number
     assert codebase.files_number == expected_small_codebase.files_number

@@ -33,6 +33,8 @@ def test_get_cc_big(
     metric = cc_calculator.calculate_metric(big_codebase)
     assert metric.results == big_codebase_cc_result
     assert len(metric.results.cc_result_per_layer) == 4
+    metric.results.cc_result_per_layer.sort(key=lambda x: x.name)
+    big_codebase_cc_result.cc_result_per_layer.sort(key=lambda x: x.name)
     assert (
         metric.results.cc_result_per_layer[0].name
         == big_codebase_cc_result.cc_result_per_layer[0].name

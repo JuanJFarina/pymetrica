@@ -25,6 +25,8 @@ def test_get_hv_big(
     metric = hv_calculator.calculate_metric(big_codebase)
     assert metric.results == big_codebase_hv_result
     assert len(metric.results.hv_per_layer) == 4
+    metric.results.hv_per_layer.sort(key=lambda x: x.name)
+    big_codebase_hv_result.hv_per_layer.sort(key=lambda x: x.name)
     assert (
         metric.results.hv_per_layer[0].name
         == big_codebase_hv_result.hv_per_layer[0].name

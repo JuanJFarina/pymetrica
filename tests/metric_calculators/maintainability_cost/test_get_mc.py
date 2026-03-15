@@ -31,6 +31,8 @@ def test_get_mc_big(
         == big_codebase_mc_result.maintainability_cost
     )
     assert len(metric.results.mc_per_layer) == 4
+    metric.results.mc_per_layer.sort(key=lambda x: x.name)
+    big_codebase_mc_result.mc_per_layer.sort(key=lambda x: x.name)
     result_layers = metric.results.mc_per_layer
     expected_layers = big_codebase_mc_result.mc_per_layer
     assert result_layers[0].name == expected_layers[0].name

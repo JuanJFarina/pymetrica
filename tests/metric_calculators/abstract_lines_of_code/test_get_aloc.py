@@ -35,6 +35,8 @@ def test_get_aloc_big(
     assert metric.results.aloc_number == big_codebase_aloc_result.aloc_number
     assert metric.results.aloc_percentage == big_codebase_aloc_result.aloc_percentage
     assert len(metric.results.aloc_result_per_layer) == 4
+    metric.results.aloc_result_per_layer.sort(key=lambda x: x.name)
+    big_codebase_aloc_result.aloc_result_per_layer.sort(key=lambda x: x.name)
     assert (
         metric.results.aloc_result_per_layer[0].name
         == big_codebase_aloc_result.aloc_result_per_layer[0].name
