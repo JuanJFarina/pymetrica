@@ -23,7 +23,8 @@ class HalsteadVolumeCalculator(MetricCalculator[HalsteadVolumeResults]):
         codebase_operands = 0
 
         for layer_name, layer_files in layers.items():
-            total_hv = 0.0
+            layer_hv = 0.0
+            layer_lloc = 0
 
             for code_file in layer_files:
                 tree = ast.parse(code_file.code)
@@ -46,12 +47,14 @@ class HalsteadVolumeCalculator(MetricCalculator[HalsteadVolumeResults]):
                     length = operators + operands
                     halstead_volume = length * math.log2(vocabulary)
 
-                total_hv += halstead_volume
+                layer_hv += halstead_volume
+                layer_lloc += code_file.lloc_number
 
             layer_results.append(
                 LayerHV(
                     name=layer_name.rsplit(os.sep, 1)[-1],
-                    hv_number=total_hv,
+                    hv_number=layer_hv,
+                    hv_per_lloc=layer_hv / (layer_lloc or 1),
                 ),
             )
 
@@ -67,9 +70,14 @@ class HalsteadVolumeCalculator(MetricCalculator[HalsteadVolumeResults]):
 
         return HalsteadVolumeMetric(
             name="Halstead Volume",
-            description=(""),
+            description=(
+                "HV is a software metric that measures the cognitive load of "
+                "a codebase based on the amount of all and unique operators "
+                "and operands."
+            ),
             results=HalsteadVolumeResults(
                 hv_number=codebase_halstead_volume,
+                hv_per_lloc=codebase_halstead_volume / (codebase.lloc_number or 1),
                 hv_per_layer=layer_results,
             ),
         )
