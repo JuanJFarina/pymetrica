@@ -9,7 +9,7 @@ from pymetrica.models import Codebase
 
 @pytest.mark.xfail(
     reason="No layer diagrams only generate a subgraph with the folder path, "
-    "which is different in different environments this test runs"
+    "which is different in different environments this test runs",
 )
 def test_small_create_diagram(codebase: Codebase, small_codebase_diagram: str) -> None:
     output = io.StringIO()
