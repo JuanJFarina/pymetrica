@@ -1,0 +1,62 @@
+%%{init: {"themeCSS": ".edgeLabel {font-size: 30px;}"}}%%
+
+graph TD
+  subgraph codebase_parser
+    codebase_parser/logical_lines_of_code
+    codebase_parser/base_stats.py
+    codebase_parser/codebase_parser.py
+    codebase_parser/diagram_generator.py
+  end
+  subgraph metric_calculators
+    metric_calculators/abstract_lines_of_code
+    metric_calculators/cyclomatic_complexity
+    metric_calculators/halstead_volume
+    metric_calculators/instability
+    metric_calculators/maintainability_cost
+  end
+  subgraph models
+    models/code.py
+    models/codebase.py
+    models/metric.py
+    models/metric_calculator.py
+    models/report_generator.py
+  end
+  subgraph playground
+  end
+  subgraph report_generators
+    report_generators/basic_terminal_report.py
+    report_generators/reports_mapping.py
+  end
+  subgraph utils
+    utils/is_comment.py
+    utils/is_lloc.py
+    utils/logging.py
+    utils/profiler.py
+  end
+  codebase_parser/logical_lines_of_code -- 1 --> utils
+  codebase_parser/base_stats.py -- 1 --> utils
+  codebase_parser/codebase_parser.py -- 1 --> models
+  codebase_parser/codebase_parser.py -- 1 --> utils
+  codebase_parser/diagram_generator.py -- 1 --> models
+  codebase_parser/diagram_generator.py -- 1 --> utils
+  metric_calculators/abstract_lines_of_code -- 4 --> models
+  metric_calculators/abstract_lines_of_code -- 2 --> utils
+  metric_calculators/abstract_lines_of_code -- 1 --> codebase_parser
+  metric_calculators/abstract_lines_of_code -- 1 --> report_generators
+  metric_calculators/cyclomatic_complexity -- 2 --> models
+  metric_calculators/cyclomatic_complexity -- 1 --> codebase_parser
+  metric_calculators/cyclomatic_complexity -- 1 --> report_generators
+  metric_calculators/cyclomatic_complexity -- 1 --> utils
+  metric_calculators/halstead_volume -- 1 --> codebase_parser
+  metric_calculators/halstead_volume -- 1 --> report_generators
+  metric_calculators/halstead_volume -- 1 --> utils
+  metric_calculators/halstead_volume -- 2 --> models
+  metric_calculators/instability -- 1 --> codebase_parser
+  metric_calculators/instability -- 1 --> report_generators
+  metric_calculators/instability -- 1 --> utils
+  metric_calculators/instability -- 3 --> models
+  metric_calculators/maintainability_cost -- 1 --> codebase_parser
+  metric_calculators/maintainability_cost -- 1 --> report_generators
+  metric_calculators/maintainability_cost -- 2 --> utils
+  metric_calculators/maintainability_cost -- 2 --> models
+  report_generators/basic_terminal_report.py -- 1 --> models

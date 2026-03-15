@@ -137,11 +137,13 @@ class DependenciesVisitor(ast.NodeVisitor):
             if not full_layer_name_list:
                 return
             full_layer_name = full_layer_name_list[0]
-            full_imported_layer_name = [
-                layer
-                for layer in self.layers
-                if layer.rsplit(sep)[-1] == imported_layer
-            ]
+            full_imported_layer_name = next(
+                iter([
+                    layer
+                    for layer in self.layers
+                    if layer.rsplit(sep)[-1] == imported_layer
+                ]),
+            )
             subdirectory_path = self.current_component.replace(
                 self.root_folder,
                 "",
@@ -156,11 +158,11 @@ class DependenciesVisitor(ast.NodeVisitor):
             try:
                 if self.layers[full_layer_name].get(clean_current_component):
                     self.layers[full_layer_name][clean_current_component].append(
-                        full_imported_layer_name,  # type: ignore[arg-type]
+                        full_imported_layer_name,
                     )
                 else:
                     self.layers[full_layer_name].update({
-                        clean_current_component: [full_imported_layer_name],  # type: ignore[list-item]  # pylint: disable=line-too-long
+                        clean_current_component: [full_imported_layer_name],
                     })
             except KeyError as e:
                 log.warning(
