@@ -107,11 +107,6 @@ jobs:
           - "3.13"
 
     steps:
-      - name: Harden Runner
-        uses: step-security/harden-runner@eb238b55efaa70779f274895e782ed17c84f2895 # v2.6.1
-        with:
-          egress-policy: audit
-
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
 
       - name: Set up Python
@@ -144,16 +139,6 @@ jobs:
       #     pipx install .
       #     pipx install python-semantic-release==8.3.0
       #     git-stats-report -vv -t "$(semantic-release -v version --print)"
-
-      - name: Upload coverage to Coveralls
-        uses: coverallsapp/github-action@3dfc5567390f6fa9267c0ee9c251e4c8c3f18949 # v2.2.3
-        if: always()
-        with:
-          flag-name: "${{ matrix.version }}"
-          parallel: true
-          file: "coverage-report.xml"
-          format: "cobertura"
-          measure: true
 
       - name: Check Build and Wheel
         run: |
