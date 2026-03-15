@@ -81,3 +81,21 @@ disable = [
     "fixme",
     "logging-fstring-interpolation",
 ]
+
+
+[tool.semantic_release.branches.main]
+match = "(main|develop)"
+
+[tool.semantic_release]
+commit_message = "chore(release): bump version and update changelog"
+version_source = "tag"
+version_variables = ["pymetrica/__init__.py:__version__"]
+
+[tool.semantic_release.changelog]
+changelog_file = "CHANGELOG.md"
+exclude_commit_patterns = ["chore*", "Merge*"]
+
+[tool.semantic_release.commit_parser_options]
+allowed_tags = ["chore", "feat", "fix"]
+minor_tags = ["feat"]
+patch_tags = ["fix"]
