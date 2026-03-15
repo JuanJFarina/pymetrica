@@ -122,7 +122,7 @@ jobs:
 
       - name: Run Tests
         run: |
-          pipenv run test
+          pipenv run test --python $(which python)
 
       # - name: Check Breaking changes
       #   run: |
