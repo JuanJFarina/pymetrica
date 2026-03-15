@@ -2,6 +2,19 @@
 
 
 
+## v1.1.0 (2026-03-15)
+
+### Feature
+
+* feat(config): add optional diagram filename argument ([`4a1e2e0`](https://github.com/JuanJFarina/pymetrica/commit/4a1e2e079aff68b29ad1e4f3c1ac01d586c1569d))
+
+### Fix
+
+* fix(config): add hv per lloc ([`f639b56`](https://github.com/JuanJFarina/pymetrica/commit/f639b566647649ca5f21db27b44aa0eeeee4475f))
+
+* fix(config): fix diagram generation not counting dependencies ([`d49c99d`](https://github.com/JuanJFarina/pymetrica/commit/d49c99d1b6557e5a3fc929ad88bf4bd39a90ce5b))
+
+
 ## v1.0.2 (2026-03-15)
 
 ### Fix
