@@ -115,14 +115,11 @@ jobs:
           pip install pre-commit==3.5.0
           pre-commit run --all-files
 
-      - name: Install Project Dependencies
-        run: |
-          pipx install pipenv
-          pipenv install --dev --deploy --python $(which python)
-
       - name: Run Tests
         run: |
-          pipenv run test --python $(which python)
+          pip install -e .
+          pip install pytest pytest-cov
+          pytest --cov --cov-report=xml:coverage-report.xml
 
       # - name: Check Breaking changes
       #   run: |
