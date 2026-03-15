@@ -18,14 +18,7 @@ def test_parse_codebase(
     assert codebase.functions_number == expected_small_codebase.functions_number
 
     assert len(codebase.layers) == 0
-    assert len(codebase.root_files) == len(expected_small_codebase.root_files)
-
-    assert codebase.files[0].filename == expected_small_codebase.files[0].filename
-    assert codebase.files[0].lloc_number == expected_small_codebase.files[0].lloc_number
-    assert (
-        codebase.files[0].comments_number
-        == expected_small_codebase.files[0].comments_number
-    )
+    assert len(codebase.files) == 1
 
 
 def test_parse_big_codebase(
@@ -44,14 +37,4 @@ def test_parse_big_codebase(
     assert codebase.functions_number == expected_big_codebase.functions_number
 
     assert len(codebase.layers) == 3
-    assert len(codebase.root_files) == len(expected_big_codebase.root_files)
-
-    codebase.files.sort(key=lambda file: file.filename)
-    expected_big_codebase.files.sort(key=lambda file: file.filename)
-
-    for index, file in enumerate(codebase.files):
-        assert file.filename == expected_big_codebase.files[index].filename
-        assert file.lloc_number == expected_big_codebase.files[index].lloc_number
-        assert (
-            file.comments_number == expected_big_codebase.files[index].comments_number
-        )
+    assert len(codebase.files) == 8

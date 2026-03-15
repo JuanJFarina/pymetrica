@@ -12,18 +12,10 @@ def test_get_cc(
     assert metric.results.cc_number == cc_result.cc_number
     assert metric.results.lloc_per_cc == cc_result.lloc_per_cc
     assert len(metric.results.cc_result_per_layer) == 1
-    assert (
-        metric.results.cc_result_per_layer[0].name
-        == cc_result.cc_result_per_layer[0].name
-    )
-    assert (
-        metric.results.cc_result_per_layer[0].cc_number
-        == cc_result.cc_result_per_layer[0].cc_number
-    )
-    assert (
-        metric.results.cc_result_per_layer[0].lloc_per_cc
-        == cc_result.cc_result_per_layer[0].lloc_per_cc
-    )
+    for idx, file in enumerate(metric.results.cc_result_per_layer):
+        assert file.name == cc_result.cc_result_per_layer[idx].name
+        assert file.cc_number == cc_result.cc_result_per_layer[idx].cc_number
+        assert file.lloc_per_cc == cc_result.cc_result_per_layer[idx].lloc_per_cc
 
 
 def test_get_cc_big(
@@ -37,51 +29,12 @@ def test_get_cc_big(
     assert len(metric.results.cc_result_per_layer) == 4
     metric.results.cc_result_per_layer.sort(key=lambda x: x.name)
     big_codebase_cc_result.cc_result_per_layer.sort(key=lambda x: x.name)
-    assert (
-        metric.results.cc_result_per_layer[0].name
-        == big_codebase_cc_result.cc_result_per_layer[0].name
-    )
-    assert (
-        metric.results.cc_result_per_layer[0].cc_number
-        == big_codebase_cc_result.cc_result_per_layer[0].cc_number
-    )
-    assert (
-        metric.results.cc_result_per_layer[0].lloc_per_cc
-        == big_codebase_cc_result.cc_result_per_layer[0].lloc_per_cc
-    )
-    assert (
-        metric.results.cc_result_per_layer[1].name
-        == big_codebase_cc_result.cc_result_per_layer[1].name
-    )
-    assert (
-        metric.results.cc_result_per_layer[1].cc_number
-        == big_codebase_cc_result.cc_result_per_layer[1].cc_number
-    )
-    assert (
-        metric.results.cc_result_per_layer[1].lloc_per_cc
-        == big_codebase_cc_result.cc_result_per_layer[1].lloc_per_cc
-    )
-    assert (
-        metric.results.cc_result_per_layer[2].name
-        == big_codebase_cc_result.cc_result_per_layer[2].name
-    )
-    assert (
-        metric.results.cc_result_per_layer[2].cc_number
-        == big_codebase_cc_result.cc_result_per_layer[2].cc_number
-    )
-    assert (
-        metric.results.cc_result_per_layer[2].lloc_per_cc
-        == big_codebase_cc_result.cc_result_per_layer[2].lloc_per_cc
-    )
-    assert (
-        metric.results.cc_result_per_layer[3].name
-        == big_codebase_cc_result.cc_result_per_layer[3].name
-    )
-    assert (
-        metric.results.cc_result_per_layer[3].cc_number
-        == big_codebase_cc_result.cc_result_per_layer[3].cc_number
-    )
-    assert (
-        metric.results.cc_result_per_layer[3].lloc_per_cc
-        == big_codebase_cc_result.cc_result_per_layer[3].lloc_per_cc
-    )
+    for idx, file in enumerate(metric.results.cc_result_per_layer):
+        assert file.name == big_codebase_cc_result.cc_result_per_layer[idx].name
+        assert (
+            file.cc_number == big_codebase_cc_result.cc_result_per_layer[idx].cc_number
+        )
+        assert (
+            file.lloc_per_cc
+            == big_codebase_cc_result.cc_result_per_layer[idx].lloc_per_cc
+        )
