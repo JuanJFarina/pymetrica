@@ -8,10 +8,12 @@ from pymetrica.models import Metric, Results
 class LayerHV(BaseModel):
     name: str
     hv_number: float
+    hv_per_lloc: float
 
 
 class HalsteadVolumeResults(Results):
     hv_number: float
+    hv_per_lloc: float
     hv_per_layer: list[LayerHV]
 
     def get_dict(self) -> dict[str, Any]:
@@ -21,9 +23,12 @@ class HalsteadVolumeResults(Results):
         return self.get_json()
 
     def get_summary(self) -> str:
-        summary = f"\nHalstead Volume: {self.hv_number:.2f}\n"
+        summary = f"\nHalstead Volume: {self.hv_number:.2f} ({self.hv_per_lloc:.2f} per LLOC)\n"
         for layer in self.hv_per_layer:
-            summary += f"  Layer {layer.name}: {layer.hv_number:.2f}\n"
+            summary += (
+                f"  Layer {layer.name}: {layer.hv_number:.2f} "
+                f"({layer.hv_per_lloc:.2f} per LLOC)\n"
+            )
         return summary
 
 

@@ -2,6 +2,25 @@
 
 
 
+## v1.1.0 (2026-03-15)
+
+### Feature
+
+* feat(config): add optional diagram filename argument ([`4a1e2e0`](https://github.com/JuanJFarina/pymetrica/commit/4a1e2e079aff68b29ad1e4f3c1ac01d586c1569d))
+
+### Fix
+
+* fix(config): add heuristic tests for diagram generation ([`5c96ea2`](https://github.com/JuanJFarina/pymetrica/commit/5c96ea2e977d5265004486b3b601ff50e5332f3d))
+
+* fix(config): update diagram tests ([`eaf047b`](https://github.com/JuanJFarina/pymetrica/commit/eaf047bfd4a23d1578e3220e7b22ff8900f2ab24))
+
+* fix(config): increase size of layer labels ([`ef27241`](https://github.com/JuanJFarina/pymetrica/commit/ef27241b1bd089189127e0aa9bf4431d0c797464))
+
+* fix(config): add hv per lloc ([`f639b56`](https://github.com/JuanJFarina/pymetrica/commit/f639b566647649ca5f21db27b44aa0eeeee4475f))
+
+* fix(config): fix diagram generation not counting dependencies ([`d49c99d`](https://github.com/JuanJFarina/pymetrica/commit/d49c99d1b6557e5a3fc929ad88bf4bd39a90ce5b))
+
+
 ## v1.0.2 (2026-03-15)
 
 ### Fix

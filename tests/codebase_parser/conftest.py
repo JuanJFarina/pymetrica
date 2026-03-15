@@ -152,7 +152,7 @@ def expected_big_codebase(
 
 @pytest.fixture
 def small_codebase_diagram() -> str:
-    return """%%{init: {"themeCSS": ".edgeLabel {font-size: 30px;}"}}%%
+    return """%%{init: {"themeCSS": ".edgeLabel {font-size: 30px;} .cluster-label {font-size: 20px !important;}"}}%%
 
 
 graph TD
@@ -166,7 +166,7 @@ graph TD
 
 @pytest.fixture
 def big_codebase_diagram() -> str:
-    return """%%{init: {"themeCSS": ".edgeLabel {font-size: 30px;}"}}%%
+    return """%%{init: {"themeCSS": ".edgeLabel {font-size: 30px;} .cluster-label {font-size: 20px !important;}"}}%%
 
 
 graph TD

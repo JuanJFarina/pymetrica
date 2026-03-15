@@ -16,7 +16,12 @@ Components: TypeAlias = dict[ComponentName, Dependencies]
 Layers: TypeAlias = dict[LayerName, Components]
 
 
-def create_diagram(codebase: Codebase, write: bool = True) -> None:
+def create_diagram(
+    codebase: Codebase,
+    *,
+    filename: str | None = None,
+    write: bool = True,
+) -> None:
     layers: Layers = {
         str(dir): Components() for dir in iterdir_generator(codebase.root_folder_path)
     }
@@ -46,6 +51,10 @@ def create_diagram(codebase: Codebase, write: bool = True) -> None:
 
     timestamp = datetime.now(tz=timezone.utc).strftime("%Y%m%d_%H%M%S")
     if write:
+        if filename:
+            with open(filename, "w") as f:  # pylint: disable=unspecified-encoding
+                write_diagram(codebase, layers, f.write)
+            return
         with open(f"architecture_diagram_{timestamp}.mmd", "w") as f:  # pylint: disable=unspecified-encoding
             write_diagram(codebase, layers, f.write)
     else:
@@ -57,7 +66,9 @@ def write_diagram(
     layers: Layers,
     write_function: Callable[..., None | int],
 ) -> None:
-    write_function('%%{init: {"themeCSS": ".edgeLabel {font-size: 30px;}"}}%%\n\n')
+    write_function(
+        '%%{init: {"themeCSS": ".edgeLabel {font-size: 30px;} .cluster-label {font-size: 20px !important;}"}}%%\n\n',  # pylint: disable=line-too-long
+    )
     write_function("graph TD\n")
     for layer_name, components in layers.items():
         write_function(
@@ -137,11 +148,13 @@ class DependenciesVisitor(ast.NodeVisitor):
             if not full_layer_name_list:
                 return
             full_layer_name = full_layer_name_list[0]
-            full_imported_layer_name = [
-                layer
-                for layer in self.layers
-                if layer.rsplit(sep)[-1] == imported_layer
-            ]
+            full_imported_layer_name = next(
+                iter([
+                    layer
+                    for layer in self.layers
+                    if layer.rsplit(sep)[-1] == imported_layer
+                ]),
+            )
             subdirectory_path = self.current_component.replace(
                 self.root_folder,
                 "",
@@ -156,11 +169,11 @@ class DependenciesVisitor(ast.NodeVisitor):
             try:
                 if self.layers[full_layer_name].get(clean_current_component):
                     self.layers[full_layer_name][clean_current_component].append(
-                        full_imported_layer_name,  # type: ignore[arg-type]
+                        full_imported_layer_name,
                     )
                 else:
                     self.layers[full_layer_name].update({
-                        clean_current_component: [full_imported_layer_name],  # type: ignore[list-item]  # pylint: disable=line-too-long
+                        clean_current_component: [full_imported_layer_name],
                     })
             except KeyError as e:
                 log.warning(
