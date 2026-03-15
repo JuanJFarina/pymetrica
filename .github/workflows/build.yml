@@ -118,7 +118,7 @@ jobs:
       - name: Install Project Dependencies
         run: |
           pipx install pipenv==2023.2.4
-          pipenv install --dev --deploy
+          pipenv install --dev --deploy --python $(which python)
 
       - name: Run Tests
         run: |
