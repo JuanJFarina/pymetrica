@@ -33,7 +33,7 @@ classifiers = [
 ]
 
 [project.scripts]
-pymetrica = "pymetrica.main:main"
+pymetrica = "pymetrica.__main__:main"
 
 [tool.setuptools.package-data]
 "*" = ["py.typed", "*.md"]
