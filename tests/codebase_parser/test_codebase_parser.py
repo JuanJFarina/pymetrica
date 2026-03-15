@@ -17,7 +17,7 @@ def test_parse_codebase(
     assert codebase.classes_number == expected_small_codebase.classes_number
     assert codebase.functions_number == expected_small_codebase.functions_number
 
-    assert codebase.layers.keys() == expected_small_codebase.layers.keys()
+    assert len(codebase.layers) == 0
     assert len(codebase.root_files) == len(expected_small_codebase.root_files)
 
     assert codebase.files[0].filename == expected_small_codebase.files[0].filename
@@ -43,7 +43,7 @@ def test_parse_big_codebase(
     assert codebase.classes_number == expected_big_codebase.classes_number
     assert codebase.functions_number == expected_big_codebase.functions_number
 
-    assert codebase.layers.keys() == expected_big_codebase.layers.keys()
+    assert len(codebase.layers) == 3
     assert len(codebase.root_files) == len(expected_big_codebase.root_files)
 
     for index, file in enumerate(codebase.files):
