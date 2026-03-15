@@ -1,0 +1,78 @@
+name: Publish
+
+on:
+  workflow_run:
+    workflows: Test
+    branches: main
+    types: completed
+
+permissions: read-all
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+
+    permissions:
+      contents: write
+      id-token: write
+
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@eb238b55efaa70779f274895e782ed17c84f2895 # v2.6.1
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+        with:
+          persist-credentials: true
+
+      - name: Set Up Git Identity
+        run: |
+          git fetch -v -v -v --all --unshallow
+          git config --global user.email "$(git log -1 --pretty=format:'%ae' | xargs)"
+          git config --global user.name "${{ github.actor }}"
+          git remote set-url origin "https://${{ github.actor }}:${{ secrets.PUSH_TOKEN }}@github.com/${{ github.repository }}"
+
+      - name: Set up Python
+        uses: actions/setup-python@65d7f2d534ac1bc67fcd62888c5f4f3d2cb2b236 # v4.7.1
+        with:
+          python-version: "3.10"
+
+      - name: Install dependencies
+        run: |
+          pip install pipx==1.2.1
+
+      - name: Build package
+        run: |
+          pipx run build
+
+      - name: Determine Target Version
+        id: version
+        run: |
+          pipx install python-semantic-release==8.3.0
+          package_version=$(semantic-release -v version --print)
+          echo "PACKAGE_VERSION=$package_version" >> $GITHUB_ENV
+
+      - name: Publish package
+        uses: pypa/gh-action-pypi-publish@2f6f737ca5f74c637829c0f5c3acd0e29ea5e8bf # v1.8.11
+
+      - name: Create Git Tag
+        run: |
+          git tag "v${{ env.PACKAGE_VERSION }}" $(git log -1 --pretty=format:"%H" --no-merges)
+          git push origin --tags
+
+      - uses: actions/setup-node@8f152de45cc393bb48ce5d89d36b731f54556e65 # v4.0.0
+
+      - name: Extract Changelog for current version
+        run: |
+          npm install -g changelog-parser
+          changelog-parser CHANGELOG.md | jq -r ".versions[0].body" >> changelog_body.md
+
+      - name: Create Github release
+        uses: ncipollo/release-action@6c75be85e571768fa31b40abf38de58ba0397db5 # v1.13.0
+        with:
+          tag: "v${{ env.PACKAGE_VERSION }}"
+          bodyFile: "changelog_body.md"
+          artifacts: "dist/*"

@@ -1,0 +1,179 @@
+name: Test
+
+on:
+  push:
+    branches:
+      - "main"
+
+  pull_request:
+    branches:
+      - "main"
+
+  workflow_dispatch:
+
+permissions: read-all
+
+concurrency:
+  group: "${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}"
+  cancel-in-progress: true
+
+jobs:
+  check_changelog:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@eb238b55efaa70779f274895e782ed17c84f2895 # v2.6.1
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+        with:
+          persist-credentials: false
+
+      - name: Set Up Git Identity
+        run: |
+          git fetch -v -v -v --all --unshallow
+          git switch "${{ github.REF_NAME }}" || git switch "${{ github.HEAD_REF }}"
+          git config --global user.email "$(git log -1 --pretty=format:'%ae' | xargs)"
+          git config --global user.name "${{ github.actor }}"
+          git remote set-url origin "https://${{ github.actor }}:${{ secrets.PUSH_TOKEN }}@github.com/${{ github.repository }}"
+
+      - name: Set up Python
+        uses: actions/setup-python@65d7f2d534ac1bc67fcd62888c5f4f3d2cb2b236 # v4.7.1
+        with:
+          python-version: "3.10"
+
+      - name: Install dependencies
+        run: |
+          pip install pipx==1.2.1
+
+      - name: Update Pre-Commits
+        run: |
+          pipx install pre-commit==3.5.0
+          pre-commit autoupdate
+          differences=$(git diff | xargs)
+
+          if [ -z "$differences" ]; then
+            echo "No changes needed"
+            exit 0
+          fi
+
+          echo "::error::The pre-commit hooks are outdated"
+          echo "$differences"
+
+          git add --all
+          git commit -m "chore(test): update versions of pre-commit hooks"
+          git push
+
+          sleep 30
+          exit 1
+
+      - name: Update Version and Changelog
+        run: |
+          pipx install python-semantic-release==8.3.0
+          semantic-release -v version --no-vcs-release --no-commit
+          differences=$(git diff | xargs)
+
+          if [ -z "$differences" ]; then
+            echo "No changes needed"
+            exit 0
+          fi
+
+          echo "::error::The version and/or Changelog is outdated"
+          echo "$differences"
+
+          git add --all
+          git commit -m "chore(release): bump version and update changelog"
+          git push
+
+          sleep 30
+          exit 1
+
+  test:
+    runs-on: ubuntu-latest
+
+    needs: check_changelog
+
+    strategy:
+      matrix:
+        version:
+          - "3.10"
+          - "3.11"
+          - "3.12"
+          - "3.13"
+
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@eb238b55efaa70779f274895e782ed17c84f2895 # v2.6.1
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+
+      - name: Set up Python
+        uses: actions/setup-python@65d7f2d534ac1bc67fcd62888c5f4f3d2cb2b236 # v4.7.1
+        with:
+          python-version: "${{ matrix.version }}"
+
+      - name: Install Global Dependencies
+        run: |
+          pip install pipx==1.2.1
+
+      - name: Check Linting and Format
+        run: |
+          pip install pre-commit==3.5.0
+          pre-commit run --all-files
+
+      - name: Install Project Dependencies
+        run: |
+          pipx install pipenv==2023.2.4
+          pipenv install --dev --deploy
+
+      - name: Run Tests
+        run: |
+          pipenv run test
+
+      # - name: Check Breaking changes
+      #   run: |
+      #     git fetch -v -v -v --all --unshallow
+      #     git switch "${{ github.REF_NAME }}" || git switch "${{ github.HEAD_REF }}"
+      #     pipx install .
+      #     pipx install python-semantic-release==8.3.0
+      #     git-stats-report -vv -t "$(semantic-release -v version --print)"
+
+      - name: Upload coverage to Coveralls
+        uses: coverallsapp/github-action@3dfc5567390f6fa9267c0ee9c251e4c8c3f18949 # v2.2.3
+        if: always()
+        with:
+          flag-name: "${{ matrix.version }}"
+          parallel: true
+          file: "coverage-report.xml"
+          format: "cobertura"
+          measure: true
+
+      - name: Check Build and Wheel
+        run: |
+          pipx run build==1.0.3
+          pipx run twine==4.0.2 check --strict dist/*
+
+  test-finish:
+    needs: test
+
+    if: always()
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@eb238b55efaa70779f274895e782ed17c84f2895 # v2.6.1
+        with:
+          egress-policy: audit
+
+      - name: Coveralls Finished
+        uses: coverallsapp/github-action@3dfc5567390f6fa9267c0ee9c251e4c8c3f18949 # v2.2.3
+        with:
+          parallel-finished: true
