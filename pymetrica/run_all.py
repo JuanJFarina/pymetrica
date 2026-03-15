@@ -16,6 +16,7 @@ from pymetrica.metric_calculators.instability.instability_calculator import (
 from pymetrica.metric_calculators.maintainability_cost.mc_calculator import (
     MaintainabilityCostCalculator,
 )
+from pymetrica.models.metric import Metric, Results
 from pymetrica.report_generators.reports_mapping import REPORTS_MAPPING
 
 aloc_calculator: AlocCalculator = AlocCalculator()
@@ -39,15 +40,15 @@ def run_all(
     long_report: bool = False,
 ) -> None:
     results = parse_codebase(dir_path)
-    metrics = [
-        aloc_calculator.calculate_metric(results),
-        cc_calculator.calculate_metric(results),
-        hv_calculator.calculate_metric(results),
-        mc_calculator.calculate_metric(results),
-        instability_calculator.calculate_metric(results),
-    ]
+    metrics = list[Metric[Results]]()
+    metrics.append(aloc_calculator.calculate_metric(results))
+    metrics.append(cc_calculator.calculate_metric(results))
+    metrics.append(hv_calculator.calculate_metric(results))
+    metrics.append(mc_calculator.calculate_metric(results))
+    metrics.append(instability_calculator.calculate_metric(results))
+
     report_generator = REPORTS_MAPPING[report_type]()
     if long_report:
-        click.echo(report_generator.generate_report(metrics))  # type: ignore[arg-type]
+        click.echo(report_generator.generate_report(metrics))
         return
-    click.echo(report_generator.generate_short_report(metrics))  # type: ignore[arg-type]
+    click.echo(report_generator.generate_short_report(metrics))

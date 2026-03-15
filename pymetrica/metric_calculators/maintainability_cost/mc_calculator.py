@@ -8,6 +8,7 @@ from pymetrica.metric_calculators.halstead_volume import (
     HalsteadVolumeCalculator,
 )
 from pymetrica.models import Codebase, Metric, MetricCalculator
+from pymetrica.utils import log
 
 from .mc_metric import LayerMC, MaintainabilityCostMetric, MaintainabilityCostResults
 
@@ -41,19 +42,30 @@ class MaintainabilityCostCalculator(MetricCalculator[MaintainabilityCostResults]
 
             hv_density = layer_hv / (layer_lloc or 1)
             cc_density = layer_cc / (layer_lloc or 1)
-            mc = (hv_density * ((cc_density) * 100)) / 50 + layer_lloc * 0.001
+            average_lloc_mc = (hv_density * ((cc_density) * 100 or 1)) / 20
+            log.debug(
+                f"Layer: {layer_name}, HV Density: {hv_density}, "
+                f"CC Density: {cc_density}, Average LLOC MC: {average_lloc_mc}",
+            )
+            mc = average_lloc_mc + layer_lloc * 0.001
             layers_results.append(
                 LayerMC(
                     name=layer_name,
                     maintainability_cost=mc,
+                    raw_line_cost=average_lloc_mc,
                 ),
             )
 
         codebase_hv_density = hv_metric.results.hv_number / (codebase.lloc_number or 1)
         codebase_cc_density = cc_metric.results.cc_number / (codebase.lloc_number or 1)
-        codebase_mc = (
-            codebase_hv_density * ((codebase_cc_density) * 100)
-        ) / 50 + codebase.lloc_number * 0.001
+        codebase_average_lloc_mc = (
+            codebase_hv_density * ((codebase_cc_density) * 100 or 1)
+        ) / 20
+        log.debug(
+            f"Codebase HV Density: {codebase_hv_density}, "
+            f"CC Density {codebase_cc_density}, Average LLOC MC: {codebase_average_lloc_mc}",
+        )
+        codebase_mc = codebase_average_lloc_mc + codebase.lloc_number * 0.001
 
         return MaintainabilityCostMetric(
             name="Maintainability Cost",
@@ -67,6 +79,7 @@ class MaintainabilityCostCalculator(MetricCalculator[MaintainabilityCostResults]
             ),
             results=MaintainabilityCostResults(
                 maintainability_cost=codebase_mc,
+                raw_line_cost=codebase_average_lloc_mc,
                 mc_per_layer=layers_results,
             ),
         )
