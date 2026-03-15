@@ -41,7 +41,7 @@ class MaintainabilityCostCalculator(MetricCalculator[MaintainabilityCostResults]
 
             hv_density = layer_hv / (layer_lloc or 1)
             cc_density = layer_cc / (layer_lloc or 1)
-            mc = (hv_density * ((cc_density) * 100)) / 50 + layer_lloc * 0.005
+            mc = (hv_density * ((cc_density) * 100)) / 50 + layer_lloc * 0.001
             layers_results.append(
                 LayerMC(
                     name=layer_name,
@@ -53,7 +53,7 @@ class MaintainabilityCostCalculator(MetricCalculator[MaintainabilityCostResults]
         codebase_cc_density = cc_metric.results.cc_number / (codebase.lloc_number or 1)
         codebase_mc = (
             codebase_hv_density * ((codebase_cc_density) * 100)
-        ) / 50 + codebase.lloc_number * 0.005
+        ) / 50 + codebase.lloc_number * 0.001
 
         return MaintainabilityCostMetric(
             name="Maintainability Cost",
