@@ -9,7 +9,8 @@ def test_get_cc(
     cc_result: CCResults,
 ) -> None:
     metric = cc_calculator.calculate_metric(codebase)
-    assert metric.results == cc_result
+    assert metric.results.cc_number == cc_result.cc_number
+    assert metric.results.lloc_per_cc == cc_result.lloc_per_cc
     assert len(metric.results.cc_result_per_layer) == 1
     assert (
         metric.results.cc_result_per_layer[0].name
@@ -31,7 +32,8 @@ def test_get_cc_big(
     big_codebase_cc_result: CCResults,
 ) -> None:
     metric = cc_calculator.calculate_metric(big_codebase)
-    assert metric.results == big_codebase_cc_result
+    assert metric.results.cc_number == big_codebase_cc_result.cc_number
+    assert metric.results.lloc_per_cc == big_codebase_cc_result.lloc_per_cc
     assert len(metric.results.cc_result_per_layer) == 4
     metric.results.cc_result_per_layer.sort(key=lambda x: x.name)
     big_codebase_cc_result.cc_result_per_layer.sort(key=lambda x: x.name)

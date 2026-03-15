@@ -9,7 +9,7 @@ def test_get_hv(
     hv_result: HalsteadVolumeResults,
 ) -> None:
     metric = hv_calculator.calculate_metric(codebase)
-    assert metric.results == hv_result
+    assert metric.results.hv_number == hv_result.hv_number
     assert len(metric.results.hv_per_layer) == 1
     assert metric.results.hv_per_layer[0].name == hv_result.hv_per_layer[0].name
     assert (
@@ -23,7 +23,7 @@ def test_get_hv_big(
     big_codebase_hv_result: HalsteadVolumeResults,
 ) -> None:
     metric = hv_calculator.calculate_metric(big_codebase)
-    assert metric.results == big_codebase_hv_result
+    assert metric.results.hv_number == big_codebase_hv_result.hv_number
     assert len(metric.results.hv_per_layer) == 4
     metric.results.hv_per_layer.sort(key=lambda x: x.name)
     big_codebase_hv_result.hv_per_layer.sort(key=lambda x: x.name)
