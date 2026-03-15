@@ -24,12 +24,12 @@ class Results(BaseModel, ABC):
         )
 
 
-T = TypeVar("T", bound=Results)
+T_co = TypeVar("T_co", bound=Results, covariant=True)
 
 
-class Metric(BaseModel, Generic[T]):
+class Metric(BaseModel, Generic[T_co]):
     name: str
     description: str
-    results: T
+    results: T_co
 
     model_config = ConfigDict(arbitrary_types_allowed=True)
