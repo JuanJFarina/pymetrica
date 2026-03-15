@@ -108,7 +108,7 @@ jobs:
 
       - name: Install Global Dependencies
         run: |
-          pip install pipx==1.2.1
+          pip install pipx
 
       - name: Check Linting and Format
         run: |
@@ -117,7 +117,7 @@ jobs:
 
       - name: Install Project Dependencies
         run: |
-          pipx install pipenv==2023.2.4
+          pipx install pipenv
           pipenv install --dev --deploy --python $(which python)
 
       - name: Run Tests
@@ -134,5 +134,5 @@ jobs:
 
       - name: Check Build and Wheel
         run: |
-          pipx run build==1.0.3
-          pipx run twine==4.0.2 check --strict dist/*
+          pipx run build
+          pipx run twine check --strict dist/*

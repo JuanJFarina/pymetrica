@@ -42,7 +42,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install pipx==1.2.1
+          pip install pipx
 
       - name: Build package
         run: |
@@ -51,7 +51,7 @@ jobs:
       - name: Determine Target Version
         id: version
         run: |
-          pipx install python-semantic-release==8.3.0
+          pipx install python-semantic-release
           package_version=$(semantic-release -v version --print)
           echo "PACKAGE_VERSION=$package_version" >> $GITHUB_ENV
 
