@@ -46,6 +46,9 @@ def test_parse_big_codebase(
     assert len(codebase.layers) == 3
     assert len(codebase.root_files) == len(expected_big_codebase.root_files)
 
+    codebase.files.sort(key=lambda file: file.filename)
+    expected_big_codebase.files.sort(key=lambda file: file.filename)
+
     for index, file in enumerate(codebase.files):
         assert file.filename == expected_big_codebase.files[index].filename
         assert file.lloc_number == expected_big_codebase.files[index].lloc_number
