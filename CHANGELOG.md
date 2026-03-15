@@ -10,6 +10,8 @@
 
 ### Fix
 
+* fix(config): increase size of layer labels ([`ef27241`](https://github.com/JuanJFarina/pymetrica/commit/ef27241b1bd089189127e0aa9bf4431d0c797464))
+
 * fix(config): add hv per lloc ([`f639b56`](https://github.com/JuanJFarina/pymetrica/commit/f639b566647649ca5f21db27b44aa0eeeee4475f))
 
 * fix(config): fix diagram generation not counting dependencies ([`d49c99d`](https://github.com/JuanJFarina/pymetrica/commit/d49c99d1b6557e5a3fc929ad88bf4bd39a90ce5b))
