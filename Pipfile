@@ -16,7 +16,7 @@ uvicorn = ">=0.40.0"
 pytest-cov = ">=7.0.0"
 
 [requires]
-python_version = ">=3.10"
+python_version = "3.10"
 
 [scripts]
 test = "pytest -v --cov --cov-report=xml:coverage-report.xml"

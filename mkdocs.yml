@@ -1,0 +1,42 @@
+site_name: Pymetrica
+site_url: https://pymetrica.readthedocs.io/en/latest/
+repo_url: https://github.com/JuanJFarina/pymetrica
+repo_name: JuanJFarina/pymetrica
+edit_uri: edit/main/docs/
+theme:
+  name: material
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.instant
+    - navigation.top
+    - content.code.annotate
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            docstring_style: google
+            show_root_heading: true
+markdown_extensions:
+  - markdown_include.include:
+      base_path: .
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight:
+      use_pygments: true
+nav:
+  - Home: index.md
+  - Usage: usage.md
+  - API Reference: api.md
