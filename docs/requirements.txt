@@ -4,83 +4,83 @@
 #
 #    pip-compile --python-version=3.12 docs/requirements.in
 #
-babel==2.14.0
+babel
     # via mkdocs-material
-certifi==2024.2.2
+certifi
     # via requests
-charset-normalizer==3.3.2
+charset-normalizer
     # via requests
-click==8.1.7
+click
     # via mkdocs
-colorama==0.4.6
+colorama
     # via mkdocs
-docstring-parser==0.16
+docstring-parser
     # via mkdocstrings-python
-ghp-import==2.1.0
+ghp-import
     # via mkdocs
-griffe==0.45.1
+griffe
     # via mkdocstrings-python
-idna==3.6
+idna
     # via requests
-importlib-metadata==7.0.1
+importlib-metadata
     # via mkdocs
-jinja2==3.1.2
+jinja2
     # via
     #   mkdocs
     #   mkdocs-material
     #   mkdocstrings
-markdown==3.6.0
+markdown
     # via
     #   markdown-include
     #   mkdocs
     #   mkdocs-material
     #   pymdown-extensions
-markdown-include==0.8.1
+markdown-include
     # via -r docs/requirements.in
-markupsafe==2.1.3
+markupsafe
     # via
     #   jinja2
     #   mkdocstrings
-mergedeep==1.3.4
+mergedeep
     # via mkdocs
-mkdocs==1.6.0
+mkdocs
     # via
     #   -r docs/requirements.in
     #   mkdocs-material
     #   mkdocstrings
-mkdocs-material==9.5.16
+mkdocs-material
     # via -r docs/requirements.in
-mkdocs-material-extensions==1.3.1
+mkdocs-material-extensions
     # via mkdocs-material
-mkdocstrings[python]==0.24.1
+mkdocstrings[python]
     # via -r docs/requirements.in
-mkdocstrings-python==1.8.0
+mkdocstrings-python
     # via mkdocstrings
-packaging==24.0
+packaging
     # via
     #   mkdocs
     #   mkdocs-material
-pathspec==0.12.1
+pathspec
     # via mkdocstrings-python
-platformdirs==4.2.0
+platformdirs
     # via mkdocstrings-python
-pymdown-extensions==10.7
+pymdown-extensions
     # via
     #   mkdocs-material
     #   mkdocstrings
-pyyaml==6.0.1
+pyyaml
     # via mkdocs
-requests==2.31.0
+requests
     # via mkdocs-material
-typing-extensions==4.10.0
+typing-extensions
     # via
     #   griffe
     #   typing-inspect
-typing-inspect==0.9.0
+typing-inspect
     # via docstring-parser
-urllib3==2.2.0
+urllib3
     # via requests
-watchdog==3.0.0
+watchdog
     # via mkdocs
-zipp==3.18.1
+zipp
     # via importlib-metadata

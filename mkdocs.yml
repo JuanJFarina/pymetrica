@@ -29,8 +29,6 @@ plugins:
             docstring_style: google
             show_root_heading: true
 markdown_extensions:
-  - markdown_include.include:
-      base_path: .
   - admonition
   - pymdownx.details
   - pymdownx.superfences
