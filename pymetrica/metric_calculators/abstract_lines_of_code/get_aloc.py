@@ -2,7 +2,7 @@ import click
 
 from pymetrica.codebase_parser import parse_codebase
 from pymetrica.report_generators import REPORTS_MAPPING
-from pymetrica.utils import run_profiler
+from pymetrica.utils import Configuration, run_profiler
 
 from .aloc_calculator import AlocCalculator
 
@@ -16,8 +16,14 @@ aloc_calculator: AlocCalculator = AlocCalculator()
 def aloc(
     dir_path: str,
     report_type: str,
-) -> None:
+) -> int:
     codebase = parse_codebase(dir_path)
     aloc_metric = aloc_calculator.calculate_metric(codebase)
     report_generator = REPORTS_MAPPING[report_type]()
     click.echo(report_generator.generate_report([aloc_metric]))
+    return (
+        0
+        if Configuration.aloc_fail_threshold == 0
+        or aloc_metric.results.aloc_percentage <= Configuration.aloc_fail_threshold
+        else 1
+    )

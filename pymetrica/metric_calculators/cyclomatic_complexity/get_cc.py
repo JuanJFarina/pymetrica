@@ -2,7 +2,7 @@ import click
 
 from pymetrica.codebase_parser import parse_codebase
 from pymetrica.report_generators import REPORTS_MAPPING
-from pymetrica.utils import run_profiler
+from pymetrica.utils import Configuration, run_profiler
 
 from .cc_calculator import CCCalculator
 
@@ -16,8 +16,14 @@ cc_calculator: CCCalculator = CCCalculator()
 def cc(
     dir_path: str,
     report_type: str,
-) -> None:
+) -> int:
     codebase = parse_codebase(dir_path)
     cc_metric = cc_calculator.calculate_metric(codebase)
     report_generator = REPORTS_MAPPING[report_type]()
     click.echo(report_generator.generate_report([cc_metric]))
+    return (
+        0
+        if Configuration.cc_fail_threshold == 0
+        or cc_metric.results.cc_number <= Configuration.cc_fail_threshold
+        else 1
+    )

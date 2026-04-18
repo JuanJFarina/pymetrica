@@ -2,7 +2,7 @@ import click
 
 from pymetrica.codebase_parser import parse_codebase
 from pymetrica.report_generators import REPORTS_MAPPING
-from pymetrica.utils import run_profiler
+from pymetrica.utils import Configuration, run_profiler
 
 from .mc_calculator import MaintainabilityCostCalculator
 
@@ -16,8 +16,14 @@ mc_calculator: MaintainabilityCostCalculator = MaintainabilityCostCalculator()
 def mc(
     dir_path: str,
     report_type: str,
-) -> None:
+) -> int:
     codebase = parse_codebase(dir_path)
     mc_metric = mc_calculator.calculate_metric(codebase)
     report_generator = REPORTS_MAPPING[report_type]()
     click.echo(report_generator.generate_report([mc_metric]))
+    return (
+        0
+        if Configuration.mc_fail_threshold == 0
+        or mc_metric.results.maintainability_cost <= Configuration.mc_fail_threshold
+        else 1
+    )

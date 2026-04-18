@@ -21,7 +21,6 @@ class _Configuration(BaseModel):
     aloc_fail_threshold: int = 0
     cc_fail_threshold: int = 0
     hv_fail_threshold: int = 0
-    li_fail_threshold: int = 0
     mc_fail_threshold: int = 0
 
     @model_validator(mode="before")
@@ -48,4 +47,4 @@ class _Configuration(BaseModel):
     model_config = ConfigDict(extra="ignore")
 
 
-Configuration = _Configuration
+Configuration = _Configuration()  # pylint: disable=invalid-name

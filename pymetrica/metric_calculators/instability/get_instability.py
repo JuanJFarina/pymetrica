@@ -16,8 +16,9 @@ instability_calculator: InstabilityCalculator = InstabilityCalculator()
 def li(
     dir_path: str,
     report_type: str,
-) -> None:
+) -> int:
     codebase = parse_codebase(dir_path)
     instability_metric = instability_calculator.calculate_metric(codebase)
     report_generator = REPORTS_MAPPING[report_type]()
     click.echo(report_generator.generate_report([instability_metric]))
+    return 0
