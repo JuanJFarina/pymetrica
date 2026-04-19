@@ -38,9 +38,9 @@ repos:
 
   - repo: local
     hooks:
-      - id: pymetrica-aloc
-        name: Pymetrica ALOC
-        entry: pymetrica aloc .
+      - id: pymetrica
+        name: Pymetrica
+        entry: pymetrica run-all .
         language: python
         pass_filenames: false
         additional_dependencies: [.]
