@@ -1,3 +1,5 @@
+import sys
+
 import click
 
 from pymetrica.codebase_parser import parse_codebase
@@ -16,14 +18,15 @@ hv_calculator: HalsteadVolumeCalculator = HalsteadVolumeCalculator()
 def hv(
     dir_path: str,
     report_type: str,
-) -> int:
+) -> None:
     codebase = parse_codebase(dir_path)
     hv_metric = hv_calculator.calculate_metric(codebase)
     report_generator = REPORTS_MAPPING[report_type]()
     click.echo(report_generator.generate_report([hv_metric]))
-    return (
+    exit_status = (
         0
         if Configuration.hv_fail_threshold == 0
-        or hv_metric.results.hv_number <= Configuration.hv_fail_threshold
+        or hv_metric.results.hv_per_lloc <= Configuration.hv_fail_threshold
         else 1
     )
+    sys.exit(exit_status)

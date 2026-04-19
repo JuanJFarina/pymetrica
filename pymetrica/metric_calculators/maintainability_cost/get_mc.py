@@ -1,3 +1,5 @@
+import sys
+
 import click
 
 from pymetrica.codebase_parser import parse_codebase
@@ -21,9 +23,10 @@ def mc(
     mc_metric = mc_calculator.calculate_metric(codebase)
     report_generator = REPORTS_MAPPING[report_type]()
     click.echo(report_generator.generate_report([mc_metric]))
-    return (
+    exit_status = (
         0
         if Configuration.mc_fail_threshold == 0
         or mc_metric.results.maintainability_cost <= Configuration.mc_fail_threshold
         else 1
     )
+    sys.exit(exit_status)

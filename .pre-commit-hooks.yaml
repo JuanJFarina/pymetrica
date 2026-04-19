@@ -1,0 +1,34 @@
+- id: pymetrica
+  name: Pymetrica
+  entry: pymetrica-run-all .
+  language: python
+  require_serial: true
+  pass_filenames: false
+
+- id: pymetrica-aloc
+  name: Pymetrica ALOC
+  entry: pymetrica-aloc .
+  language: python
+  require_serial: true
+  pass_filenames: false
+
+- id: pymetrica-cc
+  name: Pymetrica CC
+  entry: pymetrica-cc .
+  language: python
+  require_serial: true
+  pass_filenames: false
+
+- id: pymetrica-hv
+  name: Pymetrica HV
+  entry: pymetrica-hv .
+  language: python
+  require_serial: true
+  pass_filenames: false
+
+- id: pymetrica-mc
+  name: Pymetrica MC
+  entry: pymetrica-mc .
+  language: python
+  require_serial: true
+  pass_filenames: false

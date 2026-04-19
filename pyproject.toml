@@ -34,6 +34,11 @@ classifiers = [
 
 [project.scripts]
 pymetrica = "pymetrica.__main__:main"
+pymetrica-run-all = "pymetrica.run_all:run_all"
+pymetrica-aloc = "pymetrica.metric_calculators.abstract_lines_of_code.get_aloc:aloc"
+pymetrica-cc = "pymetrica.metric_calculators.cyclomatic_complexity.get_cc:cc"
+pymetrica-hv = "pymetrica.metric_calculators.halstead_volume.get_hv:hv"
+pymetrica-mc = "pymetrica.metric_calculators.maintainability_cost.get_mc:mc"
 
 [tool.setuptools.package-data]
 "*" = ["py.typed", "*.md"]
@@ -102,3 +107,6 @@ patch_tags = ["fix"]
 
 [tool.pymetrica]
 aloc_fail_threshold = 30
+cc_fail_threshold = 2
+hv_fail_threshold = 10
+mc_fail_threshold = 25

@@ -35,3 +35,12 @@ repos:
     hooks:
       - id: pylint
         exclude: "tests/sample_codebases"
+
+  - repo: local
+    hooks:
+      - id: pymetrica-aloc
+        name: Pymetrica ALOC
+        entry: pymetrica aloc .
+        language: python
+        pass_filenames: false
+        additional_dependencies: [.]

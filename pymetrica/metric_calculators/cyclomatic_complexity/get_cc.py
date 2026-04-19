@@ -1,3 +1,5 @@
+import sys
+
 import click
 
 from pymetrica.codebase_parser import parse_codebase
@@ -16,14 +18,15 @@ cc_calculator: CCCalculator = CCCalculator()
 def cc(
     dir_path: str,
     report_type: str,
-) -> int:
+) -> None:
     codebase = parse_codebase(dir_path)
     cc_metric = cc_calculator.calculate_metric(codebase)
     report_generator = REPORTS_MAPPING[report_type]()
     click.echo(report_generator.generate_report([cc_metric]))
-    return (
+    exit_status = (
         0
         if Configuration.cc_fail_threshold == 0
-        or cc_metric.results.cc_number <= Configuration.cc_fail_threshold
+        or cc_metric.results.lloc_per_cc <= Configuration.cc_fail_threshold
         else 1
     )
+    sys.exit(exit_status)
