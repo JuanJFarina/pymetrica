@@ -9,6 +9,10 @@ from pymetrica.utils import is_comment_line, is_logical_line_of_code, log
 
 
 def parse_codebase(dir_path: str) -> Codebase:  # pylint: disable=too-many-locals
+    if dir_path == ".":
+        log.warning(
+            f"parse_codebase.{dir_path = }, which resolves to {Path(dir_path).absolute()}",
+        )
     base = Path(dir_path).absolute()
     total_lloc = 0
     total_comments = 0
