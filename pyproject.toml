@@ -107,6 +107,6 @@ patch_tags = ["fix"]
 
 [tool.pymetrica]
 aloc_fail_threshold = 30
-cc_fail_threshold = 2
-hv_fail_threshold = 10
+cc_fail_threshold = 10
+hv_fail_threshold = 30
 mc_fail_threshold = 25

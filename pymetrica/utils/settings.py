@@ -39,7 +39,7 @@ class _Configuration(BaseModel):
                 "Pymetrica configurations not found in pyproject.toml, use [tool.pymetrica]",
             )
             return data
-        log.warning(
+        log.info(
             f"Configuration values taken from pyproject.toml values: {sections_values}",
         )
         return sections_values

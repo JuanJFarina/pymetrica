@@ -29,4 +29,10 @@ def mc(
         or mc_metric.results.maintainability_cost <= Configuration.mc_fail_threshold
         else 1
     )
+    if exit_status > 0:
+        click.echo(
+            f"Maintainability Cost {mc_metric.results.maintainability_cost:.2f} "
+            f"exceeds the fail threshold of {Configuration.mc_fail_threshold}",
+            err=True,
+        )
     sys.exit(exit_status)

@@ -29,4 +29,10 @@ def aloc(
         or aloc_metric.results.aloc_percentage <= Configuration.aloc_fail_threshold
         else 1
     )
+    if exit_status > 0:
+        click.echo(
+            f"ALOC percentage {aloc_metric.results.aloc_percentage:.2f}% "
+            f"exceeds the fail threshold of {Configuration.aloc_fail_threshold}%",
+            err=True,
+        )
     sys.exit(exit_status)

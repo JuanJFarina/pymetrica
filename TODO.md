@@ -1,9 +1,7 @@
 ## UPCOMING FEATURES
 
-- Add terminal exits in order to make the tool be usable in CI/CD
 - Add FileReportGenerator
 - Add JSONReportGenerator
-- Add pyproject.toml config for fail thresholds
 -
 
 ## BUGS TO FIX

@@ -9,11 +9,7 @@ from pymetrica.utils import is_comment_line, is_logical_line_of_code, log
 
 
 def parse_codebase(dir_path: str) -> Codebase:  # pylint: disable=too-many-locals
-    if dir_path == ".":
-        log.warning(
-            f"parse_codebase.{dir_path = }, which resolves to {Path(dir_path).absolute()}",
-        )
-    base = Path(dir_path).absolute()
+    base = get_base_path(dir_path)
     total_lloc = 0
     total_comments = 0
     total_classes_definitions = 0
@@ -65,8 +61,8 @@ def parse_codebase(dir_path: str) -> Codebase:  # pylint: disable=too-many-local
     total_files = sum(len(files) for files in layers.values()) + len(root_files)
 
     return Codebase(
-        root_folder_path=str(Path(dir_path).absolute()),
-        root_folder_name=os.path.basename(dir_path),
+        root_folder_path=str(base),
+        root_folder_name=os.path.basename(str(base)),
         folders_number=sum(1 for p in base.rglob("*") if p.is_dir()),
         files_number=total_files,
         lloc_number=total_lloc,
@@ -82,6 +78,34 @@ def parse_codebase(dir_path: str) -> Codebase:  # pylint: disable=too-many-local
         layers=layers,
         root_files=root_files,
     )
+
+
+def get_base_path(dir_path: str) -> Path:
+    base = Path(dir_path).absolute()
+    if dir_path == ".":
+        log.warning(
+            f"parse_codebase.{dir_path = }, which resolves to {base}",
+        )
+        src_folder = Path(str(base) + os.sep + "src")
+        app_folder = Path(str(base) + os.sep + "app")
+        root_folder = (str(base).rsplit(os.sep, maxsplit=1)[-1]).replace("-", "_")
+        with_underscores_folder = Path(str(base) + os.sep + root_folder)
+        base = check_possible_bases(
+            base,
+            [src_folder, app_folder, with_underscores_folder],
+        )
+    return base
+
+
+def check_possible_bases(base: Path, folders: list[Path]) -> Path:
+    for folder in folders:
+        if folder.exists() and folder.is_dir():
+            log.warning(
+                f"parse_codebase: {folder} exists and is a directory, "
+                f"using it as base path instead of {base}",
+            )
+            base = folder
+    return base
 
 
 def get_layers_from_path(base: Path) -> dict[str, list[Code]]:
