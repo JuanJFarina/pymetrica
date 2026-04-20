@@ -31,12 +31,9 @@ jinja2
     #   mkdocstrings
 markdown
     # via
-    #   markdown-include
     #   mkdocs
     #   mkdocs-material
     #   pymdown-extensions
-markdown-include
-    # via -r docs/requirements.in
 markupsafe
     # via
     #   jinja2

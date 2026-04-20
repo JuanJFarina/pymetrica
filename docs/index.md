@@ -1,29 +1,40 @@
-{!README.md!}
+# Pymetrica
 
-## Quick Links
+Pymetrica is a static analysis tool for Python codebases that combines
+classical software metrics with architecture-aware reporting.
 
-- **[Usage Guide](usage.md)** - Installation and getting started
-- **[API Reference](api.md)** - Full API documentation
-- **[GitHub Repository](https://github.com/JuanJFarina/pymetrica)** - Source code and issue tracker
+It parses source files with the Python AST, groups code by top-level layers,
+and produces reports that help you reason about complexity, maintainability,
+and coupling.
 
-## Features
+## What You Can Do
 
-✨ **Comprehensive Metrics** - Computes classical software engineering metrics
-📊 **AST-based Analysis** - Accurate parsing using Python's Abstract Syntax Tree
-🔧 **Modular Architecture** - Extensible design for custom metrics and reports
-📈 **CLI Interface** - Easy-to-use command-line tool
-🎯 **Actionable Insights** - Understand code complexity and maintainability
+- Run a full metrics sweep with `pymetrica run-all`.
+- Inspect parser and codebase statistics with `pymetrica base-stats`.
+- Generate Mermaid `.mmd` dependency diagrams for a codebase.
+- Fail CI based on configurable thresholds from `pyproject.toml`.
+- Drill into individual metrics such as ALOC, CC, HV, MC, and instability.
 
-## Getting Started
+## Quick Start
 
 ```bash
-# Install from PyPI
 pip install pymetrica
-
-# Analyze your project
 pymetrica run-all path/to/project
 ```
 
-!!! note
+Pymetrica requires Python 3.10 or newer.
 
-    Pymetrica requires Python 3.10 or higher.
+## Read Next
+
+- [Getting Started](usage.md) for installation, first commands, and example
+  output.
+- [CLI Reference](cli.md) for every public command and supported option.
+- [Configuration](configuration.md) for thresholds, exit codes, and CI usage.
+- [Metrics](metrics.md) for metric definitions and interpretation guidance.
+- [Architecture](architecture.md) for parsing, layering, and diagram behavior.
+- [API Reference](api.md) for the package's public Python surface.
+
+## Source
+
+The project source, issue tracker, and release history live in the
+[GitHub repository](https://github.com/JuanJFarina/pymetrica).

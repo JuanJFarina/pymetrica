@@ -1,52 +1,55 @@
 ```mermaid
 flowchart TD
     subgraph "CLI Layer"
-        CLIParser["CLI Parser"]
+        CLIParser["CLI commands"]
     end
 
-    subgraph "File Parsing Layer"
-        DirReader["Directory Reader"]
+    subgraph "Parsing Layer"
+        DirReader["Codebase parser"]
+        Codebase["Codebase model"]
     end
 
-    subgraph "Metrics Calculator [Builder Pattern]"
-        MetricsCalc["Metrics Calculator"]
-        LLOC["LLOC / File ratio"]
-        CC["CC / N of Functions"]
+    subgraph "Metric Calculators"
+        MetricsCalc["Metric calculators"]
         ALOC["Abstract Lines Of Code %"]
-        MI["Maintainability Index"]
+        CC["Cyclomatic Complexity"]
+        HV["Halstead Volume"]
+        MC["Maintainability Cost"]
+        LI["Instability"]
     end
 
-    subgraph "Report Generator [Strategy Pattern]"
-        ReportGen["Report Generator"]
-        BasicReport["Basic Terminal Report"]
-        PrettyReport["Pretty Terminal Report"]
-        JSONReport["JSON Report"]
+    subgraph "Reporting Layer"
+        ReportGen["Report generator"]
+        BasicReport["Basic terminal report"]
+        Diagram["Mermaid diagram output"]
     end
 
     CLIParser --> DirReader
-    DirReader --> MetricsCalc
+    DirReader --> Codebase
+    Codebase --> MetricsCalc
 
-    MetricsCalc --> LLOC
-    MetricsCalc --> CC
     MetricsCalc --> ALOC
-    MetricsCalc --> MI
+    MetricsCalc --> CC
+    MetricsCalc --> HV
+    MetricsCalc --> MC
+    MetricsCalc --> LI
 
-    LLOC --> ReportGen
-    CC --> ReportGen
     ALOC --> ReportGen
-    MI --> ReportGen
+    CC --> ReportGen
+    HV --> ReportGen
+    MC --> ReportGen
+    LI --> ReportGen
 
     ReportGen --> BasicReport
-    ReportGen --> PrettyReport
-    ReportGen --> JSONReport
+    DirReader --> Diagram
 
     %% Notes attached to nodes
     DirReader --- NoteCodebase
-    NoteCodebase["Note: Produces a 'Codebase' structure with Files, Lines, Sourcecode, and raw stats (LLOC, number of files, functions, etc.)"]
+    NoteCodebase["Note: Builds a Codebase with root files, top-level layers, and parser stats."]
 
     MetricsCalc --- NoteMetric
-    NoteMetric["Note: Produces a list of 'Metric' objects. Each metric is a concrete implementation."]
+    NoteMetric["Note: Produces Metric objects for ALOC, CC, HV, MC, and instability."]
 
     ReportGen --- NoteReport
-    NoteReport["Note: Abstract class for outputting reports. Output type selected via CLI."]
+    NoteReport["Note: BASIC_TERMINAL is the only bundled report backend today."]
 ```
