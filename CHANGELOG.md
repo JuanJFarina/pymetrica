@@ -14,6 +14,8 @@
 
 ### Fix
 
+* fix(config): add todos and fix cicd ([`bb58a66`](https://github.com/JuanJFarina/pymetrica/commit/bb58a66594f3daa15a2fce48902c6a777db91e0e))
+
 * fix(config): change error logs to error standard out ([`7aad07a`](https://github.com/JuanJFarina/pymetrica/commit/7aad07a5edf85bb2b9d33893f8e15e6100efc788))
 
 * fix(config): add automatic discovery of source folder for hook ([`f473c57`](https://github.com/JuanJFarina/pymetrica/commit/f473c57369962da86384b1fbbf1b2ab7e71d76dc))
