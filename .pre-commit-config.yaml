@@ -40,7 +40,6 @@ repos:
     hooks:
       - id: pymetrica
         name: Pymetrica
-        entry: pymetrica run-all .
-        language: python
+        entry: python -m pymetrica.__main__ run-all .
+        language: system
         pass_filenames: false
-        additional_dependencies: [.]
