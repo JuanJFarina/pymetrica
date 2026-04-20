@@ -1,8 +1,10 @@
+import sys
+
 import click
 
 from pymetrica.codebase_parser import parse_codebase
 from pymetrica.report_generators import REPORTS_MAPPING
-from pymetrica.utils import run_profiler
+from pymetrica.utils import Configuration, run_profiler
 
 from .aloc_calculator import AlocCalculator
 
@@ -21,3 +23,16 @@ def aloc(
     aloc_metric = aloc_calculator.calculate_metric(codebase)
     report_generator = REPORTS_MAPPING[report_type]()
     click.echo(report_generator.generate_report([aloc_metric]))
+    exit_status = (
+        0
+        if Configuration.aloc_fail_threshold == 0
+        or aloc_metric.results.aloc_percentage <= Configuration.aloc_fail_threshold
+        else 1
+    )
+    if exit_status > 0:
+        click.echo(
+            f"ALOC percentage {aloc_metric.results.aloc_percentage:.2f}% "
+            f"exceeds the fail threshold of {Configuration.aloc_fail_threshold}%",
+            err=True,
+        )
+    sys.exit(exit_status)

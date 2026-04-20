@@ -2,6 +2,41 @@
 
 
 
+## v1.2.0 (2026-04-20)
+
+### Feature
+
+* feat(config): add pre commit hook compatibility ([`af5fce0`](https://github.com/JuanJFarina/pymetrica/commit/af5fce0d212a76ca444b628310a2aa2f1f4ef43a))
+
+* feat(config): add pyproject configuration feature ([`2f04d55`](https://github.com/JuanJFarina/pymetrica/commit/2f04d554539a0b878965bc67cf7eefb003d588ba))
+
+* feat(config): add initial read the docs config ([`13f5dd5`](https://github.com/JuanJFarina/pymetrica/commit/13f5dd5f77ae582bd32d525eb6a4208cdfc22c65))
+
+### Fix
+
+* fix(config): finish first mkdocs implementation ([`b574281`](https://github.com/JuanJFarina/pymetrica/commit/b5742814fd8eb539cb291c6f29ab5b83ed6b9886))
+
+* fix(config): add upcoming feature on primitive check ([`4ee6645`](https://github.com/JuanJFarina/pymetrica/commit/4ee66456510cbe6ff32daf3be562e721327293d7))
+
+* fix(config): add dependencies installation in gh action ([`e5e0892`](https://github.com/JuanJFarina/pymetrica/commit/e5e0892c115fa916f2fed5e4464932fc1195296c))
+
+* fix(config): change local hook config ([`8aee9a1`](https://github.com/JuanJFarina/pymetrica/commit/8aee9a1b053ac29e11780d7f238e791978afda22))
+
+* fix(config): add todos and fix cicd ([`bb58a66`](https://github.com/JuanJFarina/pymetrica/commit/bb58a66594f3daa15a2fce48902c6a777db91e0e))
+
+* fix(config): change error logs to error standard out ([`7aad07a`](https://github.com/JuanJFarina/pymetrica/commit/7aad07a5edf85bb2b9d33893f8e15e6100efc788))
+
+* fix(config): add automatic discovery of source folder for hook ([`f473c57`](https://github.com/JuanJFarina/pymetrica/commit/f473c57369962da86384b1fbbf1b2ab7e71d76dc))
+
+* fix(config): use pymetrica run all for this repository ([`7fa86ea`](https://github.com/JuanJFarina/pymetrica/commit/7fa86ea22686f01ab2b2e0133d86f4b99941b7a6))
+
+* fix(config): add warning log for . dir ([`021253c`](https://github.com/JuanJFarina/pymetrica/commit/021253c9bd1abac45585be8e5b4b6a99144db642))
+
+* fix(config): add int return to all metrics except instability ([`1218018`](https://github.com/JuanJFarina/pymetrica/commit/12180182f6fb39430565486979a34ee6e334646c))
+
+* fix(config): fix mkdocs initial draft ([`2c62830`](https://github.com/JuanJFarina/pymetrica/commit/2c6283071c194a8f57a38994ecc0a081d463d7e1))
+
+
 ## v1.1.0 (2026-03-15)
 
 ### Feature

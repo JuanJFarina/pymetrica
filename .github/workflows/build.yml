@@ -112,12 +112,12 @@ jobs:
 
       - name: Check Linting and Format
         run: |
+          pip install -e .
           pip install pre-commit==3.5.0
           pre-commit run --all-files
 
       - name: Run Tests
         run: |
-          pip install -e .
           pip install pytest pytest-cov
           pytest --cov --cov-report=xml:coverage-report.xml
 

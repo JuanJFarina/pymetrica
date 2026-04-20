@@ -7,6 +7,7 @@ name = "pypi"
 pydantic = ">=2.11.7"
 click = ">=8.2.1"
 loguru = ">=0.7.3"
+tomli = ">=2.4.1"
 
 [dev-packages]
 pytest = ">=8.4.1"
@@ -16,9 +17,14 @@ uvicorn = ">=0.40.0"
 pytest-cov = ">=7.0.0"
 
 [requires]
-python_version = ">=3.10"
+python_version = "3.10"
 
 [scripts]
 test = "pytest -v --cov --cov-report=xml:coverage-report.xml"
 install_hooks = "pre-commit install"
 lint = "pre-commit run --all-files"
+test_run_all_hook = "pre-commit try-repo . pymetrica --all-files"
+test_aloc_hook = "pre-commit try-repo . pymetrica-aloc --all-files"
+test_cc_hook = "pre-commit try-repo . pymetrica-cc --all-files"
+test_hv_hook = "pre-commit try-repo . pymetrica-hv --all-files"
+test_mc_hook = "pre-commit try-repo . pymetrica-mc --all-files"

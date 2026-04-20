@@ -1,0 +1,60 @@
+site_name: Pymetrica
+site_description: Architecture-aware software metrics for Python codebases.
+site_url: https://pymetrica.readthedocs.io/en/latest/
+repo_url: https://github.com/JuanJFarina/pymetrica
+repo_name: JuanJFarina/pymetrica
+edit_uri: edit/develop/docs/
+strict: true
+theme:
+  name: material
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.instant
+    - navigation.top
+    - content.action.edit
+    - content.code.annotate
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          paths:
+            - .
+          options:
+            docstring_style: google
+            members_order: source
+            show_root_full_path: false
+            show_root_heading: true
+            show_source: false
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.highlight:
+      use_pygments: true
+  - pymdownx.superfences
+  - toc:
+      permalink: true
+nav:
+  - Home: index.md
+  - Getting Started: usage.md
+  - Guides:
+      - CLI Reference: cli.md
+      - Configuration: configuration.md
+  - Concepts:
+      - Metrics: metrics.md
+      - Architecture: architecture.md
+  - Reference:
+      - API Reference: api.md
+  - Project:
+      - Contributing: contributing.md
+      - Changelog: changelog.md

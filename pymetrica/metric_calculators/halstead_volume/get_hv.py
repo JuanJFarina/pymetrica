@@ -1,8 +1,10 @@
+import sys
+
 import click
 
 from pymetrica.codebase_parser import parse_codebase
 from pymetrica.report_generators import REPORTS_MAPPING
-from pymetrica.utils import run_profiler
+from pymetrica.utils import Configuration, run_profiler
 
 from .hv_calculator import HalsteadVolumeCalculator
 
@@ -21,3 +23,16 @@ def hv(
     hv_metric = hv_calculator.calculate_metric(codebase)
     report_generator = REPORTS_MAPPING[report_type]()
     click.echo(report_generator.generate_report([hv_metric]))
+    exit_status = (
+        0
+        if Configuration.hv_fail_threshold == 0
+        or hv_metric.results.hv_per_lloc <= Configuration.hv_fail_threshold
+        else 1
+    )
+    if exit_status > 0:
+        click.echo(
+            f"HV per LLOC {hv_metric.results.hv_per_lloc:.2f} exceeds "
+            f"the fail threshold of {Configuration.hv_fail_threshold}",
+            err=True,
+        )
+    sys.exit(exit_status)
