@@ -14,6 +14,8 @@
 
 ### Fix
 
+* fix(config): finish first mkdocs implementation ([`b574281`](https://github.com/JuanJFarina/pymetrica/commit/b5742814fd8eb539cb291c6f29ab5b83ed6b9886))
+
 * fix(config): add upcoming feature on primitive check ([`4ee6645`](https://github.com/JuanJFarina/pymetrica/commit/4ee66456510cbe6ff32daf3be562e721327293d7))
 
 * fix(config): add dependencies installation in gh action ([`e5e0892`](https://github.com/JuanJFarina/pymetrica/commit/e5e0892c115fa916f2fed5e4464932fc1195296c))
