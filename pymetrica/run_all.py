@@ -64,6 +64,7 @@ def run_all(
         click.echo(
             f"ALOC percentage {metrics[0].results.aloc_percentage:.2f}% exceeds "  # type: ignore[attr-defined]  # pylint: disable=line-too-long
             f"the fail threshold of {Configuration.aloc_fail_threshold}%",
+            err=True,
         )
         exit_status += 1
     if (
@@ -73,6 +74,7 @@ def run_all(
         click.echo(
             f"LLOC per CC {metrics[1].results.lloc_per_cc:.2f} exceeds the "  # type: ignore[attr-defined]  # pylint: disable=line-too-long
             f"fail threshold of {Configuration.cc_fail_threshold}",
+            err=True,
         )
         exit_status += 10
     if (
@@ -82,6 +84,7 @@ def run_all(
         click.echo(
             f"Halstead Volume per LLOC {metrics[2].results.hv_per_lloc:.2f} "  # type: ignore[attr-defined]  # pylint: disable=line-too-long
             f"exceeds the fail threshold of {Configuration.hv_fail_threshold}",
+            err=True,
         )
         exit_status += 100
     if (
@@ -91,6 +94,7 @@ def run_all(
         click.echo(
             f"Maintainability Cost {metrics[3].results.maintainability_cost:.2f} "  # type: ignore[attr-defined]  # pylint: disable=line-too-long
             f"exceeds the fail threshold of {Configuration.mc_fail_threshold}",
+            err=True,
         )
         exit_status += 1000
     sys.exit(exit_status)
