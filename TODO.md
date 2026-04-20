@@ -2,6 +2,7 @@
 
 - Add FileReportGenerator
 - Add JSONReportGenerator
+- Metric Primitive Obsesiveness (either full primitive check, or dict/tuple check)
 -
 
 ## BUGS TO FIX
