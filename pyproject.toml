@@ -47,6 +47,9 @@ pymetrica-mc = "pymetrica.metric_calculators.maintainability_cost.get_mc:mc"
 version = { attr = "pymetrica.__version__" }
 readme = { file = ["README.md"], content-type = "text/markdown" }
 
+[tool.setuptools.packages.find]
+where = ["."]
+
 [tool.setuptools-pipfile]
 
 [tool.mypy]
