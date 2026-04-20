@@ -14,6 +14,8 @@
 
 ### Fix
 
+* fix(config): add dependencies installation in gh action ([`e5e0892`](https://github.com/JuanJFarina/pymetrica/commit/e5e0892c115fa916f2fed5e4464932fc1195296c))
+
 * fix(config): change local hook config ([`8aee9a1`](https://github.com/JuanJFarina/pymetrica/commit/8aee9a1b053ac29e11780d7f238e791978afda22))
 
 * fix(config): add todos and fix cicd ([`bb58a66`](https://github.com/JuanJFarina/pymetrica/commit/bb58a66594f3daa15a2fce48902c6a777db91e0e))
