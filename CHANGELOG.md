@@ -14,6 +14,8 @@
 
 ### Fix
 
+* fix(config): add upcoming feature on primitive check ([`4ee6645`](https://github.com/JuanJFarina/pymetrica/commit/4ee66456510cbe6ff32daf3be562e721327293d7))
+
 * fix(config): add dependencies installation in gh action ([`e5e0892`](https://github.com/JuanJFarina/pymetrica/commit/e5e0892c115fa916f2fed5e4464932fc1195296c))
 
 * fix(config): change local hook config ([`8aee9a1`](https://github.com/JuanJFarina/pymetrica/commit/8aee9a1b053ac29e11780d7f238e791978afda22))
