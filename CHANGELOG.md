@@ -2,6 +2,15 @@
 
 
 
+## v1.2.1 (2026-04-21)
+
+### Fix
+
+* fix(config): add dir exclusion configuration ([`ff167d2`](https://github.com/JuanJFarina/pymetrica/commit/ff167d23e8d8374d327cd9c8f510d845cabfee68))
+
+* fix(config): sort layer metrics correctly ([`9ceca5b`](https://github.com/JuanJFarina/pymetrica/commit/9ceca5bea27449e87c5fdfc17105caada94ecd2d))
+
+
 ## v1.2.0 (2026-04-21)
 
 ### Feature
