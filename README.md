@@ -5,6 +5,7 @@
 [![Python](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org)
 
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen)](https://github.com/pre-commit/pre-commit)
+[![Dependabot](https://img.shields.io/badge/dependabot-enabled-brightgreen)](https://github.com/JuanJFarina/pymetrica/blob/main/.github/dependabot.yml)
 [![Ruff](https://img.shields.io/badge/lint-ruff-ccff00)](https://github.com/astral-sh/ruff)
 [![Pylint](https://img.shields.io/badge/lint-pylint-yellowgreen)](https://pylint.pycqa.org/)
 [![Type Checked](https://img.shields.io/badge/type%20checked-mypy-blue)](http://mypy-lang.org/)
