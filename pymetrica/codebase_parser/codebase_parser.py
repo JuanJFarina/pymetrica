@@ -1,9 +1,11 @@
 import ast
 import os
+from fnmatch import fnmatch
 from pathlib import Path
 
 from pymetrica.models import Code, Codebase
 from pymetrica.utils import is_comment_line, is_logical_line_of_code, log
+from pymetrica.utils.settings import Configuration
 
 # TODO ignore folders inside .gitignore
 
@@ -18,6 +20,11 @@ def parse_codebase(dir_path: str) -> Codebase:  # pylint: disable=too-many-local
     root_files = list[Code]()
 
     for path in base.rglob("*.py"):
+        if is_excluded(path, base):
+            log.warning(
+                f"parse_codebase.{path = } excluded by pyproject.toml configuration",
+            )
+            continue
         source = path.read_text(encoding="utf-8")
         lines = source.splitlines(keepends=True)
         try:
@@ -78,6 +85,11 @@ def parse_codebase(dir_path: str) -> Codebase:  # pylint: disable=too-many-local
         layers=layers,
         root_files=root_files,
     )
+
+
+def is_excluded(path: Path, root: Path) -> bool:
+    rel_path = path.relative_to(root).as_posix()
+    return any(fnmatch(rel_path, p) for p in Configuration.exclude)
 
 
 def get_base_path(dir_path: str) -> Path:
