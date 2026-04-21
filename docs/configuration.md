@@ -1,7 +1,7 @@
 # Configuration
 
-Pymetrica reads optional threshold settings from `[tool.pymetrica]` in
-`pyproject.toml`.
+Pymetrica reads optional threshold and exclusion settings from
+`[tool.pymetrica]` in `pyproject.toml`.
 
 ## Where Configuration Comes From
 
@@ -19,9 +19,11 @@ aloc_fail_threshold = 30
 cc_fail_threshold = 10
 hv_fail_threshold = 30
 mc_fail_threshold = 25
+exclude = ["generated/*", "vendor/*"]
 ```
 
-Each setting defaults to `0`, which disables failure gating for that metric.
+Each threshold defaults to `0`, which disables failure gating for that metric.
+`exclude` defaults to an empty list.
 
 | Setting | Compared against | Used by |
 | --- | --- | --- |
@@ -29,6 +31,25 @@ Each setting defaults to `0`, which disables failure gating for that metric.
 | `cc_fail_threshold` | `lloc_per_cc` | `cc`, `run-all` |
 | `hv_fail_threshold` | `hv_per_lloc` | `hv`, `run-all` |
 | `mc_fail_threshold` | `maintainability_cost` | `mc`, `run-all` |
+| `exclude` | Relative file paths matched with `fnmatch` | `run-all`, `base-stats`, `aloc`, `cc`, `hv`, `mc`, `li` |
+
+## Exclude Patterns
+
+`exclude` is evaluated during parsing, before parser statistics, diagrams, or
+metrics are produced.
+
+Important details:
+
+- patterns are matched against each analyzed file path relative to the resolved
+  analysis root
+- paths are normalized to forward slashes before matching
+- matching uses Python's `fnmatch`, so entries such as `generated/*` or
+  `legacy/test_*.py` are valid
+
+For example, if `pymetrica run-all .` resolves the codebase root to `src/`,
+then `exclude = ["generated/*"]` matches files such as
+`src/generated/models.py` because the relative path being checked is
+`generated/models.py`.
 
 ## Exit-Code Behavior
 
@@ -83,6 +104,32 @@ command instead:
 pymetrica mc .
 ```
 
+## Pre-commit Hooks
+
+Pymetrica also publishes ready-to-use `pre-commit` hooks for `run-all` and the
+threshold-gated single-metric commands:
+
+```yaml
+repos:
+  - repo: https://github.com/JuanJFarina/pymetrica
+    rev: v1.2.0
+    hooks:
+      - id: pymetrica
+      - id: pymetrica-mc
+```
+
+Available hook IDs today:
+
+- `pymetrica`
+- `pymetrica-aloc`
+- `pymetrica-cc`
+- `pymetrica-hv`
+- `pymetrica-mc`
+
+These hooks analyze the repository root (`.`) and ignore the filename list that
+`pre-commit` normally passes to hooks. Thresholds and exclusions still come
+from the repository's own `pyproject.toml`.
+
 ## Practical Notes
 
 - Threshold evaluation uses the metrics as Pymetrica reports them today. For
@@ -90,3 +137,6 @@ pymetrica mc .
 - Because configuration is resolved from the current working directory, running
   `pymetrica path/to/other/project` from outside that project will not use the
   other project's thresholds unless you change into that directory first.
+- Exclusion patterns are evaluated relative to the resolved analysis root. When
+  `pymetrica run-all .` auto-detects `src/`, `app/`, or a matching package
+  directory, patterns are relative to that detected folder.

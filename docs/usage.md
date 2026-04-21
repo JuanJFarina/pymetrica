@@ -40,7 +40,8 @@ pymetrica run-all path/to/project
 
 The default output is a short report with the top-level values for every metric.
 Use `--long-report` when you want the descriptive summaries and per-layer
-breakdown.
+breakdown. Any configured `[tool.pymetrica].exclude` patterns are applied before
+the codebase is parsed.
 
 ### Example Short Report
 
@@ -71,6 +72,10 @@ Metric: Instability
 root: 0.0
 ----------------------------------------------------------------------------------------------------
 ```
+
+If you switch to a single-metric command such as `pymetrica cc path/to/project`,
+Pymetrica always prints the descriptive report format instead of this short
+CI-oriented layout.
 
 ## Inspect Base Stats and Generate a Diagram
 
@@ -105,6 +110,7 @@ See [Metrics](metrics.md) for the full definitions and reporting details.
 ## Where to Go Next
 
 - [CLI Reference](cli.md) documents every public command and option.
-- [Configuration](configuration.md) covers thresholds, exit codes, and CI use.
+- [Configuration](configuration.md) covers thresholds, exclusions, hooks, exit
+  codes, and CI use.
 - [Architecture](architecture.md) explains layer detection and diagram output.
 - [API Reference](api.md) covers the exported Python modules.

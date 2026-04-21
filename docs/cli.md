@@ -24,8 +24,12 @@ Available commands:
 
 - `DIR_PATH` is the directory Pymetrica will analyze.
 - `-rt` / `--report-type` currently supports `BASIC_TERMINAL`.
+- All parsing commands honor `[tool.pymetrica].exclude` patterns from the
+  current repository configuration.
 - `run-all` combines multiple thresholds into one exit code. Individual metric
   commands exit with `1` when their own threshold fails.
+- Only `run-all` supports `--long-report`. Single-metric commands always print
+  the descriptive report format.
 - `li` reports instability, but it is not threshold-gated.
 
 ## `status`
@@ -54,7 +58,8 @@ What it does:
 
 - Parses the codebase.
 - Computes `ALOC`, `CC`, `HV`, `Maintainability Cost`, and `Instability`.
-- Prints either a short summary or a longer descriptive report.
+- Prints a short summary by default, or a longer descriptive report when
+  `--long-report` is set.
 - Returns a composite non-zero exit code if any configured thresholds fail.
 
 Examples:
@@ -114,6 +119,9 @@ named `architecture_diagram_<UTC timestamp>.mmd`.
 
 Use these commands when you want one metric at a time instead of the full
 pipeline.
+
+These commands always emit the descriptive report format. There is no
+single-metric equivalent of `run-all --long-report`.
 
 ### `aloc`
 
