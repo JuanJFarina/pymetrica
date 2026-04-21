@@ -5,6 +5,7 @@
 [![Python](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org)
 
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen)](https://github.com/pre-commit/pre-commit)
+[![Dependabot](https://img.shields.io/badge/dependabot-enabled-brightgreen)](https://github.com/JuanJFarina/pymetrica/blob/main/.github/dependabot.yml)
 [![Ruff](https://img.shields.io/badge/lint-ruff-ccff00)](https://github.com/astral-sh/ruff)
 [![Pylint](https://img.shields.io/badge/lint-pylint-yellowgreen)](https://pylint.pycqa.org/)
 [![Type Checked](https://img.shields.io/badge/type%20checked-mypy-blue)](http://mypy-lang.org/)
@@ -15,9 +16,13 @@
 
 **Pymetrica** is a static analysis tool that computes **software engineering metrics for Python codebases**.
 
-It parses Python source code using the **AST (Abstract Syntax Tree)** and evaluates classical metrics used to assess **complexity, maintainability, and architectural stability**.
+It parses Python source code using the **AST (Abstract Syntax Tree)** and
+evaluates classical metrics used to assess **complexity, maintainability, and
+architectural stability**.
 
-The tool provides a modular architecture, a CLI interface, and extensible reporting to help developers understand the structural quality of their Python projects.
+The tool provides a modular architecture, a CLI interface, a reusable Python
+API, and extensible reporting to help developers understand the structural
+quality of their Python projects.
 
 Repository:
 [https://github.com/JuanJFarina/pymetrica](https://github.com/JuanJFarina/pymetrica)
@@ -32,25 +37,41 @@ Analyze a Python project:
 pymetrica run-all path/to/project
 ```
 
-Example output:
+By default, `run-all` emits a short CI-oriented report. Use `--long-report`
+when you want descriptive summaries and per-layer breakdowns.
+
+Example short report:
 
 ```
+----------------------------------------------------------------------------------------------------
+Short Report
+----------------------------------------------------------------------------------------------------
 Metric: Abstract Lines Of Code
-aloc_number: 67
-aloc_percentage: 14.89
-
+aloc_number: 6
+aloc_percentage: 15.0
+----------------------------------------------------------------------------------------------------
 Metric: Cyclomatic Complexity
-cc_number: 156
-lloc_per_cc: 2.89
-
+cc_number: 23
+lloc_per_cc: 1.7391304347826086
+----------------------------------------------------------------------------------------------------
 Metric: Halstead Volume
-hv_number: 5423.67
-
+hv_number: 704.5342159112735
+hv_per_lloc: 17.613355397781838
+----------------------------------------------------------------------------------------------------
 Metric: Maintainability Cost
-maintainability_cost: 24.67
+maintainability_cost: 50.678396768622775
+raw_line_cost: 50.638396768622776
+----------------------------------------------------------------------------------------------------
+Metric: Instability
+root: 0.0
+----------------------------------------------------------------------------------------------------
 ```
 
 Pymetrica can also analyze **architecture layers and dependencies** within the codebase.
+
+If you switch to a single-metric command such as `pymetrica cc path/to/project`,
+Pymetrica always prints the descriptive report format instead of this short
+layout.
 
 ---
 
@@ -62,7 +83,9 @@ Pymetrica can also analyze **architecture layers and dependencies** within the c
 * Installation
 * Quick Start
 * CLI Commands
+* Configuration and Hooks
 * Architecture Overview
+* Python API
 * Architecture Diagram Generation
 * Testing
 * Contributing
@@ -79,6 +102,9 @@ Pymetrica can also analyze **architecture layers and dependencies** within the c
 * Multiple classical software engineering metrics
 * CLI interface for fast inspection of codebases
 * Optional Mermaid architecture diagrams
+* Configurable thresholds and file exclusion patterns from `pyproject.toml`
+* Published `pre-commit` hooks for automated metric checks
+* Reusable Python API for parser, calculators, and report generation
 * Extensible metric and reporting system
 
 ---
@@ -172,7 +198,13 @@ Values range from:
 
 Requires **Python 3.10 or newer**.
 
-Install from source:
+Install the latest published package from PyPI:
+
+```bash
+pip install pymetrica
+```
+
+Or install from source:
 
 ```bash
 git clone https://github.com/JuanJFarina/pymetrica
@@ -196,11 +228,22 @@ Analyze a Python project:
 pymetrica run-all path/to/project
 ```
 
+Configured `[tool.pymetrica].exclude` patterns are applied before the codebase
+is parsed.
+
 For an initial overview of a codebase:
 
 ```bash
 pymetrica base-stats path/to/project
 ```
+
+To focus on one metric, run its dedicated command:
+
+```bash
+pymetrica cc path/to/project
+```
+
+Single-metric commands always use the descriptive report format.
 
 ---
 
@@ -222,6 +265,56 @@ Typical usage pattern:
 ```
 pymetrica <command> DIR_PATH
 ```
+
+Notes:
+
+* `run-all` supports `--long-report` for descriptive summaries and per-layer detail
+* `aloc`, `cc`, `hv`, `mc`, and `li` always emit the descriptive report format
+* all parsing commands honor `[tool.pymetrica].exclude` patterns
+
+---
+
+# Configuration and Hooks
+
+Pymetrica reads optional thresholds and exclusion patterns from
+`[tool.pymetrica]` in `pyproject.toml`:
+
+```toml
+[tool.pymetrica]
+aloc_fail_threshold = 30
+cc_fail_threshold = 10
+hv_fail_threshold = 30
+mc_fail_threshold = 25
+exclude = ["generated/*", "vendor/*"]
+```
+
+Thresholds default to `0`, which disables failure gating for that metric.
+`exclude` defaults to an empty list.
+
+Important details:
+
+* exclusions are matched against paths relative to the resolved analysis root
+* matching uses Python's `fnmatch`
+* the same settings apply to `run-all`, `base-stats`, and the single-metric commands
+
+Pymetrica also publishes `pre-commit` hooks:
+
+```yaml
+repos:
+  - repo: https://github.com/JuanJFarina/pymetrica
+    rev: v1.2.0
+    hooks:
+      - id: pymetrica
+      - id: pymetrica-mc
+```
+
+Available hook IDs today:
+
+* `pymetrica`
+* `pymetrica-aloc`
+* `pymetrica-cc`
+* `pymetrica-hv`
+* `pymetrica-mc`
 
 ---
 
@@ -285,10 +378,38 @@ Metrics are rendered through pluggable report generators.
 
 Currently supported:
 
-* terminal summaries
-* detailed reports
+* `BASIC_TERMINAL` short terminal summaries
+* `BASIC_TERMINAL` detailed metric reports
 
 Future formats may include JSON, Markdown, or CI-friendly outputs.
+
+---
+
+# Python API
+
+The CLI and the Python API share the same parser, calculators, and report
+registry. A typical programmatic workflow is:
+
+```python
+from pymetrica.codebase_parser import create_diagram, parse_codebase
+from pymetrica.metric_calculators import AlocCalculator, CCCalculator
+from pymetrica.report_generators import REPORTS_MAPPING
+
+codebase = parse_codebase("path/to/project")
+
+metrics = [
+    AlocCalculator().calculate_metric(codebase),
+    CCCalculator().calculate_metric(codebase),
+]
+
+report = REPORTS_MAPPING["BASIC_TERMINAL"]().generate_report(metrics)
+print(report)
+
+create_diagram(codebase, filename="architecture.mmd")
+```
+
+`parse_codebase()` uses the same exclusion rules as the CLI, so configured
+`[tool.pymetrica].exclude` patterns still apply.
 
 ---
 

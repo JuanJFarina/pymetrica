@@ -13,6 +13,8 @@ and coupling.
 - Inspect parser and codebase statistics with `pymetrica base-stats`.
 - Generate Mermaid `.mmd` dependency diagrams for a codebase.
 - Fail CI based on configurable thresholds from `pyproject.toml`.
+- Reuse the parser and metric calculators directly from Python.
+- Install bundled `pre-commit` hooks for automated metric checks.
 - Drill into individual metrics such as ALOC, CC, HV, MC, and instability.
 
 ## Quick Start
@@ -29,10 +31,13 @@ Pymetrica requires Python 3.10 or newer.
 - [Getting Started](usage.md) for installation, first commands, and example
   output.
 - [CLI Reference](cli.md) for every public command and supported option.
-- [Configuration](configuration.md) for thresholds, exit codes, and CI usage.
-- [Metrics](metrics.md) for metric definitions and interpretation guidance.
+- [Configuration](configuration.md) for thresholds, exclusions, hooks, exit
+  codes, and CI usage.
+- [Metrics](metrics.md) for metric definitions, output formats, and
+  interpretation guidance.
 - [Architecture](architecture.md) for parsing, layering, and diagram behavior.
-- [API Reference](api.md) for the package's public Python surface.
+- [API Reference](api.md) for the package's public Python surface and extension
+  points.
 
 ## Source
 

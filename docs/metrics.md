@@ -108,3 +108,7 @@ That means:
 
 Use `pymetrica run-all --long-report DIR_PATH` when you want the descriptive
 summaries and per-layer breakdowns.
+
+The individual `aloc`, `cc`, `hv`, `mc`, and `li` commands already use the
+descriptive report format because they operate on one metric at a time. They do
+not expose a separate `--long-report` switch.

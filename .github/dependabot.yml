@@ -1,0 +1,60 @@
+version: 2
+
+updates:
+  - package-ecosystem: "pip"
+    directory: "/"
+    target-branch: "main"
+    labels:
+      - "dependencies"
+    open-pull-requests-limit: 20
+    commit-message:
+      prefix: "chore"
+      include: "scope"
+    cooldown:
+      default-days: 7
+    exclude-paths:
+      - "docs/**"
+    schedule:
+      interval: "weekly"
+
+  - package-ecosystem: "pip"
+    directory: "/docs"
+    target-branch: "main"
+    labels:
+      - "dependencies"
+    open-pull-requests-limit: 20
+    commit-message:
+      prefix: "chore"
+      include: "scope"
+    cooldown:
+      default-days: 7
+    schedule:
+      interval: "weekly"
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    target-branch: "main"
+    labels:
+      - "dependencies"
+    open-pull-requests-limit: 20
+    commit-message:
+      prefix: "chore"
+      include: "scope"
+    cooldown:
+      default-days: 7
+    schedule:
+      interval: "weekly"
+
+  - package-ecosystem: "docker"
+    directory: "/.devcontainer"
+    target-branch: "main"
+    labels:
+      - "dependencies"
+    open-pull-requests-limit: 20
+    commit-message:
+      prefix: "chore"
+      include: "scope"
+    cooldown:
+      default-days: 7
+    schedule:
+      interval: "monthly"

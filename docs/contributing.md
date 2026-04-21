@@ -28,6 +28,14 @@ If you are working on the docs site, you can preview it locally with:
 mkdocs serve
 ```
 
+If you are changing hook behavior, you can exercise the published local hook
+definitions directly:
+
+```bash
+pre-commit try-repo . pymetrica --all-files
+pre-commit try-repo . pymetrica-mc --all-files
+```
+
 ## Good Contribution Targets
 
 - improve metric explanations and examples
