@@ -2,6 +2,17 @@
 
 
 
+## v1.3.0 (2026-04-21)
+
+### Feature
+
+* feat(config): add dependabot ([`bf02a10`](https://github.com/JuanJFarina/pymetrica/commit/bf02a102f3474b94489557a12fa702e5754b14c3))
+
+### Fix
+
+* fix(config): update docs and readme ([`9721e1a`](https://github.com/JuanJFarina/pymetrica/commit/9721e1a1d4018b0b42b9bf13f8d9b38e17c05836))
+
+
 ## v1.2.1 (2026-04-21)
 
 ### Fix
