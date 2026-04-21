@@ -80,6 +80,10 @@ class MaintainabilityCostCalculator(MetricCalculator[MaintainabilityCostResults]
             results=MaintainabilityCostResults(
                 maintainability_cost=codebase_mc,
                 raw_line_cost=codebase_average_lloc_mc,
-                mc_per_layer=layers_results,
+                mc_per_layer=sorted(
+                    layers_results,
+                    key=lambda x: x.maintainability_cost,
+                    reverse=True,
+                ),
             ),
         )

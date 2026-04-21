@@ -58,7 +58,7 @@ class AlocCalculator(MetricCalculator[AlocResults]):
                 aloc_percentage=total_aloc / codebase.lloc_number * 100,
                 aloc_result_per_layer=sorted(
                     layer_results,
-                    key=lambda x: x.aloc_number,
+                    key=lambda x: x.aloc_percentage,
                     reverse=True,
                 ),
             ),

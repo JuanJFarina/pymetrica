@@ -78,6 +78,10 @@ class HalsteadVolumeCalculator(MetricCalculator[HalsteadVolumeResults]):
             results=HalsteadVolumeResults(
                 hv_number=codebase_halstead_volume,
                 hv_per_lloc=codebase_halstead_volume / (codebase.lloc_number or 1),
-                hv_per_layer=layer_results,
+                hv_per_layer=sorted(
+                    layer_results,
+                    key=lambda x: x.hv_per_lloc,
+                    reverse=True,
+                ),
             ),
         )
