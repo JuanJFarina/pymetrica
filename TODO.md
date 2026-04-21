@@ -14,6 +14,4 @@
 ## QUALITY OF LIFE IDEAS
 
 - Convert base-stats in a proper metric so it can be used inside run-all
-- Add folder exclusion configuration for pyproject.toml
-- Sort metrics layer results based on "worst to best" so  it's easier to understand what to fix/refactor
 -

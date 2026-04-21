@@ -113,3 +113,4 @@ aloc_fail_threshold = 30
 cc_fail_threshold = 10
 hv_fail_threshold = 30
 mc_fail_threshold = 25
+exclude = ["playground/*"]

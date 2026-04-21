@@ -50,6 +50,9 @@ class CCCalculator(MetricCalculator[CCResults]):
                 lloc_per_cc=codebase.lloc_number / codebase_complexity
                 if codebase_complexity > 0
                 else 0,
-                cc_result_per_layer=layer_results,
+                cc_result_per_layer=sorted(
+                    layer_results,
+                    key=lambda x: x.lloc_per_cc if x.lloc_per_cc > 0 else float("inf"),
+                ),
             ),
         )

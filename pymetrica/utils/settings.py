@@ -22,6 +22,7 @@ class _Configuration(BaseModel):
     cc_fail_threshold: int = 0
     hv_fail_threshold: int = 0
     mc_fail_threshold: int = 0
+    exclude: list[str] = []
 
     @model_validator(mode="before")
     @classmethod
