@@ -2,6 +2,17 @@
 
 
 
+## v1.3.1 (2026-04-26)
+
+### Fix
+
+* fix(config): improve fail messages to help understand how to improve the codebase ([`f527d73`](https://github.com/JuanJFarina/pymetrica/commit/f527d734b23676a2261c2805d508f37198ca91ba))
+
+* fix(config): invert cc fail threshold so it fails when there are fewer lloc per cc branch ([`7b04b77`](https://github.com/JuanJFarina/pymetrica/commit/7b04b779b14733a85c3caa40bb9f1e72bb0bf244))
+
+* fix(config): invert cc fail threshold so it fails when there are fewer lloc per cc branch ([`f38dc20`](https://github.com/JuanJFarina/pymetrica/commit/f38dc20c3839ce54db282b59dbef162892fe24e3))
+
+
 ## v1.3.0 (2026-04-21)
 
 ### Feature

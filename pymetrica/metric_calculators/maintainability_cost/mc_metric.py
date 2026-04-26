@@ -34,5 +34,24 @@ class MaintainabilityCostResults(Results):
             )
         return summary
 
+    def get_fail_message(self, fail_threshold: int) -> str:
+        message = (
+            f"Maintainability Cost {self.maintainability_cost:.2f}% exceeds "
+            f"the fail threshold of {fail_threshold}%. "
+        )
+        if self.raw_line_cost >= (self.maintainability_cost / 2):
+            message += (
+                "More than half of the maintainability cost comes from the "
+                "sheer size of the codebase. This may indicate the codebase "
+                "could benefit from design patterns, stricter typing, "
+                "reusability of logic, etc."
+            )
+        else:
+            message += (
+                "Average line of code is too complex, split up logic among "
+                "multiple lines, use more indirections, and overall simplify."
+            )
+        return message
+
 
 class MaintainabilityCostMetric(Metric[MaintainabilityCostResults]): ...

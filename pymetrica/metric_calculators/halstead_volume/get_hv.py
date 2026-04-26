@@ -31,8 +31,7 @@ def hv(
     )
     if exit_status > 0:
         click.echo(
-            f"HV per LLOC {hv_metric.results.hv_per_lloc:.2f} exceeds "
-            f"the fail threshold of {Configuration.hv_fail_threshold}",
+            hv_metric.results.get_fail_message(Configuration.hv_fail_threshold),
             err=True,
         )
     sys.exit(exit_status)
