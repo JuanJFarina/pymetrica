@@ -31,7 +31,7 @@ def cc(
     )
     if exit_status > 0:
         click.echo(
-            f"LLOC per CC {cc_metric.results.lloc_per_cc:.2f} exceeds the "
+            f"LLOC per CC {cc_metric.results.lloc_per_cc:.2f} is below the "
             f"fail threshold of {Configuration.cc_fail_threshold}",
             err=True,
         )

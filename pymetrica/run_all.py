@@ -69,10 +69,10 @@ def run_all(
         exit_status += 1
     if (
         Configuration.cc_fail_threshold != 0
-        and metrics[1].results.lloc_per_cc > Configuration.cc_fail_threshold  # type: ignore[attr-defined]  # pylint: disable=line-too-long
+        and metrics[1].results.lloc_per_cc < Configuration.cc_fail_threshold  # type: ignore[attr-defined]  # pylint: disable=line-too-long
     ):
         click.echo(
-            f"LLOC per CC {metrics[1].results.lloc_per_cc:.2f} exceeds the "  # type: ignore[attr-defined]  # pylint: disable=line-too-long
+            f"LLOC per CC {metrics[1].results.lloc_per_cc:.2f} is below the "  # type: ignore[attr-defined]  # pylint: disable=line-too-long
             f"fail threshold of {Configuration.cc_fail_threshold}",
             err=True,
         )
