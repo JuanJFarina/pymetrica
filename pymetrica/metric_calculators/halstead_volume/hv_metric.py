@@ -31,5 +31,14 @@ class HalsteadVolumeResults(Results):
             )
         return summary
 
+    def get_fail_message(self, fail_threshold: int) -> str:
+        message = (
+            f"Halstead Volume per LLOC {self.hv_per_lloc:.2f} exceeds "
+            f"the fail threshold of {fail_threshold}. "
+            "Reduce the number of unique operators and operands, and the "
+            "overall size of the program."
+        )
+        return message
+
 
 class HalsteadVolumeMetric(Metric[HalsteadVolumeResults]): ...

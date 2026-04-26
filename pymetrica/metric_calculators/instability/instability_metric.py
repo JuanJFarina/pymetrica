@@ -18,5 +18,8 @@ class InstabilityResults(Results):
             summary += f"  {layer}: {instability}\n"
         return summary
 
+    def get_fail_message(self, fail_threshold: int) -> str:
+        raise NotImplementedError("Instability metric does not have a fail threshold.")
+
 
 class InstabilityMetric(Metric[InstabilityResults]): ...

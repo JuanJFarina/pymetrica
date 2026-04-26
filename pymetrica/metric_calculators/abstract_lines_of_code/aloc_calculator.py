@@ -51,7 +51,8 @@ class AlocCalculator(MetricCalculator[AlocResults]):
                 "Abstract Lines Of Code (ALOC) is a software metric that "
                 "measures the number of lines of code in a program that are "
                 "not concrete operations but rather indirections or abstract "
-                "constructs and definitions."
+                "constructs and definitions. Higher values may indicate "
+                "premature abstraction, or excessive use of indirections."
             ),
             results=AlocResults(
                 aloc_number=total_aloc,

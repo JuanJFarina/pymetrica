@@ -34,5 +34,14 @@ class AlocResults(Results):
             )
         return summary
 
+    def get_fail_message(self, fail_threshold: int) -> str:
+        message = (
+            f"ALOC percentage {self.aloc_percentage:.2f}% exceeds "
+            f"the fail threshold of {fail_threshold}%. "
+            "Reduce the number of functions and classes to improve this "
+            "metric."
+        )
+        return message
+
 
 class AlocMetric(Metric[AlocResults]): ...

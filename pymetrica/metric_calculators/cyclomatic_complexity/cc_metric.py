@@ -33,5 +33,15 @@ class CCResults(Results):
             )
         return summary
 
+    def get_fail_message(self, fail_threshold: int) -> str:
+        message = (
+            f"LLOC per CC {self.lloc_per_cc:.2f} is below "
+            f"the fail threshold of {fail_threshold}. "
+            "Reduce the number of logic branches and decision points by "
+            "simplifying logic, using strict typing, and use multiple "
+            "lines of code to simplify complex expressions."
+        )
+        return message
+
 
 class CCMetric(Metric[CCResults]): ...
