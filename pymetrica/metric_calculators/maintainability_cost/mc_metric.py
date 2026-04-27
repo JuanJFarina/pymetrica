@@ -39,7 +39,7 @@ class MaintainabilityCostResults(Results):
             f"Maintainability Cost {self.maintainability_cost:.2f}% exceeds "
             f"the fail threshold of {fail_threshold}%. "
         )
-        if self.raw_line_cost >= (self.maintainability_cost / 2):
+        if self.raw_line_cost <= (self.maintainability_cost / 2):
             message += (
                 "More than half of the maintainability cost comes from the "
                 "sheer size of the codebase. This may indicate the codebase "
