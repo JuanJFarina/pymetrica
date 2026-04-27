@@ -2,6 +2,13 @@
 
 
 
+## v1.3.2 (2026-04-27)
+
+### Fix
+
+* fix(config): invert mc fail message condition ([`22c98a2`](https://github.com/JuanJFarina/pymetrica/commit/22c98a2a52648bbd394944dc4609cd0cf8d04d3f))
+
+
 ## v1.3.1 (2026-04-26)
 
 ### Fix
