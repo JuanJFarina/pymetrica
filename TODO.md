@@ -14,4 +14,5 @@
 ## QUALITY OF LIFE IDEAS
 
 - Convert base-stats in a proper metric so it can be used inside run-all
+- Metrics store per-file score, in order to show in threshold failing, configurable through pyproject.toml
 -
