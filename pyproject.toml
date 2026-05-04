@@ -38,6 +38,7 @@ pymetrica-run-all = "pymetrica.run_all:run_all"
 pymetrica-aloc = "pymetrica.metric_calculators.abstract_lines_of_code.get_aloc:aloc"
 pymetrica-cc = "pymetrica.metric_calculators.cyclomatic_complexity.get_cc:cc"
 pymetrica-hv = "pymetrica.metric_calculators.halstead_volume.get_hv:hv"
+pymetrica-po = "pymetrica.metric_calculators.primitive_obsession.get_po:po"
 pymetrica-mc = "pymetrica.metric_calculators.maintainability_cost.get_mc:mc"
 
 [tool.setuptools.package-data]

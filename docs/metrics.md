@@ -1,7 +1,7 @@
 # Metrics
 
-Pymetrica reports five metrics today: `ALOC`, `CC`, `HV`, `Maintainability
-Cost`, and `Instability`.
+Pymetrica reports six metrics today: `ALOC`, `CC`, `HV`, `Primitive Obsession`,
+`Maintainability Cost`, and `Instability`.
 
 In the default short report, Pymetrica prints only the top-level values returned
 by each metric. The long report adds descriptive summaries and, where
@@ -41,6 +41,9 @@ reports:
 `lloc_per_cc` normalizes complexity against the amount of logical code. The long
 report includes per-layer CC values.
 
+When `cc_fail_threshold` is configured, lower `lloc_per_cc` values fail the
+threshold because they indicate more decision points per logical line.
+
 ## Halstead Volume (HV)
 
 Halstead Volume estimates cognitive load from the number of operators and
@@ -52,6 +55,29 @@ Pymetrica collects operator and operand counts from the AST and reports:
 - `hv_per_lloc`
 
 The long report also includes per-layer Halstead values.
+
+## Primitive Obsession (PO)
+
+Primitive Obsession highlights type annotations that rely heavily on primitive
+types instead of domain-specific abstractions.
+
+The current implementation counts annotations for:
+
+- primitive scalar types: `int`, `float`, `bool`, `str`, and `Any`
+- targeted container types: `dict`, `list`, and `tuple`
+- containers whose arguments are also primitive or targeted types
+
+Reported fields:
+
+- `all_primitives`
+- `targeted_primitives`
+- `all_primitives_percent`
+- `targeted_primitives_percent`
+- `all_primitives_failed`
+- `targeted_primitives_failed`
+
+The percentages normalize annotation counts against total logical lines of code.
+The long report also includes per-layer primitive counts.
 
 ## Maintainability Cost (MC)
 
@@ -98,17 +124,17 @@ Important implementation details:
 ## Short Report vs Long Report
 
 The short report is optimized for automation and CI. It prints only the values
-returned by each metric's `get_dict()` method.
+returned by each metric's `dict_` property.
 
 That means:
 
-- ALOC, CC, HV, and MC short reports omit their per-layer lists
+- ALOC, CC, HV, PO, and MC short reports omit their per-layer lists
 - instability short output already includes the layer map, because its result is
   itself a dictionary of layer names to scores
 
 Use `pymetrica run-all --long-report DIR_PATH` when you want the descriptive
 summaries and per-layer breakdowns.
 
-The individual `aloc`, `cc`, `hv`, `mc`, and `li` commands already use the
+The individual `aloc`, `cc`, `hv`, `po`, `mc`, and `li` commands already use the
 descriptive report format because they operate on one metric at a time. They do
 not expose a separate `--long-report` switch.

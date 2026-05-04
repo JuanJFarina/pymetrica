@@ -33,7 +33,13 @@ checks a few common source-layout conventions:
 - a package directory matching the current folder name with hyphens converted to
   underscores
 
-This makes `pymetrica run-all .` convenient for common Python project layouts.
+If more than one candidate exists, Pymetrica checks them in that order and uses
+the last matching candidate. This means a matching package directory wins over
+`app/`, and `app/` wins over `src/`.
+
+This makes `pymetrica run-all .` convenient for common Python project layouts,
+but explicit paths are best when a repository contains more than one candidate
+source directory.
 
 ## Layer Model
 
@@ -76,7 +82,11 @@ Current behavior to know about:
 
 - the diagram writer skips root-level files as diagram components
 - components are top-level Python files inside each layer
+- layer and component directory discovery skips `__pycache__` and hidden
+  directories
 - dependency edges are derived from `from ... import ...` statements
+- generated files start with a Mermaid initialization block that adjusts diagram
+  label styling
 - when no filename is provided, Pymetrica writes
   `architecture_diagram_<UTC timestamp>.mmd`
 

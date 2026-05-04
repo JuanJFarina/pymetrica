@@ -17,6 +17,7 @@ Available commands:
 - `aloc`
 - `cc`
 - `hv`
+- `po`
 - `mc`
 - `li`
 
@@ -57,7 +58,8 @@ pymetrica run-all [--long-report] [-rt BASIC_TERMINAL] DIR_PATH
 What it does:
 
 - Parses the codebase.
-- Computes `ALOC`, `CC`, `HV`, `Maintainability Cost`, and `Instability`.
+- Computes `ALOC`, `CC`, `HV`, `Primitive Obsession`,
+  `Maintainability Cost`, and `Instability`.
 - Prints a short summary by default, or a longer descriptive report when
   `--long-report` is set.
 - Returns a composite non-zero exit code if any configured thresholds fail.
@@ -75,12 +77,14 @@ pymetrica run-all -rt BASIC_TERMINAL path/to/project
 Threshold failures are additive:
 
 - `1`: ALOC threshold exceeded
-- `10`: CC threshold exceeded
-- `100`: HV threshold exceeded
-- `1000`: Maintainability Cost threshold exceeded
+- `2`: CC threshold failed
+- `10`: HV threshold exceeded
+- `20`: Primitive Obsession threshold exceeded
+- `100`: Maintainability Cost threshold exceeded
 
-For example, an exit code of `101` means both the ALOC and HV thresholds were
-exceeded. Instability is always included in the report, but it does not
+For example, an exit code of `11` means both the ALOC and HV thresholds were
+exceeded. An exit code of `120` means Primitive Obsession and Maintainability
+Cost failed. Instability is always included in the report, but it does not
 contribute to the exit code.
 
 ## `base-stats`
@@ -139,7 +143,7 @@ pymetrica cc [-rt BASIC_TERMINAL] DIR_PATH
 ```
 
 Reports `Cyclomatic Complexity`. Exits with `1` when `cc_fail_threshold` is
-configured and exceeded.
+configured and `lloc_per_cc` falls below it.
 
 ### `hv`
 
@@ -149,6 +153,16 @@ pymetrica hv [-rt BASIC_TERMINAL] DIR_PATH
 
 Reports `Halstead Volume`. Exits with `1` when `hv_fail_threshold` is
 configured and exceeded.
+
+### `po`
+
+```bash
+pymetrica po [-rt BASIC_TERMINAL] DIR_PATH
+```
+
+Reports `Primitive Obsession`. Exits with `1` when either
+`po_all_fail_threshold` or `po_targeted_fail_threshold` is configured and
+exceeded.
 
 ### `mc`
 
@@ -180,4 +194,4 @@ threshold-based failure status.
 
 These map directly to the same implementations used by the main `pymetrica`
 subcommands. There are no separate standalone scripts for `status`,
-`base-stats`, or `li`.
+`base-stats`, `po`, or `li`.

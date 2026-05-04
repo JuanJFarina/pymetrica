@@ -48,8 +48,8 @@ def run_all(
     report_generator = REPORTS_MAPPING[report_type]()
     if long_report:
         click.echo(report_generator.generate_report(metrics))
-        return
-    click.echo(report_generator.generate_short_report(metrics))
+    else:
+        click.echo(report_generator.generate_short_report(metrics))
 
     exit_status = 0
 

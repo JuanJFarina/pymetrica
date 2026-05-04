@@ -26,6 +26,13 @@
   require_serial: true
   pass_filenames: false
 
+- id: pymetrica-po
+  name: pymetrica po
+  entry: pymetrica-po .
+  language: python
+  require_serial: true
+  pass_filenames: false
+
 - id: pymetrica-mc
   name: pymetrica mc
   entry: pymetrica-mc .

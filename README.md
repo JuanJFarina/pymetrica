@@ -38,7 +38,8 @@ pymetrica run-all path/to/project
 ```
 
 By default, `run-all` emits a short CI-oriented report. Use `--long-report`
-when you want descriptive summaries and per-layer breakdowns.
+when you want descriptive summaries and per-layer breakdowns. Configured
+threshold failures are applied for both report formats.
 
 Example short report:
 
@@ -57,6 +58,14 @@ lloc_per_cc: 1.7391304347826086
 Metric: Halstead Volume
 hv_number: 704.5342159112735
 hv_per_lloc: 17.613355397781838
+----------------------------------------------------------------------------------------------------
+Metric: Primitive Obsession
+all_primitives: 0
+targeted_primitives: 0
+all_primitives_percent: 0.0
+targeted_primitives_percent: 0.0
+all_primitives_failed: False
+targeted_primitives_failed: False
 ----------------------------------------------------------------------------------------------------
 Metric: Maintainability Cost
 maintainability_cost: 50.678396768622775
@@ -163,6 +172,17 @@ Derived from:
 
 ---
 
+## Primitive Obsession (PO)
+
+Highlights type annotations that rely heavily on primitive types instead of
+domain-specific abstractions.
+
+The current implementation counts primitive scalar annotations such as `int`,
+`float`, `bool`, `str`, and `Any`, plus targeted container annotations such as
+`dict`, `list`, and `tuple`.
+
+---
+
 ## Maintainability Cost (MC)
 
 A composite metric derived from:
@@ -255,6 +275,7 @@ pymetrica base-stats
 pymetrica aloc
 pymetrica cc
 pymetrica hv
+pymetrica po
 pymetrica mc
 pymetrica li
 pymetrica run-all
@@ -269,7 +290,7 @@ pymetrica <command> DIR_PATH
 Notes:
 
 * `run-all` supports `--long-report` for descriptive summaries and per-layer detail
-* `aloc`, `cc`, `hv`, `mc`, and `li` always emit the descriptive report format
+* `aloc`, `cc`, `hv`, `po`, `mc`, and `li` always emit the descriptive report format
 * all parsing commands honor `[tool.pymetrica].exclude` patterns
 
 ---
@@ -284,6 +305,8 @@ Pymetrica reads optional thresholds and exclusion patterns from
 aloc_fail_threshold = 30
 cc_fail_threshold = 10
 hv_fail_threshold = 30
+po_all_fail_threshold = 10
+po_targeted_fail_threshold = 2
 mc_fail_threshold = 25
 exclude = ["generated/*", "vendor/*"]
 ```
@@ -295,17 +318,20 @@ Important details:
 
 * exclusions are matched against paths relative to the resolved analysis root
 * matching uses Python's `fnmatch`
-* the same settings apply to `run-all`, `base-stats`, and the single-metric commands
+* exclusions apply to `run-all`, `base-stats`, and the single-metric commands
+* thresholds apply to `run-all` and the threshold-gated single-metric commands
+* `cc_fail_threshold` fails when `lloc_per_cc` falls below the configured value
 
 Pymetrica also publishes `pre-commit` hooks:
 
 ```yaml
 repos:
   - repo: https://github.com/JuanJFarina/pymetrica
-    rev: v1.2.0
+    rev: v1.3.2
     hooks:
       - id: pymetrica
       - id: pymetrica-mc
+      - id: pymetrica-po
 ```
 
 Available hook IDs today:
@@ -314,6 +340,7 @@ Available hook IDs today:
 * `pymetrica-aloc`
 * `pymetrica-cc`
 * `pymetrica-hv`
+* `pymetrica-po`
 * `pymetrica-mc`
 
 ---
@@ -392,7 +419,11 @@ registry. A typical programmatic workflow is:
 
 ```python
 from pymetrica.codebase_parser import create_diagram, parse_codebase
-from pymetrica.metric_calculators import AlocCalculator, CCCalculator
+from pymetrica.metric_calculators import (
+    AlocCalculator,
+    CCCalculator,
+    PrimitiveObsessionCalculator,
+)
 from pymetrica.report_generators import REPORTS_MAPPING
 
 codebase = parse_codebase("path/to/project")
@@ -400,6 +431,7 @@ codebase = parse_codebase("path/to/project")
 metrics = [
     AlocCalculator().calculate_metric(codebase),
     CCCalculator().calculate_metric(codebase),
+    PrimitiveObsessionCalculator().calculate_metric(codebase),
 ]
 
 report = REPORTS_MAPPING["BASIC_TERMINAL"]().generate_report(metrics)

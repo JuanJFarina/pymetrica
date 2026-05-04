@@ -14,7 +14,11 @@ registry. A typical programmatic workflow is:
 
 ```python
 from pymetrica.codebase_parser import create_diagram, parse_codebase
-from pymetrica.metric_calculators import AlocCalculator, CCCalculator
+from pymetrica.metric_calculators import (
+    AlocCalculator,
+    CCCalculator,
+    PrimitiveObsessionCalculator,
+)
 from pymetrica.report_generators import REPORTS_MAPPING
 
 codebase = parse_codebase("path/to/project")
@@ -22,6 +26,7 @@ codebase = parse_codebase("path/to/project")
 metrics = [
     AlocCalculator().calculate_metric(codebase),
     CCCalculator().calculate_metric(codebase),
+    PrimitiveObsessionCalculator().calculate_metric(codebase),
 ]
 
 report = REPORTS_MAPPING["BASIC_TERMINAL"]().generate_report(metrics)
