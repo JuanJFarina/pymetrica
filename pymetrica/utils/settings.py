@@ -17,7 +17,7 @@ def find_pyproject() -> Path | None:
     return path if path.exists() else None
 
 
-class _Configuration(BaseModel):
+class Configuration(BaseModel):
     aloc_fail_threshold: int = 0
     cc_fail_threshold: int = 0
     hv_fail_threshold: int = 0
@@ -45,7 +45,23 @@ class _Configuration(BaseModel):
         )
         return sections_values
 
+    @property
+    def cc_fails(self) -> bool:
+        return self.cc_fail_threshold > 0
+
+    @property
+    def aloc_fails(self) -> bool:
+        return self.aloc_fail_threshold > 0
+
+    @property
+    def hv_fails(self) -> bool:
+        return self.hv_fail_threshold > 0
+
+    @property
+    def mc_fails(self) -> bool:
+        return self.mc_fail_threshold > 0
+
     model_config = ConfigDict(extra="ignore")
 
 
-Configuration = _Configuration()  # pylint: disable=invalid-name
+Config = Configuration()

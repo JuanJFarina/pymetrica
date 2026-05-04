@@ -3,6 +3,7 @@ import json
 from pydantic import BaseModel
 
 from pymetrica.models import Metric, Results
+from pymetrica.utils.settings import Config
 
 
 class LayerPO(BaseModel):
@@ -16,13 +17,16 @@ class PrimitiveObsessionResults(Results):
     targeted_primitives: int
     po_per_layer: list[LayerPO]
 
-    def get_dict(self) -> dict[str, int]:
+    @property
+    def dict_(self) -> dict[str, int]:
         return self.model_dump(exclude={"po_per_layer"})
 
-    def get_json(self) -> str:
-        return json.dumps(self.get_dict())
+    @property
+    def json_(self) -> str:
+        return json.dumps(self.dict_)
 
-    def get_summary(self) -> str:
+    @property
+    def summary(self) -> str:
         summary = (
             f"\nTotal Codebase Primitives: {self.total_primitives} "
             f"({self.targeted_primitives} critically loose types)\n"
@@ -34,12 +38,17 @@ class PrimitiveObsessionResults(Results):
             )
         return summary
 
-    def get_fail_message(self, fail_threshold: int) -> str:
+    @property
+    def fail_message(self) -> str:
         message = (
             f"Primitive Obsession {self.primitive_obsession}% exceeds "
-            f"the fail threshold of {fail_threshold}%. "
+            f"the fail threshold of {Config.po_fail_threshold}%. "
         )
         return message
+
+    @property
+    def exceeds_threshold(self) -> bool:
+        return super().exceeds_threshold
 
 
 class PrimitiveObsessionMetric(Metric[PrimitiveObsessionResults]): ...

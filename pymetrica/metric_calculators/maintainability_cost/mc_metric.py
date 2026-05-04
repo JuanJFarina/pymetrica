@@ -3,6 +3,7 @@ import json
 from pydantic import BaseModel
 
 from pymetrica.models import Metric, Results
+from pymetrica.utils.settings import Config
 
 
 class LayerMC(BaseModel):
@@ -16,13 +17,16 @@ class MaintainabilityCostResults(Results):
     raw_line_cost: float
     mc_per_layer: list[LayerMC]
 
-    def get_dict(self) -> dict[str, int]:
+    @property
+    def dict_(self) -> dict[str, int]:
         return self.model_dump(exclude={"mc_per_layer"})
 
-    def get_json(self) -> str:
-        return json.dumps(self.get_dict())
+    @property
+    def json_(self) -> str:
+        return json.dumps(self.dict_)
 
-    def get_summary(self) -> str:
+    @property
+    def summary(self) -> str:
         summary = (
             f"\nCodebase MC: {self.maintainability_cost:.2f} "
             f"({self.raw_line_cost:.2f} raw MC, without size penalty)\n"
@@ -34,10 +38,11 @@ class MaintainabilityCostResults(Results):
             )
         return summary
 
-    def get_fail_message(self, fail_threshold: int) -> str:
+    @property
+    def fail_message(self) -> str:
         message = (
             f"Maintainability Cost {self.maintainability_cost:.2f}% exceeds "
-            f"the fail threshold of {fail_threshold}%. "
+            f"the fail threshold of {Config.mc_fail_threshold}%. "
         )
         if self.raw_line_cost <= (self.maintainability_cost / 2):
             message += (
@@ -52,6 +57,10 @@ class MaintainabilityCostResults(Results):
                 "multiple lines, use more indirections, and overall simplify."
             )
         return message
+
+    @property
+    def exceeds_threshold(self) -> bool:
+        return Config.mc_fails and self.maintainability_cost > Config.mc_fail_threshold
 
 
 class MaintainabilityCostMetric(Metric[MaintainabilityCostResults]): ...

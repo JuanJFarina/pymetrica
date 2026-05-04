@@ -6,19 +6,27 @@ from pymetrica.models import Metric, Results
 class InstabilityResults(Results):
     instability: dict[str, float]
 
-    def get_dict(self) -> dict[str, float]:
+    @property
+    def dict_(self) -> dict[str, float]:
         return self.instability
 
-    def get_json(self) -> str:
-        return json.dumps(self.get_dict())
+    @property
+    def json_(self) -> str:
+        return json.dumps(self.dict_)
 
-    def get_summary(self) -> str:
+    @property
+    def summary(self) -> str:
         summary = "\nInstability for:\n"
         for layer, instability in self.instability.items():
             summary += f"  {layer}: {instability}\n"
         return summary
 
-    def get_fail_message(self, fail_threshold: int) -> str:
+    @property
+    def fail_message(self) -> str:
+        raise NotImplementedError("Instability metric does not have a fail threshold.")
+
+    @property
+    def exceeds_threshold(self) -> bool:
         raise NotImplementedError("Instability metric does not have a fail threshold.")
 
 

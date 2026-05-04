@@ -1,14 +1,7 @@
 import os
 
 # the following imports need to be more specific to avoid cyclic imports
-from pymetrica.metric_calculators.cyclomatic_complexity import (
-    CCCalculator,
-)
-from pymetrica.metric_calculators.halstead_volume import (
-    HalsteadVolumeCalculator,
-)
 from pymetrica.models import Codebase, Metric, MetricCalculator
-from pymetrica.utils import log
 
 from .po_metric import LayerPO, PrimitiveObsessionMetric, PrimitiveObsessionResults
 
