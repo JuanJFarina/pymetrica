@@ -12,12 +12,14 @@ from .metric_calculators import (
     HalsteadVolumeCalculator,
     InstabilityCalculator,
     MaintainabilityCostCalculator,
+    PrimitiveObsessionCalculator,
 )
 
 aloc_calculator: AlocCalculator = AlocCalculator()
 cc_calculator: CCCalculator = CCCalculator()
 hv_calculator: HalsteadVolumeCalculator = HalsteadVolumeCalculator()
 mc_calculator: MaintainabilityCostCalculator = MaintainabilityCostCalculator()
+po_calculator: PrimitiveObsessionCalculator = PrimitiveObsessionCalculator()
 instability_calculator: InstabilityCalculator = InstabilityCalculator()
 
 
@@ -39,6 +41,7 @@ def run_all(
     metrics.append(aloc := aloc_calculator.calculate_metric(codebase))
     metrics.append(cc := cc_calculator.calculate_metric(codebase))
     metrics.append(hv := hv_calculator.calculate_metric(codebase))
+    metrics.append(po := po_calculator.calculate_metric(codebase))
     metrics.append(mc := mc_calculator.calculate_metric(codebase))
     metrics.append(instability_calculator.calculate_metric(codebase))
 
@@ -56,14 +59,18 @@ def run_all(
 
     if cc.results.exceeds_threshold:
         click.echo(cc.results.fail_message, err=True)
-        exit_status += 10
+        exit_status += 2
 
     if hv.results.exceeds_threshold:
         click.echo(hv.results.fail_message, err=True)
-        exit_status += 100
+        exit_status += 10
+
+    if po.results.exceeds_threshold:
+        click.echo(po.results.fail_message, err=True)
+        exit_status += 20
 
     if mc.results.exceeds_threshold:
         click.echo(mc.results.fail_message, err=True)
-        exit_status += 1000
+        exit_status += 100
 
     sys.exit(exit_status)

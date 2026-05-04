@@ -112,5 +112,7 @@ patch_tags = ["fix"]
 aloc_fail_threshold = 30
 cc_fail_threshold = 7
 hv_fail_threshold = 30
+po_all_fail_threshold = 10
+po_targeted_fail_threshold = 2
 mc_fail_threshold = 25
 exclude = ["playground/*"]

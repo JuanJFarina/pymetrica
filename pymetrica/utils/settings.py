@@ -22,6 +22,8 @@ class Configuration(BaseModel):
     cc_fail_threshold: int = 0
     hv_fail_threshold: int = 0
     mc_fail_threshold: int = 0
+    po_targeted_fail_threshold: int = 0
+    po_all_fail_threshold: int = 0
     exclude: list[str] = []
 
     @model_validator(mode="before")
@@ -61,7 +63,15 @@ class Configuration(BaseModel):
     def mc_fails(self) -> bool:
         return self.mc_fail_threshold > 0
 
+    @property
+    def po_targeted_fails(self) -> bool:
+        return self.po_targeted_fail_threshold > 0
+
+    @property
+    def po_all_fails(self) -> bool:
+        return self.po_all_fail_threshold > 0
+
     model_config = ConfigDict(extra="ignore")
 
 
-Config = Configuration()
+Config = Configuration()  # pylint: disable=invalid-name

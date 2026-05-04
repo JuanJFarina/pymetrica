@@ -1,51 +1,64 @@
+import ast
 import os
 
-# the following imports need to be more specific to avoid cyclic imports
 from pymetrica.models import Codebase, Metric, MetricCalculator
 
 from .po_metric import LayerPO, PrimitiveObsessionMetric, PrimitiveObsessionResults
+from .po_visitor import POVisitor
 
 
 class PrimitiveObsessionCalculator(MetricCalculator[PrimitiveObsessionResults]):
-    def calculate_metric(  # pylint: disable=too-many-locals
-        self: "PrimitiveObsessionCalculator",
-        codebase: Codebase,
-    ) -> Metric[PrimitiveObsessionResults]:
+    def calculate_metric(self, codebase: Codebase) -> Metric[PrimitiveObsessionResults]:
+        layers_results = list[LayerPO]()
         layers = codebase.layers.copy()
         layers.update({"root": codebase.root_files})
 
-        layers_results = list[LayerPO]()
+        codebase_all_primitives = 0
+        codebase_targeted_primitives = 0
+
         for layer_name, layer_files in layers.items():
-            layer_name = layer_name.rsplit(os.sep, 1)[-1]
-            layer_lloc = sum(file.lloc_number for file in layer_files)
-            layer_cc = [  # noqa: RUF015
-                result.cc_number
-                for result in cc_metric.results.cc_result_per_layer
-                if result.name == layer_name
-            ][0]
-            layer_hv = [  # noqa: RUF015
-                result.hv_number
-                for result in hv_metric.results.hv_per_layer
-                if result.name == layer_name
-            ][0]
+            layer_all_primitives = 0
+            layer_targeted_primitives = 0
+
+            for code_file in layer_files:
+                tree = ast.parse(code_file.code)
+                visitor = POVisitor()
+                visitor.visit(tree)
+                layer_all_primitives += len(visitor.all_primitives)
+                layer_targeted_primitives += len(visitor.targeted_primitives)
+
+            layers_results.append(
+                LayerPO(
+                    name=layer_name.rsplit(os.sep, 1)[-1],
+                    all_primitives=layer_all_primitives,
+                    targeted_primitives=layer_targeted_primitives,
+                ),
+            )
+            codebase_all_primitives += layer_all_primitives
+            codebase_targeted_primitives += layer_targeted_primitives
 
         return PrimitiveObsessionMetric(
             name="Primitive Obsession",
             description=(
                 "PO is a software metric that measures the extent to which "
-                "primitive types are used excessively in the code, based on "
-                "various factors such as Cyclomatic Complexity, Logical Lines "
-                "Of Code, and Halstead Volume. Lower scores indicate better "
-                "code quality, with scores above 20 suggesting moderate "
-                "primitive obsession and scores above 50 indicating severe "
-                "primitive obsession."
+                "primitive types are used excessively in the code."
             ),
             results=PrimitiveObsessionResults(
-                primitive_obsession=codebase_po,
-                raw_line_cost=codebase_average_lloc_po,
+                all_primitives=codebase_all_primitives,
+                targeted_primitives=codebase_targeted_primitives,
+                all_primitives_percent=(
+                    codebase_all_primitives / codebase.lloc_number * 100
+                    if codebase.lloc_number > 0
+                    else 0.0
+                ),
+                targeted_primitives_percent=(
+                    codebase_targeted_primitives / codebase.lloc_number * 100
+                    if codebase.lloc_number > 0
+                    else 0.0
+                ),
                 po_per_layer=sorted(
                     layers_results,
-                    key=lambda x: x.primitive_obsession,
+                    key=lambda x: x.targeted_primitives,
                     reverse=True,
                 ),
             ),
