@@ -15,5 +15,4 @@
 
 - Convert base-stats in a proper metric so it can be used inside run-all
 - Metrics store per-file score, in order to show in threshold failing, configurable through pyproject.toml
-- Add settings property flag that checks if threshold is 0 or not, and returns a bool
--
+- 
