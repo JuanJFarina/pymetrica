@@ -12,7 +12,7 @@ class BasicTerminalReport(ReportGenerator):
         for metric in metrics:
             report += f"Metric: {metric.name}\n"
             report += f"Description: {metric.description}\n"
-            report += f"Summary: {metric.results.get_summary()}\n"
+            report += f"Summary: {metric.results.summary}\n"
             report += "-" * 100
             report += "\n"
         return report
@@ -23,7 +23,7 @@ class BasicTerminalReport(ReportGenerator):
         report += "-" * 100
         for metric in metrics:
             report += f"\nMetric: {metric.name}\n"
-            results = metric.results.get_dict()
+            results = metric.results.dict_
             for key, value in results.items():
                 report += f"{key}: {value}\n"
             report += "-" * 100

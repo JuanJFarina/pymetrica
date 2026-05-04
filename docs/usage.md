@@ -40,8 +40,9 @@ pymetrica run-all path/to/project
 
 The default output is a short report with the top-level values for every metric.
 Use `--long-report` when you want the descriptive summaries and per-layer
-breakdown. Any configured `[tool.pymetrica].exclude` patterns are applied before
-the codebase is parsed.
+breakdown. Configured threshold failures are applied for both report formats.
+Any configured `[tool.pymetrica].exclude` patterns are applied before the
+codebase is parsed.
 
 ### Example Short Report
 
@@ -63,6 +64,14 @@ lloc_per_cc: 1.7391304347826086
 Metric: Halstead Volume
 hv_number: 704.5342159112735
 hv_per_lloc: 17.613355397781838
+----------------------------------------------------------------------------------------------------
+Metric: Primitive Obsession
+all_primitives: 0
+targeted_primitives: 0
+all_primitives_percent: 0.0
+targeted_primitives_percent: 0.0
+all_primitives_failed: False
+targeted_primitives_failed: False
 ----------------------------------------------------------------------------------------------------
 Metric: Maintainability Cost
 maintainability_cost: 50.678396768622775
@@ -97,11 +106,12 @@ When `--diagram` is set without a filename, Pymetrica writes
 
 ## Understand the Main Output Areas
 
-Pymetrica currently exposes five metrics:
+Pymetrica currently exposes six metrics:
 
 - `ALOC` for abstraction-heavy lines and unused concrete class bodies.
 - `CC` for cyclomatic complexity.
 - `HV` for Halstead volume.
+- `PO` for primitive obsession in type annotations.
 - `MC` for maintainability cost.
 - `Instability` for layer-level coupling.
 

@@ -11,6 +11,11 @@ from .maintainability_cost import (
     MaintainabilityCostResults,
     mc,
 )
+from .primitive_obsession import (
+    PrimitiveObsessionCalculator,
+    PrimitiveObsessionResults,
+    po,
+)
 
 __all__ = [
     "AlocCalculator",
@@ -20,9 +25,12 @@ __all__ = [
     "InstabilityResults",
     "MaintainabilityCostCalculator",
     "MaintainabilityCostResults",
+    "PrimitiveObsessionCalculator",
+    "PrimitiveObsessionResults",
     "aloc",
     "cc",
     "hv",
     "li",
     "mc",
+    "po",
 ]

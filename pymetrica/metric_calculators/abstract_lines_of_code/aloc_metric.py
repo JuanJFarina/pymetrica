@@ -3,6 +3,7 @@ from typing import Any
 from pydantic import BaseModel
 
 from pymetrica.models import Metric, Results
+from pymetrica.utils.settings import Config
 
 
 class LayerAloc(BaseModel):
@@ -16,13 +17,16 @@ class AlocResults(Results):
     aloc_percentage: float
     aloc_result_per_layer: list[LayerAloc]
 
-    def get_dict(self) -> dict[str, Any]:
+    @property
+    def dict_(self) -> dict[str, Any]:
         return self.model_dump(exclude={"aloc_result_per_layer"})
 
-    def get_json(self) -> str:
-        return self.get_json()
+    @property
+    def json_(self) -> str:
+        return self.json_
 
-    def get_summary(self) -> str:
+    @property
+    def summary(self) -> str:
         summary = (
             "\nTotal ALOC: "
             f"{self.aloc_number} ({self.aloc_percentage:0.2f}% of total LLOC)\n"
@@ -34,14 +38,19 @@ class AlocResults(Results):
             )
         return summary
 
-    def get_fail_message(self, fail_threshold: int) -> str:
+    @property
+    def fail_message(self) -> str:
         message = (
             f"ALOC percentage {self.aloc_percentage:.2f}% exceeds "
-            f"the fail threshold of {fail_threshold}%. "
+            f"the fail threshold of {Config.aloc_fail_threshold}%. "
             "Reduce the number of functions and classes to improve this "
             "metric."
         )
         return message
+
+    @property
+    def exceeds_threshold(self) -> bool:
+        return Config.aloc_fails and self.aloc_percentage > Config.aloc_fail_threshold
 
 
 class AlocMetric(Metric[AlocResults]): ...

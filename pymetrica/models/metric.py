@@ -7,20 +7,29 @@ _NIE_MSG = "Subclasses of Results must implement this method."
 
 
 class Results(BaseModel, ABC):
+    @property
     @abstractmethod
-    def get_json(self) -> str:
+    def json_(self) -> str:
         raise NotImplementedError(_NIE_MSG)
 
+    @property
     @abstractmethod
-    def get_dict(self) -> dict[str, Any]:
+    def dict_(self) -> dict[str, Any]:
         raise NotImplementedError(_NIE_MSG)
 
+    @property
     @abstractmethod
-    def get_summary(self) -> str:
+    def summary(self) -> str:
         raise NotImplementedError(_NIE_MSG)
 
+    @property
     @abstractmethod
-    def get_fail_message(self, fail_threshold: int) -> str:
+    def fail_message(self) -> str:
+        raise NotImplementedError(_NIE_MSG)
+
+    @property
+    @abstractmethod
+    def exceeds_threshold(self) -> bool:
         raise NotImplementedError(_NIE_MSG)
 
 

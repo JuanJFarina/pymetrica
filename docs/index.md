@@ -15,7 +15,7 @@ and coupling.
 - Fail CI based on configurable thresholds from `pyproject.toml`.
 - Reuse the parser and metric calculators directly from Python.
 - Install bundled `pre-commit` hooks for automated metric checks.
-- Drill into individual metrics such as ALOC, CC, HV, MC, and instability.
+- Drill into individual metrics such as ALOC, CC, HV, PO, MC, and instability.
 
 ## Quick Start
 

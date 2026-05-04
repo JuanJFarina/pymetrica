@@ -5,7 +5,7 @@ from pathlib import Path
 
 from pymetrica.models import Code, Codebase
 from pymetrica.utils import is_comment_line, is_logical_line_of_code, log
-from pymetrica.utils.settings import Configuration
+from pymetrica.utils.settings import Config
 
 # TODO ignore folders inside .gitignore
 
@@ -89,7 +89,7 @@ def parse_codebase(dir_path: str) -> Codebase:  # pylint: disable=too-many-local
 
 def is_excluded(path: Path, root: Path) -> bool:
     rel_path = path.relative_to(root).as_posix()
-    return any(fnmatch(rel_path, p) for p in Configuration.exclude)
+    return any(fnmatch(rel_path, p) for p in Config.exclude)
 
 
 def get_base_path(dir_path: str) -> Path:

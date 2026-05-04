@@ -8,7 +8,7 @@ from .cc_visitor import CCVisitor
 
 
 class CCCalculator(MetricCalculator[CCResults]):
-    def calculate_metric(self: "CCCalculator", codebase: Codebase) -> CCMetric:
+    def calculate_metric(self, codebase: Codebase) -> CCMetric:
         layer_results = list[LayerCC]()
         layers = codebase.layers.copy()
         layers.update({"root": codebase.root_files})

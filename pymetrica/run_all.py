@@ -3,29 +3,23 @@ import sys
 import click
 
 from pymetrica.codebase_parser import parse_codebase
-from pymetrica.metric_calculators.abstract_lines_of_code.aloc_calculator import (
-    AlocCalculator,
-)
-from pymetrica.metric_calculators.cyclomatic_complexity.cc_calculator import (
-    CCCalculator,
-)
-from pymetrica.metric_calculators.halstead_volume.hv_calculator import (
-    HalsteadVolumeCalculator,
-)
-from pymetrica.metric_calculators.instability.instability_calculator import (
-    InstabilityCalculator,
-)
-from pymetrica.metric_calculators.maintainability_cost.mc_calculator import (
-    MaintainabilityCostCalculator,
-)
 from pymetrica.models.metric import Metric, Results
 from pymetrica.report_generators.reports_mapping import REPORTS_MAPPING
-from pymetrica.utils import Configuration
+
+from .metric_calculators import (
+    AlocCalculator,
+    CCCalculator,
+    HalsteadVolumeCalculator,
+    InstabilityCalculator,
+    MaintainabilityCostCalculator,
+    PrimitiveObsessionCalculator,
+)
 
 aloc_calculator: AlocCalculator = AlocCalculator()
 cc_calculator: CCCalculator = CCCalculator()
 hv_calculator: HalsteadVolumeCalculator = HalsteadVolumeCalculator()
 mc_calculator: MaintainabilityCostCalculator = MaintainabilityCostCalculator()
+po_calculator: PrimitiveObsessionCalculator = PrimitiveObsessionCalculator()
 instability_calculator: InstabilityCalculator = InstabilityCalculator()
 
 
@@ -44,53 +38,39 @@ def run_all(
 ) -> None:
     codebase = parse_codebase(dir_path)
     metrics = list[Metric[Results]]()
-    metrics.append(aloc_calculator.calculate_metric(codebase))
-    metrics.append(cc_calculator.calculate_metric(codebase))
-    metrics.append(hv_calculator.calculate_metric(codebase))
-    metrics.append(mc_calculator.calculate_metric(codebase))
+    metrics.append(aloc := aloc_calculator.calculate_metric(codebase))
+    metrics.append(cc := cc_calculator.calculate_metric(codebase))
+    metrics.append(hv := hv_calculator.calculate_metric(codebase))
+    metrics.append(po := po_calculator.calculate_metric(codebase))
+    metrics.append(mc := mc_calculator.calculate_metric(codebase))
     metrics.append(instability_calculator.calculate_metric(codebase))
 
     report_generator = REPORTS_MAPPING[report_type]()
     if long_report:
         click.echo(report_generator.generate_report(metrics))
-        return
-    click.echo(report_generator.generate_short_report(metrics))
+    else:
+        click.echo(report_generator.generate_short_report(metrics))
 
     exit_status = 0
-    if (
-        Configuration.aloc_fail_threshold != 0
-        and metrics[0].results.aloc_percentage > Configuration.aloc_fail_threshold  # type: ignore[attr-defined]  # pylint: disable=line-too-long
-    ):
-        click.echo(
-            metrics[0].results.get_fail_message(Configuration.aloc_fail_threshold),
-            err=True,
-        )
+
+    if aloc.results.exceeds_threshold:
+        click.echo(aloc.results.fail_message, err=True)
         exit_status += 1
-    if (
-        Configuration.cc_fail_threshold != 0
-        and metrics[1].results.lloc_per_cc < Configuration.cc_fail_threshold  # type: ignore[attr-defined]  # pylint: disable=line-too-long
-    ):
-        click.echo(
-            metrics[1].results.get_fail_message(Configuration.cc_fail_threshold),
-            err=True,
-        )
+
+    if cc.results.exceeds_threshold:
+        click.echo(cc.results.fail_message, err=True)
+        exit_status += 2
+
+    if hv.results.exceeds_threshold:
+        click.echo(hv.results.fail_message, err=True)
         exit_status += 10
-    if (
-        Configuration.hv_fail_threshold != 0
-        and metrics[2].results.hv_per_lloc > Configuration.hv_fail_threshold  # type: ignore[attr-defined]  # pylint: disable=line-too-long
-    ):
-        click.echo(
-            metrics[2].results.get_fail_message(Configuration.hv_fail_threshold),
-            err=True,
-        )
+
+    if po.results.exceeds_threshold:
+        click.echo(po.results.fail_message, err=True)
+        exit_status += 20
+
+    if mc.results.exceeds_threshold:
+        click.echo(mc.results.fail_message, err=True)
         exit_status += 100
-    if (
-        Configuration.mc_fail_threshold != 0
-        and metrics[3].results.maintainability_cost > Configuration.mc_fail_threshold  # type: ignore[attr-defined]  # pylint: disable=line-too-long
-    ):
-        click.echo(
-            metrics[3].results.get_fail_message(Configuration.mc_fail_threshold),
-            err=True,
-        )
-        exit_status += 1000
+
     sys.exit(exit_status)
