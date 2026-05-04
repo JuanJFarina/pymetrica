@@ -2,6 +2,19 @@
 
 
 
+## v1.4.0 (2026-05-04)
+
+### Feature
+
+* feat(config): add primitive obsession metric ([`bb28cbf`](https://github.com/JuanJFarina/pymetrica/commit/bb28cbf8e49cdae5ba9f2be2e2d2483275719018))
+
+### Fix
+
+* fix(config): update docs and fix small issues ([`e834f6b`](https://github.com/JuanJFarina/pymetrica/commit/e834f6bfab957152888b5263c9ab0939c71b5ceb))
+
+* fix(config): refactor to simplify metrics ([`a8c588a`](https://github.com/JuanJFarina/pymetrica/commit/a8c588a7b23f95a8b4fae506cc4d56be639c43f5))
+
+
 ## v1.3.2 (2026-04-27)
 
 ### Fix
