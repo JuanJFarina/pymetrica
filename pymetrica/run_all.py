@@ -63,14 +63,14 @@ def run_all(
 
     if hv.results.exceeds_threshold:
         click.echo(hv.results.fail_message, err=True)
-        exit_status += 10
+        exit_status += 4
 
     if po.results.exceeds_threshold:
         click.echo(po.results.fail_message, err=True)
-        exit_status += 20
+        exit_status += 8
 
     if mc.results.exceeds_threshold:
         click.echo(mc.results.fail_message, err=True)
-        exit_status += 100
+        exit_status += 16
 
     sys.exit(exit_status)

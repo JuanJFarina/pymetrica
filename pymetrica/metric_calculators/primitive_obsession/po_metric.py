@@ -24,7 +24,15 @@ class PrimitiveObsessionResults(Results):
 
     @property
     def dict_(self) -> dict[str, int]:
-        return self.model_dump(exclude={"po_per_layer"})
+        return self.model_dump(
+            exclude={
+                "all_primitives",
+                "targeted_primitives",
+                "all_primitives_failed",
+                "targeted_primitives_failed",
+                "po_per_layer",
+            },
+        )
 
     @property
     def json_(self) -> str:

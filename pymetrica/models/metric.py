@@ -41,4 +41,8 @@ class Metric(BaseModel, Generic[T_co]):
     description: str
     results: T_co
 
+    @property
+    def failed(self) -> bool:
+        return self.results.exceeds_threshold
+
     model_config = ConfigDict(arbitrary_types_allowed=True)
