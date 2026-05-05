@@ -56,7 +56,10 @@ class AlocResults(Results):
 
     @property
     def exceeds_threshold(self) -> bool:
-        return self.aloc_percentage > Config.aloc_fail_threshold
+        return (
+            Config.aloc_fail_threshold != 0
+            and self.aloc_percentage > Config.aloc_fail_threshold
+        )
 
 
 class AlocMetric(Metric[AlocResults]): ...

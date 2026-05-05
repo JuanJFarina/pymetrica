@@ -91,10 +91,12 @@ class PrimitiveObsessionResults(Results):
     @property
     def exceeds_threshold(self) -> bool:
         self.all_primitives_failed = (
-            self.all_primitives_percent > Config.po_all_fail_threshold
+            Config.po_all_fail_threshold != 0
+            and self.all_primitives_percent > Config.po_all_fail_threshold
         )
         self.targeted_primitives_failed = (
-            self.targeted_primitives_percent > Config.po_targeted_fail_threshold
+            Config.po_targeted_fail_threshold != 0
+            and self.targeted_primitives_percent > Config.po_targeted_fail_threshold
         )
         return self.all_primitives_failed or self.targeted_primitives_failed
 

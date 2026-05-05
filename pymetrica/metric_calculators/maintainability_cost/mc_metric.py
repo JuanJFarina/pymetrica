@@ -68,7 +68,10 @@ class MaintainabilityCostResults(Results):
 
     @property
     def exceeds_threshold(self) -> bool:
-        return self.maintainability_cost > Config.mc_fail_threshold
+        return (
+            Config.mc_fail_threshold != 0
+            and self.maintainability_cost > Config.mc_fail_threshold
+        )
 
 
 class MaintainabilityCostMetric(Metric[MaintainabilityCostResults]): ...

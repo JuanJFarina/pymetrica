@@ -60,12 +60,8 @@ hv_number: 704.5342159112735
 hv_per_lloc: 17.613355397781838
 ----------------------------------------------------------------------------------------------------
 Metric: Primitive Obsession
-all_primitives: 0
-targeted_primitives: 0
 all_primitives_percent: 0.0
 targeted_primitives_percent: 0.0
-all_primitives_failed: False
-targeted_primitives_failed: False
 ----------------------------------------------------------------------------------------------------
 Metric: Maintainability Cost
 maintainability_cost: 50.678396768622775
@@ -179,7 +175,7 @@ domain-specific abstractions.
 
 The current implementation counts primitive scalar annotations such as `int`,
 `float`, `bool`, `str`, and `Any`, plus targeted container annotations such as
-`dict`, `list`, and `tuple`.
+`dict`, `list`, `tuple`, and `set`. `Any` is also treated as targeted.
 
 ---
 
@@ -309,25 +305,31 @@ po_all_fail_threshold = 10
 po_targeted_fail_threshold = 2
 mc_fail_threshold = 25
 exclude = ["generated/*", "vendor/*"]
+top_findings = 5
 ```
 
 Thresholds default to `0`, which disables failure gating for that metric.
-`exclude` defaults to an empty list.
+Configure a positive threshold value when you want CI or hooks to fail on a
+metric. `exclude` defaults to an empty list, and `top_findings` defaults to `5`.
 
 Important details:
 
 * exclusions are matched against paths relative to the resolved analysis root
 * matching uses Python's `fnmatch`
-* exclusions apply to `run-all`, `base-stats`, and the single-metric commands
+* exclusions skip matching Python files during parsing; layer discovery and
+  folder counts can still include excluded directories
 * thresholds apply to `run-all` and the threshold-gated single-metric commands
 * `cc_fail_threshold` fails when `lloc_per_cc` falls below the configured value
+* `run-all` combines threshold failures with exit-code weights `1` for ALOC,
+  `2` for CC, `4` for HV, `8` for PO, and `16` for MC
+* `top_findings = 0` disables top-finding lists in failure messages
 
 Pymetrica also publishes `pre-commit` hooks:
 
 ```yaml
 repos:
   - repo: https://github.com/JuanJFarina/pymetrica
-    rev: v1.3.2
+    rev: v1.4.0
     hooks:
       - id: pymetrica
       - id: pymetrica-mc
@@ -405,8 +407,8 @@ Metrics are rendered through pluggable report generators.
 
 Currently supported:
 
-* `BASIC_TERMINAL` short terminal summaries
-* `BASIC_TERMINAL` detailed metric reports
+* `BASIC_TERMINAL` terminal reports, with short and detailed layouts
+* `BASIC_HOOK` hook-oriented reports that show only failed metrics
 
 Future formats may include JSON, Markdown, or CI-friendly outputs.
 

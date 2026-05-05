@@ -53,7 +53,10 @@ class HalsteadVolumeResults(Results):
 
     @property
     def exceeds_threshold(self) -> bool:
-        return self.hv_per_lloc > Config.hv_fail_threshold
+        return (
+            Config.hv_fail_threshold != 0
+            and self.hv_per_lloc > Config.hv_fail_threshold
+        )
 
 
 class HalsteadVolumeMetric(Metric[HalsteadVolumeResults]): ...

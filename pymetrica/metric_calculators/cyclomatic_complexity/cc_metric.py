@@ -56,7 +56,10 @@ class CCResults(Results):
 
     @property
     def exceeds_threshold(self) -> bool:
-        return self.lloc_per_cc < Config.cc_fail_threshold
+        return (
+            Config.cc_fail_threshold != 0
+            and self.lloc_per_cc < Config.cc_fail_threshold
+        )
 
 
 class CCMetric(Metric[CCResults]): ...

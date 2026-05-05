@@ -50,8 +50,11 @@ Important details:
 
 - files directly under the base path are stored separately as root files
 - `__pycache__` is excluded from initial layer discovery
+- dot-prefixed directories are still discovered as layers by the parser
 - syntax-error files are skipped during parsing
 - the parser currently does not honor `.gitignore`
+- `[tool.pymetrica].exclude` skips matching Python files after layer discovery,
+  so excluded directories can still appear as empty layers or in folder counts
 
 This layer model is what powers both the per-layer metrics and the instability
 analysis.
@@ -92,17 +95,21 @@ Current behavior to know about:
 
 ## Reporting Model
 
-Pymetrica currently ships with one report backend:
+Pymetrica currently ships with two report backends:
 
 ```text
 BASIC_TERMINAL
+BASIC_HOOK
 ```
 
-That backend supports:
+The terminal backend supports:
 
 - a short key/value report for automation
 - a longer summary report with descriptions and per-layer detail where
   available
+
+The hook backend is used by the published pre-commit hooks and reports only
+failed metrics, or a success message when all thresholds pass.
 
 ## Current Scope and Limits
 
@@ -112,7 +119,7 @@ important limits are worth documenting:
 - layer analysis is based on top-level folders, not arbitrary architectural
   boundaries
 - coupling analysis currently inspects `ImportFrom` relationships
-- only the basic terminal report generator is implemented today
+- only the basic terminal and hook report generators are implemented today
 
 Those constraints are useful to keep in mind when interpreting results or
 planning future extensions.
