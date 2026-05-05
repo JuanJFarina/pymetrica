@@ -2,6 +2,13 @@
 
 
 
+## v1.5.2 (2026-05-05)
+
+### Fix
+
+* fix(config): fix bug in file maintainability cost and refactor some logs ([`54c3294`](https://github.com/JuanJFarina/pymetrica/commit/54c3294cad33e080c8f4764a6f30c2cf70f4d6f5))
+
+
 ## v1.5.1 (2026-05-05)
 
 ### Fix
