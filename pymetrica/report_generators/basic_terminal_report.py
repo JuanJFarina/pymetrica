@@ -1,30 +1,31 @@
-from collections.abc import Sequence
 from typing import TypeVar
 
-from pymetrica.models import Metric, ReportGenerator, Results
+from pymetrica.models import Report, ReportGenerator, Results
 
 T = TypeVar("T", bound=Results)
 
 
 class BasicTerminalReport(ReportGenerator):
-    def generate_report(self, metrics: Sequence[Metric[T]]) -> str:
-        report = ""
-        for metric in metrics:
-            report += f"Metric: {metric.name}\n"
-            report += f"Description: {metric.description}\n"
-            report += f"Summary: {metric.results.summary}\n"
-            report += "-" * 100
-            report += "\n"
-        return report
-
-    def generate_short_report(self, metrics: Sequence[Metric[T]]) -> str:
-        report = "-" * 100
-        report += "\nShort Report\n"
-        report += "-" * 100
-        for metric in metrics:
-            report += f"\nMetric: {metric.name}\n"
+    @property
+    def short_report(self) -> Report:
+        content = "-" * 100
+        content += "\nShort Report\n"
+        content += "-" * 100
+        for metric in self.metrics:
+            content += f"\nMetric: {metric.name}\n"
             results = metric.results.dict_
             for key, value in results.items():
-                report += f"{key}: {value}\n"
-            report += "-" * 100
-        return report
+                content += f"{key}: {value}\n"
+            content += "-" * 100
+        return Report(content=content)
+
+    @property
+    def long_report(self) -> Report:
+        content = ""
+        for metric in self.metrics:
+            content += f"Metric: {metric.name}\n"
+            content += f"Description: {metric.description}\n"
+            content += f"Summary: {metric.results.summary}\n"
+            content += "-" * 100
+            content += "\n"
+        return Report(content=content)

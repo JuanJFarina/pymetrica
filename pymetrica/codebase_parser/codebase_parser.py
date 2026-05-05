@@ -95,7 +95,7 @@ def is_excluded(path: Path, root: Path) -> bool:
 def get_base_path(dir_path: str) -> Path:
     base = Path(dir_path).absolute()
     if dir_path == ".":
-        log.warning(
+        log.info(
             f"parse_codebase.{dir_path = }, which resolves to {base}",
         )
         src_folder = Path(str(base) + os.sep + "src")
@@ -112,7 +112,7 @@ def get_base_path(dir_path: str) -> Path:
 def check_possible_bases(base: Path, folders: list[Path]) -> Path:
     for folder in folders:
         if folder.exists() and folder.is_dir():
-            log.warning(
+            log.info(
                 f"parse_codebase: {folder} exists and is a directory, "
                 f"using it as base path instead of {base}",
             )

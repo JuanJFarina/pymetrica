@@ -62,4 +62,5 @@ class CCResults(Results):
         )
 
 
-class CCMetric(Metric[CCResults]): ...
+class CCMetric(Metric[CCResults]):
+    exit_code: int = 2

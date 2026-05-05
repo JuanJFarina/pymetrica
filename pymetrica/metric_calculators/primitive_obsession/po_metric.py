@@ -101,4 +101,5 @@ class PrimitiveObsessionResults(Results):
         return self.all_primitives_failed or self.targeted_primitives_failed
 
 
-class PrimitiveObsessionMetric(Metric[PrimitiveObsessionResults]): ...
+class PrimitiveObsessionMetric(Metric[PrimitiveObsessionResults]):
+    exit_code: int = 16

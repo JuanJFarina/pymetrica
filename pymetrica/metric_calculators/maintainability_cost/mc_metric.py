@@ -74,4 +74,5 @@ class MaintainabilityCostResults(Results):
         )
 
 
-class MaintainabilityCostMetric(Metric[MaintainabilityCostResults]): ...
+class MaintainabilityCostMetric(Metric[MaintainabilityCostResults]):
+    exit_code: int = 8

@@ -38,39 +38,19 @@ def run_all(
 ) -> None:
     codebase = parse_codebase(dir_path)
     metrics = list[Metric[Results]]()
-    metrics.append(aloc := aloc_calculator.calculate_metric(codebase))
-    metrics.append(cc := cc_calculator.calculate_metric(codebase))
-    metrics.append(hv := hv_calculator.calculate_metric(codebase))
-    metrics.append(po := po_calculator.calculate_metric(codebase))
-    metrics.append(mc := mc_calculator.calculate_metric(codebase))
+    metrics.append(aloc_calculator.calculate_metric(codebase))
+    metrics.append(cc_calculator.calculate_metric(codebase))
+    metrics.append(hv_calculator.calculate_metric(codebase))
+    metrics.append(po_calculator.calculate_metric(codebase))
+    metrics.append(mc_calculator.calculate_metric(codebase))
     metrics.append(instability_calculator.calculate_metric(codebase))
 
-    report_generator = REPORTS_MAPPING[report_type]()
+    report_generator = REPORTS_MAPPING[report_type](metrics)
+
     if long_report:
-        click.echo(report_generator.generate_report(metrics))
+        report = report_generator.long_report
     else:
-        click.echo(report_generator.generate_short_report(metrics))
+        report = report_generator.short_report
 
-    exit_status = 0
-
-    if aloc.results.exceeds_threshold:
-        click.echo(aloc.results.fail_message, err=True)
-        exit_status += 1
-
-    if cc.results.exceeds_threshold:
-        click.echo(cc.results.fail_message, err=True)
-        exit_status += 2
-
-    if hv.results.exceeds_threshold:
-        click.echo(hv.results.fail_message, err=True)
-        exit_status += 4
-
-    if po.results.exceeds_threshold:
-        click.echo(po.results.fail_message, err=True)
-        exit_status += 8
-
-    if mc.results.exceeds_threshold:
-        click.echo(mc.results.fail_message, err=True)
-        exit_status += 16
-
-    sys.exit(exit_status)
+    click.echo(report.content)
+    sys.exit(report.exit_status)
