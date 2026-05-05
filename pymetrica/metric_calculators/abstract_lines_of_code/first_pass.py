@@ -78,7 +78,7 @@ def gather_loc_and_classes(files: list[Code]) -> PreliminaryResults:  # pylint: 
                         try:
                             bases.append(ast.unparse(b))
                         except:  # noqa: E722  # pylint: disable=bare-except
-                            log.warning(
+                            log.debug(
                                 f"gather_loc_and_classes.unparse_failed.{ast.dump(b) = }",
                             )
                 # Treat ABC, ABCMeta, Protocol, and Enum as abstract
