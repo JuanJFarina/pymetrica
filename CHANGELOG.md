@@ -6,6 +6,8 @@
 
 ### Fix
 
+* fix(config): add support for union types in po metric ([`25ed3db`](https://github.com/JuanJFarina/pymetrica/commit/25ed3db2008c8ffe70df640b45863d43dc9cb233))
+
 * fix(config): fix bug in file maintainability cost and refactor some logs ([`54c3294`](https://github.com/JuanJFarina/pymetrica/commit/54c3294cad33e080c8f4764a6f30c2cf70f4d6f5))
 
 
