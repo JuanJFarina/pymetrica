@@ -37,8 +37,10 @@ Analyze a Python project:
 pymetrica run-all path/to/project
 ```
 
-By default, `run-all` emits a short CI-oriented report. Use `--long-report`
-when you want descriptive summaries and per-layer breakdowns.
+By default, `run-all` emits a short terminal report. Use `--long-report`
+when you want descriptive summaries and per-layer breakdowns. Use
+`-rt BASIC_HOOK` when you want thresholds to produce a non-zero exit status
+for CI or pre-commit.
 
 Example short report:
 
@@ -57,6 +59,10 @@ lloc_per_cc: 1.7391304347826086
 Metric: Halstead Volume
 hv_number: 704.5342159112735
 hv_per_lloc: 17.613355397781838
+----------------------------------------------------------------------------------------------------
+Metric: Primitive Obsession
+all_primitives_percent: 0.0
+targeted_primitives_percent: 0.0
 ----------------------------------------------------------------------------------------------------
 Metric: Maintainability Cost
 maintainability_cost: 50.678396768622775
@@ -101,7 +107,7 @@ layout.
 * Layered architecture detection based on directories
 * Multiple classical software engineering metrics
 * CLI interface for fast inspection of codebases
-* Optional Mermaid architecture diagrams
+* Optional Mermaid architecture diagrams for top-level layers and components
 * Configurable thresholds and file exclusion patterns from `pyproject.toml`
 * Published `pre-commit` hooks for automated metric checks
 * Reusable Python API for parser, calculators, and report generation
@@ -146,6 +152,7 @@ Calculated by analyzing control flow structures including:
 * loops
 * exception handling
 * boolean logic
+* comprehensions, assertions, context managers, and structural pattern matching
 
 Higher values correspond to more complex and harder-to-maintain code.
 
@@ -161,6 +168,25 @@ Derived from:
 * program length
 * token frequency
 
+The current visitor counts Python AST operators such as assignments,
+arithmetic and boolean operations, comparisons, control-flow keywords,
+function and class definitions, and operands such as names, attributes, and
+constants.
+
+---
+
+## Primitive Obsession (PO)
+
+Highlights type annotations that rely heavily on primitive types instead of
+domain-specific abstractions.
+
+The current implementation counts primitive scalar annotations such as `int`,
+`float`, `bool`, `str`, and `Any`, plus targeted container annotations such as
+`dict`, `list`, `tuple`, and `set`. `Any` is also treated as targeted.
+PEP 604 `|` unions are counted when every member resolves to one of the
+supported primitive or container forms. Unsupported or custom annotation forms
+are ignored rather than reported as primitive usage.
+
 ---
 
 ## Maintainability Cost (MC)
@@ -172,6 +198,8 @@ A composite metric derived from:
 * Logical Lines of Code
 
 It estimates the **expected maintenance effort** required for the codebase.
+The score combines Halstead density, CC density, and a small LLOC-based size
+penalty.
 
 Lower scores indicate better maintainability.
 
@@ -229,7 +257,11 @@ pymetrica run-all path/to/project
 ```
 
 Configured `[tool.pymetrica].exclude` patterns are applied before the codebase
-is parsed.
+is parsed. To enforce thresholds in automation, use the hook report backend:
+
+```bash
+pymetrica run-all -rt BASIC_HOOK path/to/project
+```
 
 For an initial overview of a codebase:
 
@@ -255,6 +287,7 @@ pymetrica base-stats
 pymetrica aloc
 pymetrica cc
 pymetrica hv
+pymetrica po
 pymetrica mc
 pymetrica li
 pymetrica run-all
@@ -269,7 +302,7 @@ pymetrica <command> DIR_PATH
 Notes:
 
 * `run-all` supports `--long-report` for descriptive summaries and per-layer detail
-* `aloc`, `cc`, `hv`, `mc`, and `li` always emit the descriptive report format
+* `aloc`, `cc`, `hv`, `po`, `mc`, and `li` always emit the descriptive report format
 * all parsing commands honor `[tool.pymetrica].exclude` patterns
 
 ---
@@ -284,28 +317,43 @@ Pymetrica reads optional thresholds and exclusion patterns from
 aloc_fail_threshold = 30
 cc_fail_threshold = 10
 hv_fail_threshold = 30
+po_all_fail_threshold = 10
+po_targeted_fail_threshold = 2
 mc_fail_threshold = 25
 exclude = ["generated/*", "vendor/*"]
+top_findings = 5
 ```
 
-Thresholds default to `0`, which disables failure gating for that metric.
-`exclude` defaults to an empty list.
+Built-in threshold defaults are active: `30` for ALOC, `7` for CC, `30` for
+HV, `10` for all primitives, `2` for targeted primitives, and `25` for MC.
+Set a threshold to `0` to disable failure gating for that metric. `exclude`
+defaults to an empty list, and `top_findings` defaults to `5`.
 
 Important details:
 
 * exclusions are matched against paths relative to the resolved analysis root
 * matching uses Python's `fnmatch`
-* the same settings apply to `run-all`, `base-stats`, and the single-metric commands
+* exclusions skip matching Python files during parsing; layer discovery and
+  folder counts can still include excluded directories
+* thresholds are enforced by the `BASIC_HOOK` report backend; `BASIC_TERMINAL`
+  prints values and exits with `0`
+* `cc_fail_threshold` fails when `lloc_per_cc` falls below the configured value
+* `run-all` combines threshold failures with exit-code weights `1` for ALOC,
+  `2` for CC, `4` for HV, `8` for MC, and `16` for PO
+* single-metric commands using `BASIC_HOOK` return their metric-specific exit
+  code when the threshold fails
+* `top_findings = 0` disables top-finding lists in failure messages
 
 Pymetrica also publishes `pre-commit` hooks:
 
 ```yaml
 repos:
   - repo: https://github.com/JuanJFarina/pymetrica
-    rev: v1.2.0
+    rev: v1.5.2
     hooks:
       - id: pymetrica
       - id: pymetrica-mc
+      - id: pymetrica-po
 ```
 
 Available hook IDs today:
@@ -314,6 +362,7 @@ Available hook IDs today:
 * `pymetrica-aloc`
 * `pymetrica-cc`
 * `pymetrica-hv`
+* `pymetrica-po`
 * `pymetrica-mc`
 
 ---
@@ -378,8 +427,10 @@ Metrics are rendered through pluggable report generators.
 
 Currently supported:
 
-* `BASIC_TERMINAL` short terminal summaries
-* `BASIC_TERMINAL` detailed metric reports
+* `BASIC_TERMINAL` terminal reports, with short and detailed layouts and a
+  zero exit status
+* `BASIC_HOOK` hook-oriented reports that show only failed metrics and return
+  threshold-based exit statuses
 
 Future formats may include JSON, Markdown, or CI-friendly outputs.
 
@@ -392,7 +443,14 @@ registry. A typical programmatic workflow is:
 
 ```python
 from pymetrica.codebase_parser import create_diagram, parse_codebase
-from pymetrica.metric_calculators import AlocCalculator, CCCalculator
+from pymetrica.metric_calculators import (
+    AlocCalculator,
+    CCCalculator,
+    HalsteadVolumeCalculator,
+    InstabilityCalculator,
+    MaintainabilityCostCalculator,
+    PrimitiveObsessionCalculator,
+)
 from pymetrica.report_generators import REPORTS_MAPPING
 
 codebase = parse_codebase("path/to/project")
@@ -400,10 +458,14 @@ codebase = parse_codebase("path/to/project")
 metrics = [
     AlocCalculator().calculate_metric(codebase),
     CCCalculator().calculate_metric(codebase),
+    HalsteadVolumeCalculator().calculate_metric(codebase),
+    PrimitiveObsessionCalculator().calculate_metric(codebase),
+    MaintainabilityCostCalculator().calculate_metric(codebase),
+    InstabilityCalculator().calculate_metric(codebase),
 ]
 
-report = REPORTS_MAPPING["BASIC_TERMINAL"]().generate_report(metrics)
-print(report)
+report_generator = REPORTS_MAPPING["BASIC_TERMINAL"](metrics)
+print(report_generator.long_report.content)
 
 create_diagram(codebase, filename="architecture.mmd")
 ```
@@ -426,6 +488,9 @@ This creates a `.mmd` file that can be rendered using:
 * Mermaid Live Editor
 * VSCode Mermaid extensions
 * documentation pipelines
+
+The diagram focuses on top-level layers and components. Root-level files are
+omitted, and `__init__.py`-style files are not emitted as components.
 
 ---
 

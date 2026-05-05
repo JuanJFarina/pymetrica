@@ -2,6 +2,66 @@
 
 
 
+## v1.5.2 (2026-05-05)
+
+### Fix
+
+* fix(config): add support for union types in po metric ([`25ed3db`](https://github.com/JuanJFarina/pymetrica/commit/25ed3db2008c8ffe70df640b45863d43dc9cb233))
+
+* fix(config): fix bug in file maintainability cost and refactor some logs ([`54c3294`](https://github.com/JuanJFarina/pymetrica/commit/54c3294cad33e080c8f4764a6f30c2cf70f4d6f5))
+
+
+## v1.5.1 (2026-05-05)
+
+### Fix
+
+* fix(config): refactor report generation and set threshold defaults ([`3e1f632`](https://github.com/JuanJFarina/pymetrica/commit/3e1f63297e4818b7345988a90ecb3b8c21db3c58))
+
+
+## v1.5.0 (2026-05-05)
+
+### Feature
+
+* feat(config): add top findings for when metric fails ([`aa64531`](https://github.com/JuanJFarina/pymetrica/commit/aa645310be06b47200412fe32a47a1b1c4d78a9d))
+
+* feat(config): add precommit hook report generator ([`f13ea87`](https://github.com/JuanJFarina/pymetrica/commit/f13ea87567739778cc8580481c6a2c99b81fedbf))
+
+### Fix
+
+* fix(config): update docs and fix small bugs ([`927c835`](https://github.com/JuanJFarina/pymetrica/commit/927c8356fd291c8ec679d28385c895e212698f40))
+
+
+## v1.4.0 (2026-05-04)
+
+### Feature
+
+* feat(config): add primitive obsession metric ([`bb28cbf`](https://github.com/JuanJFarina/pymetrica/commit/bb28cbf8e49cdae5ba9f2be2e2d2483275719018))
+
+### Fix
+
+* fix(config): update docs and fix small issues ([`e834f6b`](https://github.com/JuanJFarina/pymetrica/commit/e834f6bfab957152888b5263c9ab0939c71b5ceb))
+
+* fix(config): refactor to simplify metrics ([`a8c588a`](https://github.com/JuanJFarina/pymetrica/commit/a8c588a7b23f95a8b4fae506cc4d56be639c43f5))
+
+
+## v1.3.2 (2026-04-27)
+
+### Fix
+
+* fix(config): invert mc fail message condition ([`22c98a2`](https://github.com/JuanJFarina/pymetrica/commit/22c98a2a52648bbd394944dc4609cd0cf8d04d3f))
+
+
+## v1.3.1 (2026-04-26)
+
+### Fix
+
+* fix(config): improve fail messages to help understand how to improve the codebase ([`f527d73`](https://github.com/JuanJFarina/pymetrica/commit/f527d734b23676a2261c2805d508f37198ca91ba))
+
+* fix(config): invert cc fail threshold so it fails when there are fewer lloc per cc branch ([`7b04b77`](https://github.com/JuanJFarina/pymetrica/commit/7b04b779b14733a85c3caa40bb9f1e72bb0bf244))
+
+* fix(config): invert cc fail threshold so it fails when there are fewer lloc per cc branch ([`f38dc20`](https://github.com/JuanJFarina/pymetrica/commit/f38dc20c3839ce54db282b59dbef162892fe24e3))
+
+
 ## v1.3.0 (2026-04-21)
 
 ### Feature

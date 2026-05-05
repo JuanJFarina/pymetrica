@@ -38,10 +38,19 @@ Analyze a Python project with the full metrics pipeline:
 pymetrica run-all path/to/project
 ```
 
-The default output is a short report with the top-level values for every metric.
-Use `--long-report` when you want the descriptive summaries and per-layer
-breakdown. Any configured `[tool.pymetrica].exclude` patterns are applied before
-the codebase is parsed.
+The default output is a short terminal report with the top-level values for
+every metric. Use `--long-report` when you want the descriptive summaries and
+per-layer breakdown.
+
+Thresholds are enforced when you use the hook report backend:
+
+```bash
+pymetrica run-all -rt BASIC_HOOK path/to/project
+```
+
+You can combine it with `--long-report` if you want the longer failure output.
+Any configured `[tool.pymetrica].exclude` patterns are applied before the
+codebase is parsed.
 
 ### Example Short Report
 
@@ -64,6 +73,10 @@ Metric: Halstead Volume
 hv_number: 704.5342159112735
 hv_per_lloc: 17.613355397781838
 ----------------------------------------------------------------------------------------------------
+Metric: Primitive Obsession
+all_primitives_percent: 0.0
+targeted_primitives_percent: 0.0
+----------------------------------------------------------------------------------------------------
 Metric: Maintainability Cost
 maintainability_cost: 50.678396768622775
 raw_line_cost: 50.638396768622776
@@ -75,7 +88,7 @@ root: 0.0
 
 If you switch to a single-metric command such as `pymetrica cc path/to/project`,
 Pymetrica always prints the descriptive report format instead of this short
-CI-oriented layout.
+compact layout.
 
 ## Inspect Base Stats and Generate a Diagram
 
@@ -97,11 +110,12 @@ When `--diagram` is set without a filename, Pymetrica writes
 
 ## Understand the Main Output Areas
 
-Pymetrica currently exposes five metrics:
+Pymetrica currently exposes six metrics:
 
 - `ALOC` for abstraction-heavy lines and unused concrete class bodies.
 - `CC` for cyclomatic complexity.
 - `HV` for Halstead volume.
+- `PO` for primitive obsession in type annotations.
 - `MC` for maintainability cost.
 - `Instability` for layer-level coupling.
 

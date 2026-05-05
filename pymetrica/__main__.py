@@ -6,6 +6,7 @@ from pymetrica.metric_calculators import (
     hv,
     li,
     mc,
+    po,
 )
 
 from .codebase_parser import base_stats
@@ -25,6 +26,7 @@ main.add_command(cc)
 main.add_command(hv)
 main.add_command(mc)
 main.add_command(li)
+main.add_command(po)
 
 if __name__ == "__main__":
     main()

@@ -17,12 +17,15 @@ def find_pyproject() -> Path | None:
     return path if path.exists() else None
 
 
-class _Configuration(BaseModel):
-    aloc_fail_threshold: int = 0
-    cc_fail_threshold: int = 0
-    hv_fail_threshold: int = 0
-    mc_fail_threshold: int = 0
+class Configuration(BaseModel):
+    aloc_fail_threshold: int = 30
+    cc_fail_threshold: int = 7
+    hv_fail_threshold: int = 30
+    mc_fail_threshold: int = 25
+    po_all_fail_threshold: int = 10
+    po_targeted_fail_threshold: int = 2
     exclude: list[str] = []
+    top_findings: int = 5
 
     @model_validator(mode="before")
     @classmethod
@@ -45,7 +48,11 @@ class _Configuration(BaseModel):
         )
         return sections_values
 
+    @property
+    def find_top_flaws(self) -> bool:
+        return self.top_findings > 0
+
     model_config = ConfigDict(extra="ignore")
 
 
-Configuration = _Configuration()  # pylint: disable=invalid-name
+Config = Configuration()  # pylint: disable=invalid-name

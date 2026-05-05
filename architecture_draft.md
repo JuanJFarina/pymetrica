@@ -14,6 +14,7 @@ flowchart TD
         ALOC["Abstract Lines Of Code %"]
         CC["Cyclomatic Complexity"]
         HV["Halstead Volume"]
+        PO["Primitive Obsession"]
         MC["Maintainability Cost"]
         LI["Instability"]
     end
@@ -21,6 +22,7 @@ flowchart TD
     subgraph "Reporting Layer"
         ReportGen["Report generator"]
         BasicReport["Basic terminal report"]
+        HookReport["Basic hook report"]
         Diagram["Mermaid diagram output"]
     end
 
@@ -31,16 +33,19 @@ flowchart TD
     MetricsCalc --> ALOC
     MetricsCalc --> CC
     MetricsCalc --> HV
+    MetricsCalc --> PO
     MetricsCalc --> MC
     MetricsCalc --> LI
 
     ALOC --> ReportGen
     CC --> ReportGen
     HV --> ReportGen
+    PO --> ReportGen
     MC --> ReportGen
     LI --> ReportGen
 
     ReportGen --> BasicReport
+    ReportGen --> HookReport
     DirReader --> Diagram
 
     %% Notes attached to nodes
@@ -48,8 +53,8 @@ flowchart TD
     NoteCodebase["Note: Builds a Codebase with root files, top-level layers, and parser stats."]
 
     MetricsCalc --- NoteMetric
-    NoteMetric["Note: Produces Metric objects for ALOC, CC, HV, MC, and instability."]
+    NoteMetric["Note: Produces Metric objects for ALOC, CC, HV, PO, MC, and instability."]
 
     ReportGen --- NoteReport
-    NoteReport["Note: BASIC_TERMINAL is the only bundled report backend today."]
+    NoteReport["Note: BASIC_TERMINAL and BASIC_HOOK are bundled report backends today."]
 ```

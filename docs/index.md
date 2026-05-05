@@ -12,10 +12,11 @@ and coupling.
 - Run a full metrics sweep with `pymetrica run-all`.
 - Inspect parser and codebase statistics with `pymetrica base-stats`.
 - Generate Mermaid `.mmd` dependency diagrams for a codebase.
-- Fail CI based on configurable thresholds from `pyproject.toml`.
+- Fail CI with the `BASIC_HOOK` report backend and configurable thresholds from
+  `pyproject.toml`.
 - Reuse the parser and metric calculators directly from Python.
 - Install bundled `pre-commit` hooks for automated metric checks.
-- Drill into individual metrics such as ALOC, CC, HV, MC, and instability.
+- Drill into individual metrics such as ALOC, CC, HV, PO, MC, and instability.
 
 ## Quick Start
 

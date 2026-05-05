@@ -7,8 +7,8 @@ from pymetrica.metric_calculators.cyclomatic_complexity import (
 from pymetrica.metric_calculators.halstead_volume import (
     HalsteadVolumeCalculator,
 )
-from pymetrica.models import Codebase, Metric, MetricCalculator
-from pymetrica.utils import log
+from pymetrica.models import Code, Codebase, Metric, MetricCalculator
+from pymetrica.utils import Config, log
 
 from .mc_metric import LayerMC, MaintainabilityCostMetric, MaintainabilityCostResults
 
@@ -20,6 +20,7 @@ class MaintainabilityCostCalculator(MetricCalculator[MaintainabilityCostResults]
     ) -> Metric[MaintainabilityCostResults]:
         layers = codebase.layers.copy()
         layers.update({"root": codebase.root_files})
+        top_findings = list[Code]()
         cc_calculator = CCCalculator()
         hv_calculator = HalsteadVolumeCalculator()
         cc_metric = cc_calculator.calculate_metric(codebase)
@@ -67,6 +68,13 @@ class MaintainabilityCostCalculator(MetricCalculator[MaintainabilityCostResults]
         )
         codebase_mc = codebase_average_lloc_mc + codebase.lloc_number * 0.001
 
+        if Config.find_top_flaws:
+            top_findings = sorted(
+                codebase.files,
+                key=lambda f: f.maintainability_cost or 0,
+                reverse=True,
+            )[: Config.top_findings]
+
         return MaintainabilityCostMetric(
             name="Maintainability Cost",
             description=(
@@ -85,5 +93,6 @@ class MaintainabilityCostCalculator(MetricCalculator[MaintainabilityCostResults]
                     key=lambda x: x.maintainability_cost,
                     reverse=True,
                 ),
+                top_findings=top_findings,
             ),
         )

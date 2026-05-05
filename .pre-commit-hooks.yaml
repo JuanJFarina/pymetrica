@@ -1,34 +1,41 @@
 - id: pymetrica
-  name: Pymetrica
-  entry: pymetrica-run-all .
+  name: pymetrica
+  entry: pymetrica-run-all . --report-type BASIC_HOOK
   language: python
   require_serial: true
   pass_filenames: false
 
 - id: pymetrica-aloc
-  name: Pymetrica ALOC
-  entry: pymetrica-aloc .
+  name: pymetrica aloc
+  entry: pymetrica-aloc . --report-type BASIC_HOOK
   language: python
   require_serial: true
   pass_filenames: false
 
 - id: pymetrica-cc
-  name: Pymetrica CC
-  entry: pymetrica-cc .
+  name: pymetrica cc
+  entry: pymetrica-cc . --report-type BASIC_HOOK
   language: python
   require_serial: true
   pass_filenames: false
 
 - id: pymetrica-hv
-  name: Pymetrica HV
-  entry: pymetrica-hv .
+  name: pymetrica hv
+  entry: pymetrica-hv . --report-type BASIC_HOOK
+  language: python
+  require_serial: true
+  pass_filenames: false
+
+- id: pymetrica-po
+  name: pymetrica po
+  entry: pymetrica-po . --report-type BASIC_HOOK
   language: python
   require_serial: true
   pass_filenames: false
 
 - id: pymetrica-mc
-  name: Pymetrica MC
-  entry: pymetrica-mc .
+  name: pymetrica mc
+  entry: pymetrica-mc . --report-type BASIC_HOOK
   language: python
   require_serial: true
   pass_filenames: false

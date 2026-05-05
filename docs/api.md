@@ -14,7 +14,14 @@ registry. A typical programmatic workflow is:
 
 ```python
 from pymetrica.codebase_parser import create_diagram, parse_codebase
-from pymetrica.metric_calculators import AlocCalculator, CCCalculator
+from pymetrica.metric_calculators import (
+    AlocCalculator,
+    CCCalculator,
+    HalsteadVolumeCalculator,
+    InstabilityCalculator,
+    MaintainabilityCostCalculator,
+    PrimitiveObsessionCalculator,
+)
 from pymetrica.report_generators import REPORTS_MAPPING
 
 codebase = parse_codebase("path/to/project")
@@ -22,10 +29,14 @@ codebase = parse_codebase("path/to/project")
 metrics = [
     AlocCalculator().calculate_metric(codebase),
     CCCalculator().calculate_metric(codebase),
+    HalsteadVolumeCalculator().calculate_metric(codebase),
+    PrimitiveObsessionCalculator().calculate_metric(codebase),
+    MaintainabilityCostCalculator().calculate_metric(codebase),
+    InstabilityCalculator().calculate_metric(codebase),
 ]
 
-report = REPORTS_MAPPING["BASIC_TERMINAL"]().generate_report(metrics)
-print(report)
+report_generator = REPORTS_MAPPING["BASIC_TERMINAL"](metrics)
+print(report_generator.long_report.content)
 
 create_diagram(codebase, filename="architecture.mmd")
 ```
@@ -42,8 +53,10 @@ The most useful public extension points are:
 - `ReportGenerator` subclasses for adding new report backends
 - `REPORTS_MAPPING` for registering report backends under `-rt` names
 
-Today the only bundled report backend is `BASIC_TERMINAL`, but the registry is
-already part of the public reporting surface.
+Bundled report backends are `BASIC_TERMINAL` for normal terminal output and
+`BASIC_HOOK` for pre-commit style output that only shows failed metrics and
+returns threshold-based exit statuses. Instantiate a backend with a metric
+sequence and then read its `short_report` or `long_report` property.
 
 ## Models
 
@@ -61,15 +74,19 @@ generation helpers.
 
 ## Metric Calculators
 
-The `metric_calculators` package re-exports the calculators, result types, and
-CLI callables that make up the supported metrics surface.
+The `metric_calculators` package re-exports the calculator classes and CLI
+callables for the supported metrics. It also re-exports selected result types;
+more detailed result and layer models live in each metric's submodule.
 
 ::: pymetrica.metric_calculators
 
 ## Report Generators
 
 The report layer is small today. `REPORTS_MAPPING` is the registry used by the
-CLI, and `BasicTerminalReport` is the only bundled implementation.
+CLI. It includes the normal terminal backend and the hook-oriented backend used
+by the published pre-commit hooks. `BasicTerminalReport` is exported directly
+from this package; the hook backend is available through the registry and its
+submodule.
 
 ::: pymetrica.report_generators
 
