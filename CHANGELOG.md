@@ -2,6 +2,13 @@
 
 
 
+## v1.5.1 (2026-05-05)
+
+### Fix
+
+* fix(config): refactor report generation and set threshold defaults ([`3e1f632`](https://github.com/JuanJFarina/pymetrica/commit/3e1f63297e4818b7345988a90ecb3b8c21db3c58))
+
+
 ## v1.5.0 (2026-05-05)
 
 ### Feature
