@@ -5,7 +5,7 @@ name = "pypi"
 
 [packages]
 pydantic = ">=2.11.7"
-click = ">=8.2.1"
+click = ">=8.3.3"
 loguru = ">=0.7.3"
 tomli = ">=2.4.1"
 
