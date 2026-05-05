@@ -1,7 +1,8 @@
 import ast
 import os
 
-from pymetrica.models import Codebase, MetricCalculator
+from pymetrica.models import Code, Codebase, MetricCalculator
+from pymetrica.utils.settings import Config
 
 from .cc_metric import CCMetric, CCResults, LayerCC
 from .cc_visitor import CCVisitor
@@ -12,6 +13,7 @@ class CCCalculator(MetricCalculator[CCResults]):
         layer_results = list[LayerCC]()
         layers = codebase.layers.copy()
         layers.update({"root": codebase.root_files})
+        top_findings = list[Code]()
 
         codebase_complexity = 1
 
@@ -24,6 +26,7 @@ class CCCalculator(MetricCalculator[CCResults]):
                 visitor = CCVisitor()
                 visitor.visit(tree)
                 layer_complexity += visitor.complexity
+                code_file.cc_number = visitor.complexity
                 layer_lloc += code_file.lloc_number
 
             layer_results.append(
@@ -36,6 +39,13 @@ class CCCalculator(MetricCalculator[CCResults]):
                 ),
             )
             codebase_complexity += layer_complexity
+
+        if Config.find_top_flaws:
+            top_findings = sorted(
+                codebase.files,
+                key=lambda f: f.cc_number or 0,
+                reverse=True,
+            )[: Config.top_findings]
 
         return CCMetric(
             name="Cyclomatic Complexity",
@@ -54,5 +64,6 @@ class CCCalculator(MetricCalculator[CCResults]):
                     layer_results,
                     key=lambda x: x.lloc_per_cc if x.lloc_per_cc > 0 else float("inf"),
                 ),
+                top_findings=top_findings,
             ),
         )

@@ -4,8 +4,8 @@ from pydantic import BaseModel
 
 from pymetrica.utils import log
 
-PRIMITIVES = {"int", "float", "bool", "str", "Any"}
-TARGETS = {"dict", "list", "tuple"}
+PRIMITIVES = {"Any", "bool", "float", "int", "str"}
+TARGETS = {"dict", "list", "tuple", "set"}
 
 
 def get_name(node: ast.AST) -> str:

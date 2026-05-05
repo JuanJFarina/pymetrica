@@ -12,3 +12,9 @@ class ReportGenerator(ABC):
         raise NotImplementedError(
             "Subclasses of ReportGenerator must implement this method.",
         )
+
+    @abstractmethod
+    def generate_short_report(self, metrics: list[Metric[T]]) -> str:
+        raise NotImplementedError(
+            "Subclasses of ReportGenerator must implement this method.",
+        )

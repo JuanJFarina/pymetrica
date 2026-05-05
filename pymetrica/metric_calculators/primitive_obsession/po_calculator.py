@@ -1,7 +1,8 @@
 import ast
 import os
 
-from pymetrica.models import Codebase, Metric, MetricCalculator
+from pymetrica.models import Code, Codebase, Metric, MetricCalculator
+from pymetrica.utils.settings import Config
 
 from .po_metric import LayerPO, PrimitiveObsessionMetric, PrimitiveObsessionResults
 from .po_visitor import POVisitor
@@ -12,6 +13,8 @@ class PrimitiveObsessionCalculator(MetricCalculator[PrimitiveObsessionResults]):
         layers_results = list[LayerPO]()
         layers = codebase.layers.copy()
         layers.update({"root": codebase.root_files})
+        top_findings_all = list[Code]()
+        top_findings_targeted = list[Code]()
 
         codebase_all_primitives = 0
         codebase_targeted_primitives = 0
@@ -24,8 +27,10 @@ class PrimitiveObsessionCalculator(MetricCalculator[PrimitiveObsessionResults]):
                 tree = ast.parse(code_file.code)
                 visitor = POVisitor()
                 visitor.visit(tree)
-                layer_all_primitives += len(visitor.all_primitives)
-                layer_targeted_primitives += len(visitor.targeted_primitives)
+                code_file.all_primitives = len(visitor.all_primitives)
+                code_file.targeted_primitives = len(visitor.targeted_primitives)
+                layer_all_primitives += code_file.all_primitives
+                layer_targeted_primitives += code_file.targeted_primitives
 
             layers_results.append(
                 LayerPO(
@@ -36,6 +41,18 @@ class PrimitiveObsessionCalculator(MetricCalculator[PrimitiveObsessionResults]):
             )
             codebase_all_primitives += layer_all_primitives
             codebase_targeted_primitives += layer_targeted_primitives
+
+        if Config.find_top_flaws:
+            top_findings_all = sorted(
+                codebase.files,
+                key=lambda f: f.all_primitives or 0,
+                reverse=True,
+            )[: Config.top_findings]
+            top_findings_targeted = sorted(
+                codebase.files,
+                key=lambda f: f.targeted_primitives or 0,
+                reverse=True,
+            )[: Config.top_findings]
 
         return PrimitiveObsessionMetric(
             name="Primitive Obsession",
@@ -61,5 +78,7 @@ class PrimitiveObsessionCalculator(MetricCalculator[PrimitiveObsessionResults]):
                     key=lambda x: x.targeted_primitives,
                     reverse=True,
                 ),
+                top_findings_all=top_findings_all,
+                top_findings_targeted=top_findings_targeted,
             ),
         )

@@ -66,12 +66,8 @@ hv_number: 704.5342159112735
 hv_per_lloc: 17.613355397781838
 ----------------------------------------------------------------------------------------------------
 Metric: Primitive Obsession
-all_primitives: 0
-targeted_primitives: 0
 all_primitives_percent: 0.0
 targeted_primitives_percent: 0.0
-all_primitives_failed: False
-targeted_primitives_failed: False
 ----------------------------------------------------------------------------------------------------
 Metric: Maintainability Cost
 maintainability_cost: 50.678396768622775

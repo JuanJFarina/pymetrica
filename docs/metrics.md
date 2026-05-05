@@ -64,20 +64,19 @@ types instead of domain-specific abstractions.
 The current implementation counts annotations for:
 
 - primitive scalar types: `int`, `float`, `bool`, `str`, and `Any`
-- targeted container types: `dict`, `list`, and `tuple`
+- targeted container types: `dict`, `list`, `tuple`, and `set`
 - containers whose arguments are also primitive or targeted types
+- `Any` as both primitive and targeted
 
-Reported fields:
+Short-report fields:
 
-- `all_primitives`
-- `targeted_primitives`
 - `all_primitives_percent`
 - `targeted_primitives_percent`
-- `all_primitives_failed`
-- `targeted_primitives_failed`
 
 The percentages normalize annotation counts against total logical lines of code.
-The long report also includes per-layer primitive counts.
+The long report summary includes the raw primitive counts and per-layer
+primitive counts. Failure messages track whether the all-primitive or targeted
+primitive threshold failed.
 
 ## Maintainability Cost (MC)
 
@@ -129,6 +128,8 @@ returned by each metric's `dict_` property.
 That means:
 
 - ALOC, CC, HV, PO, and MC short reports omit their per-layer lists
+- PO short reports also omit raw counts and failure flags, leaving only the two
+  percentage fields
 - instability short output already includes the layer map, because its result is
   itself a dictionary of layer names to scores
 

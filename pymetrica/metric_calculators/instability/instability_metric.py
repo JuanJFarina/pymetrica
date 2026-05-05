@@ -1,6 +1,7 @@
 import json
 
 from pymetrica.models import Metric, Results
+from pymetrica.utils import log
 
 
 class InstabilityResults(Results):
@@ -27,7 +28,8 @@ class InstabilityResults(Results):
 
     @property
     def exceeds_threshold(self) -> bool:
-        raise NotImplementedError("Instability metric does not have a fail threshold.")
+        log.warning("Instability metric does not have a fail threshold.")
+        return False
 
 
 class InstabilityMetric(Metric[InstabilityResults]): ...

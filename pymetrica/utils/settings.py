@@ -25,6 +25,7 @@ class Configuration(BaseModel):
     po_targeted_fail_threshold: int = 0
     po_all_fail_threshold: int = 0
     exclude: list[str] = []
+    top_findings: int = 5
 
     @model_validator(mode="before")
     @classmethod
@@ -48,28 +49,8 @@ class Configuration(BaseModel):
         return sections_values
 
     @property
-    def cc_fails(self) -> bool:
-        return self.cc_fail_threshold > 0
-
-    @property
-    def aloc_fails(self) -> bool:
-        return self.aloc_fail_threshold > 0
-
-    @property
-    def hv_fails(self) -> bool:
-        return self.hv_fail_threshold > 0
-
-    @property
-    def mc_fails(self) -> bool:
-        return self.mc_fail_threshold > 0
-
-    @property
-    def po_targeted_fails(self) -> bool:
-        return self.po_targeted_fail_threshold > 0
-
-    @property
-    def po_all_fails(self) -> bool:
-        return self.po_all_fail_threshold > 0
+    def find_top_flaws(self) -> bool:
+        return self.top_findings > 0
 
     model_config = ConfigDict(extra="ignore")
 

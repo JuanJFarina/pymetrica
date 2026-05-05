@@ -2,7 +2,8 @@ import ast
 import math
 import os
 
-from pymetrica.models import Codebase, MetricCalculator
+from pymetrica.models import Code, Codebase, MetricCalculator
+from pymetrica.utils.settings import Config
 
 from .hv_metric import HalsteadVolumeMetric, HalsteadVolumeResults, LayerHV
 from .hv_visitor import HalsteadVolumeVisitor
@@ -16,6 +17,7 @@ class HalsteadVolumeCalculator(MetricCalculator[HalsteadVolumeResults]):
         layer_results = list[LayerHV]()
         layers = codebase.layers.copy()
         layers.update({"root": codebase.root_files})
+        top_findings = list[Code]()
 
         codebase_unique_operators = set[str]()
         codebase_unique_operands = set[str]()
@@ -47,6 +49,7 @@ class HalsteadVolumeCalculator(MetricCalculator[HalsteadVolumeResults]):
                     length = operators + operands
                     halstead_volume = length * math.log2(vocabulary)
 
+                code_file.hv_number = halstead_volume
                 layer_hv += halstead_volume
                 layer_lloc += code_file.lloc_number
 
@@ -68,6 +71,13 @@ class HalsteadVolumeCalculator(MetricCalculator[HalsteadVolumeResults]):
             length = codebase_operators + codebase_operands
             codebase_halstead_volume = length * math.log2(vocabulary)
 
+        if Config.find_top_flaws:
+            top_findings = sorted(
+                codebase.files,
+                key=lambda f: f.hv_number or 0,
+                reverse=True,
+            )[: Config.top_findings]
+
         return HalsteadVolumeMetric(
             name="Halstead Volume",
             description=(
@@ -83,5 +93,6 @@ class HalsteadVolumeCalculator(MetricCalculator[HalsteadVolumeResults]):
                     key=lambda x: x.hv_per_lloc,
                     reverse=True,
                 ),
+                top_findings=top_findings,
             ),
         )

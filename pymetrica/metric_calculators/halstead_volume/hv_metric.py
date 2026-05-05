@@ -1,8 +1,8 @@
 from typing import Any
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
-from pymetrica.models import Metric, Results
+from pymetrica.models import Code, Metric, Results
 from pymetrica.utils.settings import Config
 
 
@@ -16,10 +16,11 @@ class HalsteadVolumeResults(Results):
     hv_number: float
     hv_per_lloc: float
     hv_per_layer: list[LayerHV]
+    top_findings: list[Code] = Field(default_factory=list[Code])
 
     @property
     def dict_(self) -> dict[str, Any]:
-        return self.model_dump(exclude={"hv_per_layer"})
+        return self.model_dump(exclude={"hv_per_layer", "top_findings"})
 
     @property
     def json_(self) -> str:
@@ -37,17 +38,25 @@ class HalsteadVolumeResults(Results):
 
     @property
     def fail_message(self) -> str:
-        message = (
+        message = ("-" * 40) + " HV DETAILS " + ("-" * 40) + "\n\n"
+        message += (
             f"Halstead Volume per LLOC {self.hv_per_lloc:.2f} exceeds "
             f"the fail threshold of {Config.hv_fail_threshold}. "
             "Reduce the number of unique operators and operands, and the "
-            "overall size of the program."
+            "overall size of the program.\n"
         )
+        if self.top_findings:
+            message += "Top findings for HV:\n"
+            for finding in self.top_findings:
+                message += f"  {finding.filepath} -> {finding.hv_number:.2f}\n"
         return message
 
     @property
     def exceeds_threshold(self) -> bool:
-        return Config.hv_fails and self.hv_per_lloc > Config.hv_fail_threshold
+        return (
+            Config.hv_fail_threshold != 0
+            and self.hv_per_lloc > Config.hv_fail_threshold
+        )
 
 
 class HalsteadVolumeMetric(Metric[HalsteadVolumeResults]): ...

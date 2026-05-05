@@ -22,10 +22,12 @@ po_all_fail_threshold = 10
 po_targeted_fail_threshold = 2
 mc_fail_threshold = 25
 exclude = ["generated/*", "vendor/*"]
+top_findings = 5
 ```
 
 Each threshold defaults to `0`, which disables failure gating for that metric.
-`exclude` defaults to an empty list.
+Set a positive threshold value when you want CI or hooks to fail on a metric.
+`exclude` defaults to an empty list, and `top_findings` defaults to `5`.
 
 | Setting | Compared against | Used by |
 | --- | --- | --- |
@@ -36,10 +38,11 @@ Each threshold defaults to `0`, which disables failure gating for that metric.
 | `po_targeted_fail_threshold` | `targeted_primitives_percent` greater than the threshold | `po`, `run-all` |
 | `mc_fail_threshold` | `maintainability_cost` greater than the threshold | `mc`, `run-all` |
 | `exclude` | Relative file paths matched with `fnmatch` | `run-all`, `base-stats`, `aloc`, `cc`, `hv`, `po`, `mc`, `li` |
+| `top_findings` | Number of worst files shown in threshold failure messages; `0` disables the lists | `aloc`, `cc`, `hv`, `po`, `mc`, `run-all` |
 
 ## Exclude Patterns
 
-`exclude` is evaluated during parsing, before parser statistics, diagrams, or
+`exclude` is evaluated during parsing and skips matching Python files before
 metrics are produced.
 
 Important details:
@@ -49,6 +52,8 @@ Important details:
 - paths are normalized to forward slashes before matching
 - matching uses Python's `fnmatch`, so entries such as `generated/*` or
   `legacy/test_*.py` are valid
+- layer discovery and folder counts happen separately, so an excluded directory
+  can still appear as an empty layer or in `folders_number`
 
 For example, if `pymetrica run-all .` resolves the codebase root to `src/`,
 then `exclude = ["generated/*"]` matches files such as
@@ -63,15 +68,15 @@ then `exclude = ["generated/*"]` matches files such as
 
 - `1` for ALOC
 - `2` for CC
-- `10` for HV
-- `20` for Primitive Obsession
-- `100` for Maintainability Cost
+- `4` for HV
+- `8` for Primitive Obsession
+- `16` for Maintainability Cost
 
 If more than one threshold fails, the exit code is the sum of the matching
 values. For example:
 
-- `11` means ALOC and HV failed.
-- `120` means Primitive Obsession and Maintainability Cost failed.
+- `5` means ALOC and HV failed.
+- `24` means Primitive Obsession and Maintainability Cost failed.
 
 Instability is always computed, but it is not threshold-gated.
 
@@ -84,14 +89,17 @@ The `li` command does not currently support a threshold setting.
 
 ## Report Type
 
-Pymetrica currently ships with one report backend:
+Pymetrica currently ships with two report backends:
 
 ```text
 BASIC_TERMINAL
+BASIC_HOOK
 ```
 
-This value is accepted by the `-rt` / `--report-type` option on the reporting
-commands.
+These values are accepted by the `-rt` / `--report-type` option on the
+reporting commands. `BASIC_TERMINAL` is the normal CLI output. `BASIC_HOOK` is
+used by the published pre-commit hooks and reports only failed metrics, or a
+success message when all thresholds pass.
 
 ## CI Usage
 
@@ -117,7 +125,7 @@ threshold-gated single-metric commands:
 ```yaml
 repos:
   - repo: https://github.com/JuanJFarina/pymetrica
-    rev: v1.3.2
+    rev: v1.4.0
     hooks:
       - id: pymetrica
       - id: pymetrica-mc

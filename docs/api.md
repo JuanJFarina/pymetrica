@@ -47,8 +47,9 @@ The most useful public extension points are:
 - `ReportGenerator` subclasses for adding new report backends
 - `REPORTS_MAPPING` for registering report backends under `-rt` names
 
-Today the only bundled report backend is `BASIC_TERMINAL`, but the registry is
-already part of the public reporting surface.
+Bundled report backends are `BASIC_TERMINAL` for normal terminal output and
+`BASIC_HOOK` for pre-commit style output that only shows failed metrics. The
+registry is already part of the public reporting surface.
 
 ## Models
 
@@ -74,7 +75,8 @@ CLI callables that make up the supported metrics surface.
 ## Report Generators
 
 The report layer is small today. `REPORTS_MAPPING` is the registry used by the
-CLI, and `BasicTerminalReport` is the only bundled implementation.
+CLI. It includes the normal terminal backend and the hook-oriented backend used
+by the published pre-commit hooks.
 
 ::: pymetrica.report_generators
 

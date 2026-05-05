@@ -1,6 +1,7 @@
 import os
 
-from pymetrica.models import Codebase, MetricCalculator
+from pymetrica.models import Code, Codebase, MetricCalculator
+from pymetrica.utils.settings import Config
 
 from .aloc_metric import AlocMetric, AlocResults, LayerAloc
 from .first_pass import gather_loc_and_classes
@@ -14,6 +15,7 @@ class AlocCalculator(MetricCalculator[AlocResults]):
         layers.update({"root": codebase.root_files})
         all_called_classes = set[str]()
         classes_per_layer = dict[str, dict[str, int]]()
+        top_findings = list[Code]()
 
         for name, files in layers.items():
             preliminary_results = gather_loc_and_classes(files)
@@ -45,6 +47,12 @@ class AlocCalculator(MetricCalculator[AlocResults]):
                     )
 
         total_aloc = sum(layer.aloc_number for layer in layer_results)
+        if Config.find_top_flaws:
+            top_findings = sorted(
+                codebase.files,
+                key=lambda f: f.aloc_number or 0,
+                reverse=True,
+            )[: Config.top_findings]
         return AlocMetric(
             name="Abstract Lines Of Code",
             description=(
@@ -62,5 +70,6 @@ class AlocCalculator(MetricCalculator[AlocResults]):
                     key=lambda x: x.aloc_percentage,
                     reverse=True,
                 ),
+                top_findings=top_findings,
             ),
         )
