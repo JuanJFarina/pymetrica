@@ -2,6 +2,19 @@
 
 
 
+## v1.5.0 (2026-05-05)
+
+### Feature
+
+* feat(config): add top findings for when metric fails ([`aa64531`](https://github.com/JuanJFarina/pymetrica/commit/aa645310be06b47200412fe32a47a1b1c4d78a9d))
+
+* feat(config): add precommit hook report generator ([`f13ea87`](https://github.com/JuanJFarina/pymetrica/commit/f13ea87567739778cc8580481c6a2c99b81fedbf))
+
+### Fix
+
+* fix(config): update docs and fix small bugs ([`927c835`](https://github.com/JuanJFarina/pymetrica/commit/927c8356fd291c8ec679d28385c895e212698f40))
+
+
 ## v1.4.0 (2026-05-04)
 
 ### Feature
