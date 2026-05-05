@@ -104,12 +104,14 @@ BASIC_HOOK
 
 The terminal backend supports:
 
-- a short key/value report for automation
+- a short key/value report for compact output
 - a longer summary report with descriptions and per-layer detail where
   available
+- a zero exit status; it reports metrics but does not enforce thresholds
 
 The hook backend is used by the published pre-commit hooks and reports only
-failed metrics, or a success message when all thresholds pass.
+failed metrics, or a success message when all thresholds pass. It is the backend
+that returns threshold-based exit statuses for CI and hooks.
 
 ## Current Scope and Limits
 

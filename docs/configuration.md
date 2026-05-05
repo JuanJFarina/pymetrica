@@ -9,6 +9,9 @@ Configuration is loaded from the current working directory at command startup.
 In practice, that means you should run Pymetrica from the repository whose
 `pyproject.toml` contains the thresholds you want to enforce.
 
+If no `pyproject.toml` or `[tool.pymetrica]` section is found, Pymetrica uses
+its built-in defaults.
+
 ## Supported Settings
 
 Example:
@@ -25,20 +28,20 @@ exclude = ["generated/*", "vendor/*"]
 top_findings = 5
 ```
 
-Each threshold defaults to `0`, which disables failure gating for that metric.
-Set a positive threshold value when you want CI or hooks to fail on a metric.
-`exclude` defaults to an empty list, and `top_findings` defaults to `5`.
+Thresholds are positive by default. Set a threshold to `0` when you want to
+disable failure gating for that metric. `exclude` defaults to an empty list,
+and `top_findings` defaults to `5`.
 
-| Setting | Compared against | Used by |
-| --- | --- | --- |
-| `aloc_fail_threshold` | `aloc_percentage` greater than the threshold | `aloc`, `run-all` |
-| `cc_fail_threshold` | `lloc_per_cc` lower than the threshold | `cc`, `run-all` |
-| `hv_fail_threshold` | `hv_per_lloc` greater than the threshold | `hv`, `run-all` |
-| `po_all_fail_threshold` | `all_primitives_percent` greater than the threshold | `po`, `run-all` |
-| `po_targeted_fail_threshold` | `targeted_primitives_percent` greater than the threshold | `po`, `run-all` |
-| `mc_fail_threshold` | `maintainability_cost` greater than the threshold | `mc`, `run-all` |
-| `exclude` | Relative file paths matched with `fnmatch` | `run-all`, `base-stats`, `aloc`, `cc`, `hv`, `po`, `mc`, `li` |
-| `top_findings` | Number of worst files shown in threshold failure messages; `0` disables the lists | `aloc`, `cc`, `hv`, `po`, `mc`, `run-all` |
+| Setting | Default | Compared against | Used by |
+| --- | --- | --- | --- |
+| `aloc_fail_threshold` | `30` | `aloc_percentage` greater than the threshold | `aloc`, `run-all` |
+| `cc_fail_threshold` | `7` | `lloc_per_cc` lower than the threshold | `cc`, `run-all` |
+| `hv_fail_threshold` | `30` | `hv_per_lloc` greater than the threshold | `hv`, `run-all` |
+| `po_all_fail_threshold` | `10` | `all_primitives_percent` greater than the threshold | `po`, `run-all` |
+| `po_targeted_fail_threshold` | `2` | `targeted_primitives_percent` greater than the threshold | `po`, `run-all` |
+| `mc_fail_threshold` | `25` | `maintainability_cost` greater than the threshold | `mc`, `run-all` |
+| `exclude` | `[]` | Relative file paths matched with `fnmatch` | `run-all`, `base-stats`, `aloc`, `cc`, `hv`, `po`, `mc`, `li` |
+| `top_findings` | `5` | Number of worst files shown in threshold failure messages; `0` disables the lists | `aloc`, `cc`, `hv`, `po`, `mc`, `run-all` |
 
 ## Exclude Patterns
 
@@ -64,13 +67,16 @@ then `exclude = ["generated/*"]` matches files such as
 
 ### `run-all`
 
-`run-all` combines failures into a single exit code:
+Threshold exit statuses are enforced by the `BASIC_HOOK` report backend. The
+default `BASIC_TERMINAL` backend prints values and exits with `0`.
+
+`run-all -rt BASIC_HOOK` combines failures into a single exit code:
 
 - `1` for ALOC
 - `2` for CC
 - `4` for HV
-- `8` for Primitive Obsession
-- `16` for Maintainability Cost
+- `8` for Maintainability Cost
+- `16` for Primitive Obsession
 
 If more than one threshold fails, the exit code is the sum of the matching
 values. For example:
@@ -82,8 +88,14 @@ Instability is always computed, but it is not threshold-gated.
 
 ### Single-Metric Commands
 
-The `aloc`, `cc`, `hv`, `po`, and `mc` commands each exit with `1` when their
-own threshold is configured and fails.
+With `BASIC_HOOK`, single-metric commands exit with their metric-specific code
+when their own positive threshold fails:
+
+- `aloc`: `1`
+- `cc`: `2`
+- `hv`: `4`
+- `mc`: `8`
+- `po`: `16`
 
 The `li` command does not currently support a threshold setting.
 
@@ -97,9 +109,9 @@ BASIC_HOOK
 ```
 
 These values are accepted by the `-rt` / `--report-type` option on the
-reporting commands. `BASIC_TERMINAL` is the normal CLI output. `BASIC_HOOK` is
-used by the published pre-commit hooks and reports only failed metrics, or a
-success message when all thresholds pass.
+reporting commands. `BASIC_TERMINAL` is the normal CLI output and exits with
+`0`. `BASIC_HOOK` is used by the published pre-commit hooks, reports only
+failed metrics, and returns the threshold-based exit status.
 
 ## CI Usage
 
@@ -107,25 +119,25 @@ A common pattern is to configure thresholds in the repository and run the full
 analysis in CI:
 
 ```bash
-pymetrica run-all .
+pymetrica run-all -rt BASIC_HOOK .
 ```
 
 If you only want to gate one metric, use the corresponding single-metric
 command instead:
 
 ```bash
-pymetrica mc .
+pymetrica mc -rt BASIC_HOOK .
 ```
 
 ## Pre-commit Hooks
 
 Pymetrica also publishes ready-to-use `pre-commit` hooks for `run-all` and the
-threshold-gated single-metric commands:
+threshold-capable single-metric commands:
 
 ```yaml
 repos:
   - repo: https://github.com/JuanJFarina/pymetrica
-    rev: v1.4.0
+    rev: v1.5.0
     hooks:
       - id: pymetrica
       - id: pymetrica-mc
@@ -150,6 +162,8 @@ from the repository's own `pyproject.toml`.
 - Threshold evaluation uses the metrics as Pymetrica reports them today. For
   example, CC gating is based on `lloc_per_cc`, not the raw `cc_number`, and it
   fails when `lloc_per_cc` is below the configured threshold.
+- `PYMETRICA_LOG_LEVEL` can be set to `DEBUG`, `INFO`, `WARNING`, or `ERROR`.
+  Invalid or missing values fall back to `WARNING`.
 - Because configuration is resolved from the current working directory, running
   `pymetrica path/to/other/project` from outside that project will not use the
   other project's thresholds unless you change into that directory first.

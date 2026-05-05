@@ -27,8 +27,9 @@ Available commands:
 - `-rt` / `--report-type` supports `BASIC_TERMINAL` and `BASIC_HOOK`.
 - All parsing commands honor `[tool.pymetrica].exclude` patterns from the
   current repository configuration.
-- `run-all` combines multiple thresholds into one exit code. Individual metric
-  commands exit with `1` when their own threshold fails.
+- `BASIC_TERMINAL` prints metric values and exits with `0`.
+- `BASIC_HOOK` enforces thresholds and returns non-zero exit statuses when
+  metrics fail.
 - Only `run-all` supports `--long-report`. Single-metric commands always print
   the descriptive report format.
 - `li` reports instability, but it is not threshold-gated.
@@ -63,7 +64,8 @@ What it does:
   `Maintainability Cost`, and `Instability`.
 - Prints a short summary by default, or a longer descriptive report when
   `--long-report` is set.
-- Returns a composite non-zero exit code if any configured thresholds fail.
+- Returns a composite non-zero exit code if any configured thresholds fail when
+  `-rt BASIC_HOOK` is used.
 
 Examples:
 
@@ -75,13 +77,16 @@ pymetrica run-all -rt BASIC_TERMINAL path/to/project
 
 ### `run-all` Exit Codes
 
+These exit codes apply to `run-all` when `-rt BASIC_HOOK` is used. The default
+`BASIC_TERMINAL` report backend exits with `0`.
+
 Threshold failures are additive:
 
 - `1`: ALOC threshold exceeded
 - `2`: CC threshold failed
 - `4`: HV threshold exceeded
-- `8`: Primitive Obsession threshold exceeded
-- `16`: Maintainability Cost threshold exceeded
+- `8`: Maintainability Cost threshold exceeded
+- `16`: Primitive Obsession threshold exceeded
 
 For example, an exit code of `5` means both the ALOC and HV thresholds were
 exceeded. An exit code of `24` means Primitive Obsession and Maintainability
@@ -105,7 +110,7 @@ The output includes:
 - `lloc_number`
 - `lloc_file_ratio`
 - `comments_number`
-- `comment_lloc_ratio`
+- `comment_line_ratio`
 - `classes_number`
 - `functions_number`
 
@@ -134,8 +139,8 @@ single-metric equivalent of `run-all --long-report`.
 pymetrica aloc [-rt BASIC_TERMINAL|BASIC_HOOK] DIR_PATH
 ```
 
-Reports the `Abstract Lines Of Code` metric. Exits with `1` when
-`aloc_fail_threshold` is configured and exceeded.
+Reports the `Abstract Lines Of Code` metric. With `BASIC_HOOK`, exits with `1`
+when `aloc_fail_threshold` is positive and exceeded.
 
 ### `cc`
 
@@ -143,8 +148,8 @@ Reports the `Abstract Lines Of Code` metric. Exits with `1` when
 pymetrica cc [-rt BASIC_TERMINAL|BASIC_HOOK] DIR_PATH
 ```
 
-Reports `Cyclomatic Complexity`. Exits with `1` when `cc_fail_threshold` is
-configured and `lloc_per_cc` falls below it.
+Reports `Cyclomatic Complexity`. With `BASIC_HOOK`, exits with `2` when
+`cc_fail_threshold` is positive and `lloc_per_cc` falls below it.
 
 ### `hv`
 
@@ -152,8 +157,8 @@ configured and `lloc_per_cc` falls below it.
 pymetrica hv [-rt BASIC_TERMINAL|BASIC_HOOK] DIR_PATH
 ```
 
-Reports `Halstead Volume`. Exits with `1` when `hv_fail_threshold` is
-configured and exceeded.
+Reports `Halstead Volume`. With `BASIC_HOOK`, exits with `4` when
+`hv_fail_threshold` is positive and exceeded.
 
 ### `po`
 
@@ -161,8 +166,8 @@ configured and exceeded.
 pymetrica po [-rt BASIC_TERMINAL|BASIC_HOOK] DIR_PATH
 ```
 
-Reports `Primitive Obsession`. Exits with `1` when either
-`po_all_fail_threshold` or `po_targeted_fail_threshold` is configured and
+Reports `Primitive Obsession`. With `BASIC_HOOK`, exits with `16` when either
+`po_all_fail_threshold` or `po_targeted_fail_threshold` is positive and
 exceeded.
 
 ### `mc`
@@ -171,8 +176,8 @@ exceeded.
 pymetrica mc [-rt BASIC_TERMINAL|BASIC_HOOK] DIR_PATH
 ```
 
-Reports `Maintainability Cost`. Exits with `1` when `mc_fail_threshold` is
-configured and exceeded.
+Reports `Maintainability Cost`. With `BASIC_HOOK`, exits with `8` when
+`mc_fail_threshold` is positive and exceeded.
 
 ### `li`
 
