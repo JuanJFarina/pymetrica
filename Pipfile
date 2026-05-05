@@ -4,7 +4,7 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-pydantic = ">=2.11.7"
+pydantic = ">=2.13.3"
 click = ">=8.3.3"
 loguru = ">=0.7.3"
 tomli = ">=2.4.1"
