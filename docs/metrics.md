@@ -20,6 +20,12 @@ The current implementation counts:
 - the logical body size of concrete classes that are never instantiated in the
   analyzed codebase
 
+For the unused-class body adjustment, Pymetrica currently inspects top-level
+class definitions. Classes inheriting from `ABC`, `ABCMeta`, `Protocol`, or
+`Enum` are treated as abstract bases and do not receive the concrete-class body
+penalty. A class is considered used when it appears in a direct call, a class
+method call, or as a positional call argument.
+
 Reported fields:
 
 - `aloc_number`
@@ -41,6 +47,11 @@ reports:
 `lloc_per_cc` normalizes complexity against the amount of logical code. The long
 report includes per-layer CC values.
 
+The visitor currently increments complexity for `if` and ternary expressions,
+`match` statements and cases, boolean `and`/`or` chains, `for`/`async for` and
+`while` loops, loop `else` blocks, `try` handlers and `else` blocks,
+`with`/`async with` items, `assert` statements, and comprehensions.
+
 When `cc_fail_threshold` is configured, lower `lloc_per_cc` values fail the
 threshold because they indicate more decision points per logical line.
 
@@ -56,6 +67,11 @@ Pymetrica collects operator and operand counts from the AST and reports:
 
 The long report also includes per-layer Halstead values.
 
+The visitor counts operators for assignments, augmented assignments, binary,
+unary, boolean, and comparison operations, `if`/`for`/`while`, and function and
+class definitions. It counts operands from function names, class names, names,
+attributes, and constants.
+
 ## Primitive Obsession (PO)
 
 Primitive Obsession highlights type annotations that rely heavily on primitive
@@ -67,6 +83,13 @@ The current implementation counts annotations for:
 - targeted container types: `dict`, `list`, `tuple`, and `set`
 - containers whose arguments are also primitive or targeted types
 - `Any` as both primitive and targeted
+
+The parser is intentionally narrow today. It recognizes simple names and
+attributes such as `typing.Any`, subscripted built-in containers such as
+`list[int]` or `dict[str, Any]`, and PEP 604 `|` unions when every member is a
+supported primitive or targeted container form. Unsupported annotations,
+including many custom types and uppercase typing aliases such as `typing.List`,
+are ignored for this metric.
 
 Short-report fields:
 
@@ -96,6 +119,15 @@ Reported fields:
 
 `raw_line_cost` is the density-based portion of the score before the additional
 size penalty is applied. The long report includes per-layer MC values.
+
+The implemented formula is:
+
+```text
+hv_density = hv_number / lloc_number
+cc_density = cc_number / lloc_number
+raw_line_cost = (hv_density * ((cc_density * 100) or 1)) / 20
+maintainability_cost = raw_line_cost + (lloc_number * 0.001)
+```
 
 ## Instability
 

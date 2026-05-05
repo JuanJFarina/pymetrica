@@ -137,7 +137,7 @@ threshold-capable single-metric commands:
 ```yaml
 repos:
   - repo: https://github.com/JuanJFarina/pymetrica
-    rev: v1.5.0
+    rev: v1.5.2
     hooks:
       - id: pymetrica
       - id: pymetrica-mc
