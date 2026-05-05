@@ -13,7 +13,7 @@ def get_name(node: ast.AST) -> str:
         return node.id
     if isinstance(node, ast.Attribute):
         return node.attr  # ignore module (typing.Any → Any)
-    raise ValueError(f"Unsupported annotation node: {ast.dump(node)}")
+    raise ValueError(f"Unsupported annotation node: {ast.dump(node, indent=2)}")
 
 
 class TypeAnnotation(BaseModel):
@@ -23,6 +23,8 @@ class TypeAnnotation(BaseModel):
     is_targeted: bool = False
 
     def __str__(self) -> str:
+        if self.type == "Union" and self.args:
+            return " | ".join(str(arg) for arg in self.args)  # pylint: disable=not-an-iterable
         str_repr = self.type
         if self.args:
             str_repr += "[" + ", ".join(str(arg) for arg in self.args) + "]"
@@ -35,6 +37,10 @@ class TypeAnnotation(BaseModel):
 def parse_type(
     node: ast.AST,
 ) -> TypeAnnotation:
+    if isinstance(node, ast.BinOp) and isinstance(node.op, ast.BitOr):
+        left = parse_type(node.left)
+        right = parse_type(node.right)
+        return TypeAnnotation(type="Union", args=[left, right])
     if isinstance(node, (ast.Name, ast.Attribute)) and (
         get_name(node) in PRIMITIVES or get_name(node) in TARGETS
     ):
@@ -51,24 +57,42 @@ def parse_type(
 
         return TypeAnnotation(type=base, args=args)
 
-    raise ValueError(f"Unsupported annotation node: {ast.dump(node)}")
+    raise ValueError(f"Unsupported annotation node: {ast.dump(node, indent=2)}")
 
 
-def analyze_type(parsed_type: TypeAnnotation) -> bool:
+class Analysis(BaseModel):
+    is_valid: bool
+    is_primitive: bool
+    is_targeted: bool
+
+
+def analyze_type(parsed_type: TypeAnnotation) -> Analysis:
+    if parsed_type.type == "Union" and all(
+        analyze_type(arg) for arg in parsed_type.args or []
+    ):
+        parsed_type.is_primitive = all(
+            arg.is_primitive for arg in parsed_type.args or []
+        )
+        parsed_type.is_targeted = any(arg.is_targeted for arg in parsed_type.args or [])
+        return Analysis(
+            is_valid=True,
+            is_primitive=parsed_type.is_primitive,
+            is_targeted=parsed_type.is_targeted,
+        )
     if parsed_type.type == "Any":
         parsed_type.is_primitive = True
         parsed_type.is_targeted = True
-        return True
+        return Analysis(is_valid=True, is_primitive=True, is_targeted=True)
     if parsed_type.type in PRIMITIVES:
         parsed_type.is_primitive = True
-        return True
+        return Analysis(is_valid=True, is_primitive=True, is_targeted=False)
     if parsed_type.type in TARGETS and (
         not parsed_type.args or all(analyze_type(arg) for arg in parsed_type.args)
     ):
         parsed_type.is_primitive = True
         parsed_type.is_targeted = True
-        return True
-    return False
+        return Analysis(is_valid=True, is_primitive=True, is_targeted=True)
+    return Analysis(is_valid=False, is_primitive=False, is_targeted=False)
 
 
 class POVisitor(ast.NodeVisitor):

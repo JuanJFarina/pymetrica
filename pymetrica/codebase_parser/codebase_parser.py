@@ -21,7 +21,7 @@ def parse_codebase(dir_path: str) -> Codebase:  # pylint: disable=too-many-local
 
     for path in base.rglob("*.py"):
         if is_excluded(path, base):
-            log.warning(
+            log.info(
                 f"parse_codebase.{path = } excluded by pyproject.toml configuration",
             )
             continue
@@ -30,8 +30,8 @@ def parse_codebase(dir_path: str) -> Codebase:  # pylint: disable=too-many-local
         try:
             tree = ast.parse(source)
         except SyntaxError as e:
-            log.warning(f"parse_codebase.SyntaxError.{path = }")
-            log.warning(f"parse_codebase.SyntaxError: {e = }")
+            log.debug(f"parse_codebase.SyntaxError.{path = }")
+            log.debug(f"parse_codebase.SyntaxError: {e = }")
             continue
         total_classes_definitions += sum(
             isinstance(n, ast.ClassDef) for n in ast.walk(tree)

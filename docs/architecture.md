@@ -84,7 +84,12 @@ detected cross-layer dependencies.
 Current behavior to know about:
 
 - the diagram writer skips root-level files as diagram components
-- components are top-level Python files inside each layer
+- components are top-level Python files inside each layer, plus immediate
+  subdirectories when a layer contains nested code
+- files whose names end in `__.py`, including `__init__.py`, are skipped by the
+  component-file check
+- dependency edges from nested files are collapsed to the immediate
+  subdirectory component
 - layer and component directory discovery skips `__pycache__` and hidden
   directories
 - dependency edges are derived from `from ... import ...` statements

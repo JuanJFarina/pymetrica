@@ -16,8 +16,8 @@ class Code(BaseModel):
     targeted_primitives: int | None = None
 
     @property
-    def maintainability_cost(self) -> float | None:
-        hv_density = self.hv_number or 0 / (self.lloc_number or 1)
-        cc_density = self.cc_number or 0 / (self.lloc_number or 1)
+    def maintainability_cost(self) -> float:
+        hv_density = (self.hv_number or 0) / (self.lloc_number or 1)
+        cc_density = (self.cc_number or 0) / (self.lloc_number or 1)
         average_lloc_mc = (hv_density * ((cc_density) * 100 or 1)) / 20
         return average_lloc_mc + self.lloc_number * 0.001

@@ -27,7 +27,7 @@ def create_diagram(
     }
 
     if len(layers) == 0:
-        log.warning(f"create_diagram.{codebase.root_folder_path = }")
+        log.info(f"create_diagram.{codebase.root_folder_path = }")
         layers = {codebase.root_folder_path: Components()}
 
     for layer_name in layers:
@@ -176,7 +176,7 @@ class DependenciesVisitor(ast.NodeVisitor):
                         clean_current_component: [full_imported_layer_name],
                     })
             except KeyError as e:
-                log.warning(
+                log.debug(
                     f"DependenciesVisitor.visit_ImportFrom.KeyError.{clean_current_component = }",
                 )
-                log.warning(f"DependenciesVisitor.visit_ImportFrom.KeyError: {e = }")
+                log.debug(f"DependenciesVisitor.visit_ImportFrom.KeyError: {e = }")

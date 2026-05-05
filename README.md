@@ -107,7 +107,7 @@ layout.
 * Layered architecture detection based on directories
 * Multiple classical software engineering metrics
 * CLI interface for fast inspection of codebases
-* Optional Mermaid architecture diagrams
+* Optional Mermaid architecture diagrams for top-level layers and components
 * Configurable thresholds and file exclusion patterns from `pyproject.toml`
 * Published `pre-commit` hooks for automated metric checks
 * Reusable Python API for parser, calculators, and report generation
@@ -152,6 +152,7 @@ Calculated by analyzing control flow structures including:
 * loops
 * exception handling
 * boolean logic
+* comprehensions, assertions, context managers, and structural pattern matching
 
 Higher values correspond to more complex and harder-to-maintain code.
 
@@ -167,6 +168,11 @@ Derived from:
 * program length
 * token frequency
 
+The current visitor counts Python AST operators such as assignments,
+arithmetic and boolean operations, comparisons, control-flow keywords,
+function and class definitions, and operands such as names, attributes, and
+constants.
+
 ---
 
 ## Primitive Obsession (PO)
@@ -177,6 +183,9 @@ domain-specific abstractions.
 The current implementation counts primitive scalar annotations such as `int`,
 `float`, `bool`, `str`, and `Any`, plus targeted container annotations such as
 `dict`, `list`, `tuple`, and `set`. `Any` is also treated as targeted.
+PEP 604 `|` unions are counted when every member resolves to one of the
+supported primitive or container forms. Unsupported or custom annotation forms
+are ignored rather than reported as primitive usage.
 
 ---
 
@@ -189,6 +198,8 @@ A composite metric derived from:
 * Logical Lines of Code
 
 It estimates the **expected maintenance effort** required for the codebase.
+The score combines Halstead density, CC density, and a small LLOC-based size
+penalty.
 
 Lower scores indicate better maintainability.
 
@@ -338,7 +349,7 @@ Pymetrica also publishes `pre-commit` hooks:
 ```yaml
 repos:
   - repo: https://github.com/JuanJFarina/pymetrica
-    rev: v1.5.0
+    rev: v1.5.2
     hooks:
       - id: pymetrica
       - id: pymetrica-mc
@@ -435,6 +446,9 @@ from pymetrica.codebase_parser import create_diagram, parse_codebase
 from pymetrica.metric_calculators import (
     AlocCalculator,
     CCCalculator,
+    HalsteadVolumeCalculator,
+    InstabilityCalculator,
+    MaintainabilityCostCalculator,
     PrimitiveObsessionCalculator,
 )
 from pymetrica.report_generators import REPORTS_MAPPING
@@ -444,7 +458,10 @@ codebase = parse_codebase("path/to/project")
 metrics = [
     AlocCalculator().calculate_metric(codebase),
     CCCalculator().calculate_metric(codebase),
+    HalsteadVolumeCalculator().calculate_metric(codebase),
     PrimitiveObsessionCalculator().calculate_metric(codebase),
+    MaintainabilityCostCalculator().calculate_metric(codebase),
+    InstabilityCalculator().calculate_metric(codebase),
 ]
 
 report_generator = REPORTS_MAPPING["BASIC_TERMINAL"](metrics)
@@ -471,6 +488,9 @@ This creates a `.mmd` file that can be rendered using:
 * Mermaid Live Editor
 * VSCode Mermaid extensions
 * documentation pipelines
+
+The diagram focuses on top-level layers and components. Root-level files are
+omitted, and `__init__.py`-style files are not emitted as components.
 
 ---
 

@@ -17,6 +17,9 @@ from pymetrica.codebase_parser import create_diagram, parse_codebase
 from pymetrica.metric_calculators import (
     AlocCalculator,
     CCCalculator,
+    HalsteadVolumeCalculator,
+    InstabilityCalculator,
+    MaintainabilityCostCalculator,
     PrimitiveObsessionCalculator,
 )
 from pymetrica.report_generators import REPORTS_MAPPING
@@ -26,7 +29,10 @@ codebase = parse_codebase("path/to/project")
 metrics = [
     AlocCalculator().calculate_metric(codebase),
     CCCalculator().calculate_metric(codebase),
+    HalsteadVolumeCalculator().calculate_metric(codebase),
     PrimitiveObsessionCalculator().calculate_metric(codebase),
+    MaintainabilityCostCalculator().calculate_metric(codebase),
+    InstabilityCalculator().calculate_metric(codebase),
 ]
 
 report_generator = REPORTS_MAPPING["BASIC_TERMINAL"](metrics)
@@ -68,8 +74,9 @@ generation helpers.
 
 ## Metric Calculators
 
-The `metric_calculators` package re-exports the calculators, result types, and
-CLI callables that make up the supported metrics surface.
+The `metric_calculators` package re-exports the calculator classes and CLI
+callables for the supported metrics. It also re-exports selected result types;
+more detailed result and layer models live in each metric's submodule.
 
 ::: pymetrica.metric_calculators
 
@@ -77,7 +84,9 @@ CLI callables that make up the supported metrics surface.
 
 The report layer is small today. `REPORTS_MAPPING` is the registry used by the
 CLI. It includes the normal terminal backend and the hook-oriented backend used
-by the published pre-commit hooks.
+by the published pre-commit hooks. `BasicTerminalReport` is exported directly
+from this package; the hook backend is available through the registry and its
+submodule.
 
 ::: pymetrica.report_generators
 
