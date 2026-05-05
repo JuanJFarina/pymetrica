@@ -62,4 +62,5 @@ class AlocResults(Results):
         )
 
 
-class AlocMetric(Metric[AlocResults]): ...
+class AlocMetric(Metric[AlocResults]):
+    exit_code: int = 1

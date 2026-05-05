@@ -40,5 +40,6 @@ class Metric(BaseModel, Generic[T_co]):
     name: str
     description: str
     results: T_co
+    exit_code: int
 
     model_config = ConfigDict(arbitrary_types_allowed=True)

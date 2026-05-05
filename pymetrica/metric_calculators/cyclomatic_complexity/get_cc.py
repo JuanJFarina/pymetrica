@@ -21,9 +21,8 @@ def cc(
 ) -> None:
     codebase = parse_codebase(dir_path)
     cc_metric = cc_calculator.calculate_metric(codebase)
-    report_generator = REPORTS_MAPPING[report_type]()
-    click.echo(report_generator.generate_report([cc_metric]))
-    exit_status = int(cc_metric.results.exceeds_threshold)
-    if exit_status > 0:
-        click.echo(cc_metric.results.fail_message, err=True)
-    sys.exit(exit_status)
+    report_generator = REPORTS_MAPPING[report_type]([cc_metric])
+    report = report_generator.long_report
+
+    click.echo(report.content)
+    sys.exit(report.exit_status)

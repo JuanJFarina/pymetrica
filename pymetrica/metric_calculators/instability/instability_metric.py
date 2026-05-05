@@ -24,12 +24,14 @@ class InstabilityResults(Results):
 
     @property
     def fail_message(self) -> str:
-        raise NotImplementedError("Instability metric does not have a fail threshold.")
+        log.debug("Instability metric does not have a fail threshold.")
+        return ""
 
     @property
     def exceeds_threshold(self) -> bool:
-        log.warning("Instability metric does not have a fail threshold.")
+        log.debug("Instability metric does not have a fail threshold.")
         return False
 
 
-class InstabilityMetric(Metric[InstabilityResults]): ...
+class InstabilityMetric(Metric[InstabilityResults]):
+    exit_code: int = 0

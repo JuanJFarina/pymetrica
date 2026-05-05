@@ -122,8 +122,9 @@ Important implementation details:
 
 ## Short Report vs Long Report
 
-The short report is optimized for automation and CI. It prints only the values
-returned by each metric's `dict_` property.
+The short report is optimized for compact terminal output. It prints only the
+values returned by each metric's `dict_` property. Use `-rt BASIC_HOOK` when you
+want threshold failures to affect the process exit status in CI or hooks.
 
 That means:
 

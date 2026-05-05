@@ -38,9 +38,17 @@ Analyze a Python project with the full metrics pipeline:
 pymetrica run-all path/to/project
 ```
 
-The default output is a short report with the top-level values for every metric.
-Use `--long-report` when you want the descriptive summaries and per-layer
-breakdown. Configured threshold failures are applied for both report formats.
+The default output is a short terminal report with the top-level values for
+every metric. Use `--long-report` when you want the descriptive summaries and
+per-layer breakdown.
+
+Thresholds are enforced when you use the hook report backend:
+
+```bash
+pymetrica run-all -rt BASIC_HOOK path/to/project
+```
+
+You can combine it with `--long-report` if you want the longer failure output.
 Any configured `[tool.pymetrica].exclude` patterns are applied before the
 codebase is parsed.
 
@@ -80,7 +88,7 @@ root: 0.0
 
 If you switch to a single-metric command such as `pymetrica cc path/to/project`,
 Pymetrica always prints the descriptive report format instead of this short
-CI-oriented layout.
+compact layout.
 
 ## Inspect Base Stats and Generate a Diagram
 

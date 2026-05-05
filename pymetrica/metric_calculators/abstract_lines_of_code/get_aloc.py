@@ -21,9 +21,8 @@ def aloc(
 ) -> None:
     codebase = parse_codebase(dir_path)
     aloc_metric = aloc_calculator.calculate_metric(codebase)
-    report_generator = REPORTS_MAPPING[report_type]()
-    click.echo(report_generator.generate_report([aloc_metric]))
-    exit_status = int(aloc_metric.results.exceeds_threshold)
-    if exit_status > 0:
-        click.echo(aloc_metric.results.fail_message, err=True)
-    sys.exit(exit_status)
+    report_generator = REPORTS_MAPPING[report_type]([aloc_metric])
+    report = report_generator.long_report
+
+    click.echo(report.content)
+    sys.exit(report.exit_status)

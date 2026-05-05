@@ -37,9 +37,10 @@ Analyze a Python project:
 pymetrica run-all path/to/project
 ```
 
-By default, `run-all` emits a short CI-oriented report. Use `--long-report`
-when you want descriptive summaries and per-layer breakdowns. Configured
-threshold failures are applied for both report formats.
+By default, `run-all` emits a short terminal report. Use `--long-report`
+when you want descriptive summaries and per-layer breakdowns. Use
+`-rt BASIC_HOOK` when you want thresholds to produce a non-zero exit status
+for CI or pre-commit.
 
 Example short report:
 
@@ -245,7 +246,11 @@ pymetrica run-all path/to/project
 ```
 
 Configured `[tool.pymetrica].exclude` patterns are applied before the codebase
-is parsed.
+is parsed. To enforce thresholds in automation, use the hook report backend:
+
+```bash
+pymetrica run-all -rt BASIC_HOOK path/to/project
+```
 
 For an initial overview of a codebase:
 
@@ -308,9 +313,10 @@ exclude = ["generated/*", "vendor/*"]
 top_findings = 5
 ```
 
-Thresholds default to `0`, which disables failure gating for that metric.
-Configure a positive threshold value when you want CI or hooks to fail on a
-metric. `exclude` defaults to an empty list, and `top_findings` defaults to `5`.
+Built-in threshold defaults are active: `30` for ALOC, `7` for CC, `30` for
+HV, `10` for all primitives, `2` for targeted primitives, and `25` for MC.
+Set a threshold to `0` to disable failure gating for that metric. `exclude`
+defaults to an empty list, and `top_findings` defaults to `5`.
 
 Important details:
 
@@ -318,10 +324,13 @@ Important details:
 * matching uses Python's `fnmatch`
 * exclusions skip matching Python files during parsing; layer discovery and
   folder counts can still include excluded directories
-* thresholds apply to `run-all` and the threshold-gated single-metric commands
+* thresholds are enforced by the `BASIC_HOOK` report backend; `BASIC_TERMINAL`
+  prints values and exits with `0`
 * `cc_fail_threshold` fails when `lloc_per_cc` falls below the configured value
 * `run-all` combines threshold failures with exit-code weights `1` for ALOC,
-  `2` for CC, `4` for HV, `8` for PO, and `16` for MC
+  `2` for CC, `4` for HV, `8` for MC, and `16` for PO
+* single-metric commands using `BASIC_HOOK` return their metric-specific exit
+  code when the threshold fails
 * `top_findings = 0` disables top-finding lists in failure messages
 
 Pymetrica also publishes `pre-commit` hooks:
@@ -329,7 +338,7 @@ Pymetrica also publishes `pre-commit` hooks:
 ```yaml
 repos:
   - repo: https://github.com/JuanJFarina/pymetrica
-    rev: v1.4.0
+    rev: v1.5.0
     hooks:
       - id: pymetrica
       - id: pymetrica-mc
@@ -407,8 +416,10 @@ Metrics are rendered through pluggable report generators.
 
 Currently supported:
 
-* `BASIC_TERMINAL` terminal reports, with short and detailed layouts
-* `BASIC_HOOK` hook-oriented reports that show only failed metrics
+* `BASIC_TERMINAL` terminal reports, with short and detailed layouts and a
+  zero exit status
+* `BASIC_HOOK` hook-oriented reports that show only failed metrics and return
+  threshold-based exit statuses
 
 Future formats may include JSON, Markdown, or CI-friendly outputs.
 
@@ -436,8 +447,8 @@ metrics = [
     PrimitiveObsessionCalculator().calculate_metric(codebase),
 ]
 
-report = REPORTS_MAPPING["BASIC_TERMINAL"]().generate_report(metrics)
-print(report)
+report_generator = REPORTS_MAPPING["BASIC_TERMINAL"](metrics)
+print(report_generator.long_report.content)
 
 create_diagram(codebase, filename="architecture.mmd")
 ```

@@ -18,12 +18,12 @@ def find_pyproject() -> Path | None:
 
 
 class Configuration(BaseModel):
-    aloc_fail_threshold: int = 0
-    cc_fail_threshold: int = 0
-    hv_fail_threshold: int = 0
-    mc_fail_threshold: int = 0
-    po_targeted_fail_threshold: int = 0
-    po_all_fail_threshold: int = 0
+    aloc_fail_threshold: int = 30
+    cc_fail_threshold: int = 7
+    hv_fail_threshold: int = 30
+    mc_fail_threshold: int = 25
+    po_all_fail_threshold: int = 10
+    po_targeted_fail_threshold: int = 2
     exclude: list[str] = []
     top_findings: int = 5
 

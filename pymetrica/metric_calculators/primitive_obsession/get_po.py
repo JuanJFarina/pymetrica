@@ -21,9 +21,8 @@ def po(
 ) -> int:
     codebase = parse_codebase(dir_path)
     po_metric = po_calculator.calculate_metric(codebase)
-    report_generator = REPORTS_MAPPING[report_type]()
-    click.echo(report_generator.generate_report([po_metric]))
-    exit_status = int(po_metric.results.exceeds_threshold)
-    if exit_status > 0:
-        click.echo(po_metric.results.fail_message, err=True)
-    sys.exit(exit_status)
+    report_generator = REPORTS_MAPPING[report_type]([po_metric])
+    report = report_generator.long_report
+
+    click.echo(report.content)
+    sys.exit(report.exit_status)

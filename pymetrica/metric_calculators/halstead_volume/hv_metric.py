@@ -59,4 +59,5 @@ class HalsteadVolumeResults(Results):
         )
 
 
-class HalsteadVolumeMetric(Metric[HalsteadVolumeResults]): ...
+class HalsteadVolumeMetric(Metric[HalsteadVolumeResults]):
+    exit_code: int = 4

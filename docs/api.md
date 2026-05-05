@@ -29,8 +29,8 @@ metrics = [
     PrimitiveObsessionCalculator().calculate_metric(codebase),
 ]
 
-report = REPORTS_MAPPING["BASIC_TERMINAL"]().generate_report(metrics)
-print(report)
+report_generator = REPORTS_MAPPING["BASIC_TERMINAL"](metrics)
+print(report_generator.long_report.content)
 
 create_diagram(codebase, filename="architecture.mmd")
 ```
@@ -48,8 +48,9 @@ The most useful public extension points are:
 - `REPORTS_MAPPING` for registering report backends under `-rt` names
 
 Bundled report backends are `BASIC_TERMINAL` for normal terminal output and
-`BASIC_HOOK` for pre-commit style output that only shows failed metrics. The
-registry is already part of the public reporting surface.
+`BASIC_HOOK` for pre-commit style output that only shows failed metrics and
+returns threshold-based exit statuses. Instantiate a backend with a metric
+sequence and then read its `short_report` or `long_report` property.
 
 ## Models
 
