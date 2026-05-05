@@ -1,8 +1,8 @@
 from typing import Any
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
-from pymetrica.models import Metric, Results
+from pymetrica.models import Code, Metric, Results
 from pymetrica.utils.settings import Config
 
 
@@ -16,10 +16,11 @@ class CCResults(Results):
     cc_number: int
     lloc_per_cc: float
     cc_result_per_layer: list[LayerCC]
+    top_findings: list[Code] = Field(default_factory=list[Code])
 
     @property
     def dict_(self) -> dict[str, Any]:
-        return self.model_dump(exclude={"cc_result_per_layer"})
+        return self.model_dump(exclude={"cc_result_per_layer", "top_findings"})
 
     @property
     def json_(self) -> str:
@@ -39,18 +40,23 @@ class CCResults(Results):
 
     @property
     def fail_message(self) -> str:
-        message = (
+        message = ("-" * 40) + " CC DETAILS " + ("-" * 40) + "\n\n"
+        message += (
             f"LLOC per CC {self.lloc_per_cc:.2f} is below "
             f"the fail threshold of {Config.cc_fail_threshold}. "
             "Reduce the number of logic branches and decision points by "
             "simplifying logic, using strict typing, and use multiple "
-            "lines of code to simplify complex expressions."
+            "lines of code to simplify complex expressions.\n"
         )
+        if self.top_findings:
+            message += "Top findings for CC:\n"
+            for finding in self.top_findings:
+                message += f"  {finding.filepath} -> {finding.cc_number}\n"
         return message
 
     @property
     def exceeds_threshold(self) -> bool:
-        return Config.cc_fails and self.lloc_per_cc < Config.cc_fail_threshold
+        return self.lloc_per_cc < Config.cc_fail_threshold
 
 
 class CCMetric(Metric[CCResults]): ...
