@@ -1,5 +1,3 @@
-import sys
-
 import click
 
 from pymetrica.codebase_parser import parse_codebase
@@ -18,11 +16,10 @@ mc_calculator: MaintainabilityCostCalculator = MaintainabilityCostCalculator()
 def mc(
     dir_path: str,
     report_type: str,
-) -> int:
+) -> None:
     codebase = parse_codebase(dir_path)
     mc_metric = mc_calculator.calculate_metric(codebase)
     report_generator = REPORTS_MAPPING[report_type]([mc_metric])
     report = report_generator.long_report
 
-    click.echo(report.content)
-    sys.exit(report.exit_status)
+    report.echo_and_exit()

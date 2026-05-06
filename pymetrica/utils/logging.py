@@ -2,6 +2,7 @@ import os
 import sys
 from enum import Enum
 
+from dotenv import load_dotenv
 from loguru import logger
 from pydantic import TypeAdapter
 
@@ -14,6 +15,8 @@ class LogLevel(Enum):
 
 
 LogLevelAdapter = TypeAdapter(LogLevel)
+
+load_dotenv()
 
 LOG_LEVEL = os.getenv("PYMETRICA_LOG_LEVEL")
 try:

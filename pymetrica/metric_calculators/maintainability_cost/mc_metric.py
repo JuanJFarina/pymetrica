@@ -26,13 +26,17 @@ class MaintainabilityCostResults(Results):
     def json_(self) -> str:
         return json.dumps(self.dict_)
 
+
+class MaintainabilityCostMetric(Metric[MaintainabilityCostResults]):
+    exit_code: int = 8
+
     @property
     def summary(self) -> str:
         summary = (
-            f"\nCodebase MC: {self.maintainability_cost:.2f} "
-            f"({self.raw_line_cost:.2f} raw MC, without size penalty)\n"
+            f"\nCodebase MC: {self.results.maintainability_cost:.2f} "
+            f"({self.results.raw_line_cost:.2f} raw MC, without size penalty)\n"
         )
-        for layer in self.mc_per_layer:
+        for layer in self.results.mc_per_layer:
             summary += (
                 f"  Layer {layer.name}: "
                 f"{layer.maintainability_cost:.2f} ({layer.raw_line_cost:.2f} raw)\n"
@@ -40,13 +44,20 @@ class MaintainabilityCostResults(Results):
         return summary
 
     @property
+    def exceeds_threshold(self) -> bool:
+        return (
+            Config.mc_fail_threshold != 0
+            and self.results.maintainability_cost > Config.mc_fail_threshold
+        )
+
+    @property
     def fail_message(self) -> str:
         message = ("-" * 40) + " MC DETAILS " + ("-" * 40) + "\n\n"
         message += (
-            f"Maintainability Cost {self.maintainability_cost:.2f}% exceeds "
+            f"Maintainability Cost {self.results.maintainability_cost:.2f}% exceeds "
             f"the fail threshold of {Config.mc_fail_threshold}%. "
         )
-        if self.raw_line_cost <= (self.maintainability_cost / 2):
+        if self.results.raw_line_cost <= (self.results.maintainability_cost / 2):
             message += (
                 "More than half of the maintainability cost comes from the "
                 "sheer size of the codebase. This may indicate the codebase "
@@ -58,21 +69,10 @@ class MaintainabilityCostResults(Results):
                 "Average line of code is too complex, split up logic among "
                 "multiple lines, use more indirections, and overall simplify.\n"
             )
-        if self.top_findings:
+        if self.results.top_findings:
             message += "Top findings for MC:\n"
-            for finding in self.top_findings:
+            for finding in self.results.top_findings:
                 message += (
                     f"  {finding.filepath} -> {finding.maintainability_cost:.2f}\n"
                 )
         return message
-
-    @property
-    def exceeds_threshold(self) -> bool:
-        return (
-            Config.mc_fail_threshold != 0
-            and self.maintainability_cost > Config.mc_fail_threshold
-        )
-
-
-class MaintainabilityCostMetric(Metric[MaintainabilityCostResults]):
-    exit_code: int = 8

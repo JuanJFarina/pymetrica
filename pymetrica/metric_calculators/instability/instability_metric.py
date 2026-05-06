@@ -15,23 +15,23 @@ class InstabilityResults(Results):
     def json_(self) -> str:
         return json.dumps(self.dict_)
 
+
+class InstabilityMetric(Metric[InstabilityResults]):
+    exit_code: int = 0
+
     @property
     def summary(self) -> str:
         summary = "\nInstability for:\n"
-        for layer, instability in self.instability.items():
+        for layer, instability in self.results.instability.items():
             summary += f"  {layer}: {instability}\n"
         return summary
-
-    @property
-    def fail_message(self) -> str:
-        log.debug("Instability metric does not have a fail threshold.")
-        return ""
 
     @property
     def exceeds_threshold(self) -> bool:
         log.debug("Instability metric does not have a fail threshold.")
         return False
 
-
-class InstabilityMetric(Metric[InstabilityResults]):
-    exit_code: int = 0
+    @property
+    def fail_message(self) -> str:
+        log.debug("Instability metric does not have a fail threshold.")
+        return ""

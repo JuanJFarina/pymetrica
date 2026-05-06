@@ -1,10 +1,9 @@
-import sys
-
 import click
 
 from pymetrica.codebase_parser import parse_codebase
 from pymetrica.models.metric import Metric, Results
 from pymetrica.report_generators.reports_mapping import REPORTS_MAPPING
+from pymetrica.utils.profiler import run_profiler
 
 from .metric_calculators import (
     AlocCalculator,
@@ -31,6 +30,7 @@ instability_calculator: InstabilityCalculator = InstabilityCalculator()
 )
 @click.argument("dir_path")
 @click.option("-rt", "--report-type", type=str, default="BASIC_TERMINAL")
+@run_profiler
 def run_all(
     dir_path: str,
     report_type: str,
@@ -52,5 +52,4 @@ def run_all(
     else:
         report = report_generator.short_report
 
-    click.echo(report.content)
-    sys.exit(report.exit_status)
+    report.echo_and_exit()

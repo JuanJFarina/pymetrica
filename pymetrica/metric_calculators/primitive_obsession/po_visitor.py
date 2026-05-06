@@ -2,8 +2,6 @@ import ast
 
 from pydantic import BaseModel
 
-from pymetrica.utils import log
-
 PRIMITIVES = {"Any", "bool", "float", "int", "str"}
 TARGETS = {"dict", "list", "tuple", "set"}
 
@@ -121,8 +119,7 @@ class POVisitor(ast.NodeVisitor):
     def _handle(self, annotation: ast.AST) -> None:
         try:
             parsed = parse_type(annotation)
-        except ValueError as e:
-            log.debug(f"Error parsing annotation: {e}")
+        except ValueError:
             return
         analyze_type(parsed)
         if parsed.is_primitive:

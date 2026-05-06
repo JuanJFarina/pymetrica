@@ -1,5 +1,3 @@
-import sys
-
 import click
 
 from pymetrica.codebase_parser import parse_codebase
@@ -24,5 +22,4 @@ def aloc(
     report_generator = REPORTS_MAPPING[report_type]([aloc_metric])
     report = report_generator.long_report
 
-    click.echo(report.content)
-    sys.exit(report.exit_status)
+    report.echo_and_exit()

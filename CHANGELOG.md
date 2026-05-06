@@ -2,6 +2,15 @@
 
 
 
+## v1.5.3 (2026-05-06)
+
+### Fix
+
+* fix(config): fix log level env issue and refactor commands exitting ([`f0d8cb2`](https://github.com/JuanJFarina/pymetrica/commit/f0d8cb22541344386db99a12fb052eb820d15d22))
+
+* fix(config): apply law of demeter principle ([`ae77744`](https://github.com/JuanJFarina/pymetrica/commit/ae77744486466743dd98e8904f81bdf7636d7b87))
+
+
 ## v1.5.2 (2026-05-05)
 
 ### Fix
