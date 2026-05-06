@@ -1,5 +1,3 @@
-import sys
-
 import click
 
 from pymetrica.codebase_parser import parse_codebase
@@ -18,11 +16,10 @@ po_calculator: PrimitiveObsessionCalculator = PrimitiveObsessionCalculator()
 def po(
     dir_path: str,
     report_type: str,
-) -> int:
+) -> None:
     codebase = parse_codebase(dir_path)
     po_metric = po_calculator.calculate_metric(codebase)
     report_generator = REPORTS_MAPPING[report_type]([po_metric])
     report = report_generator.long_report
 
-    click.echo(report.content)
-    sys.exit(report.exit_status)
+    report.echo_and_exit()

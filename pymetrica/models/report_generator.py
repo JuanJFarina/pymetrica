@@ -1,8 +1,10 @@
+import sys
 from abc import ABC, abstractmethod
 from collections.abc import Sequence
 from dataclasses import dataclass
 from typing import Any, TypeVar
 
+import click
 from pydantic import BaseModel
 
 from .metric import Metric, Results
@@ -13,6 +15,11 @@ T = TypeVar("T", bound=Results)
 class Report(BaseModel):
     content: str
     exit_status: int = 0
+
+    def echo_and_exit(self) -> None:
+        click.echo(self.content)
+        if self.exit_status:
+            sys.exit(self.exit_status)
 
 
 @dataclass

@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "b6701d31f93888f8b0fc7fd39fd72442ba0092e6f7e8e36aee5dc430c4af5cd4"
+            "sha256": "c8db318629263aa6cd1de862c410ef6b7e1e053173c82e454dfacb93836eb4dd"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -286,6 +286,7 @@
                 "sha256:398329ad4837b2ff7cbe1dd166a4c0f8900c3ca3a218de04466f38f6497f18a2",
                 "sha256:a2bf429bb3033c89fa4936ffb35d5cb471e3719e1f3c8a7c3fff0b8314305613"
             ],
+            "index": "pypi",
             "markers": "python_version >= '3.10'",
             "version": "==8.3.3"
         },
@@ -478,11 +479,11 @@
         },
         "packaging": {
             "hashes": [
-                "sha256:5d9c0669c6285e491e0ced2eee587eaf67b670d94a19e94e3984a481aba6802f",
-                "sha256:f042152b681c4bfac5cae2742a55e103d27ab2ec0f3d88037136b6bfe7c9c5de"
+                "sha256:5fc45236b9446107ff2415ce77c807cee2862cb6fac22b8a73826d0693b0980e",
+                "sha256:ff452ff5a3e828ce110190feff1178bb1f2ea2281fa2075aadb987c2fb221661"
             ],
             "markers": "python_version >= '3.8'",
-            "version": "==26.1"
+            "version": "==26.2"
         },
         "platformdirs": {
             "hashes": [
@@ -514,6 +515,7 @@
                 "sha256:6db14ac8dfc9a1e57f87ea2c0de670c251240f43cb0c30a5130e9720dc612927",
                 "sha256:af09e9d1d09f4e7fe37145c1f577e1d61ceb9a41924bf0094a36506285d0a84d"
             ],
+            "index": "pypi",
             "markers": "python_version >= '3.9'",
             "version": "==2.13.3"
         },
@@ -676,6 +678,15 @@
             ],
             "markers": "python_version >= '3.8'",
             "version": "==1.3.0"
+        },
+        "python-dotenv": {
+            "hashes": [
+                "sha256:1d8214789a24de455a8b8bd8ae6fe3c6b69a5e3d64aa8a8e5d68e694bbcb285a",
+                "sha256:2c371a91fbd7ba082c2c1dc1f8bf89ca22564a087c2c287cd9b662adde799cf3"
+            ],
+            "index": "pypi",
+            "markers": "python_version >= '3.10'",
+            "version": "==1.2.2"
         },
         "pyyaml": {
             "hashes": [
