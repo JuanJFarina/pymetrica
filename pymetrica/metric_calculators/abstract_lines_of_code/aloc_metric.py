@@ -26,13 +26,17 @@ class AlocResults(Results):
     def json_(self) -> str:
         return self.json_
 
+
+class AlocMetric(Metric[AlocResults]):
+    exit_code: int = 1
+
     @property
     def summary(self) -> str:
         summary = (
             "\nTotal ALOC: "
-            f"{self.aloc_number} ({self.aloc_percentage:0.2f}% of total LLOC)\n"
+            f"{self.results.aloc_number} ({self.results.aloc_percentage:0.2f}% of total LLOC)\n"
         )
-        for layer in self.aloc_result_per_layer:
+        for layer in self.results.aloc_result_per_layer:
             summary += (
                 f"  Layer {layer.name} ALOC: "
                 f"{layer.aloc_number} ({layer.aloc_percentage:0.2f}%)\n"
@@ -40,27 +44,23 @@ class AlocResults(Results):
         return summary
 
     @property
+    def exceeds_threshold(self) -> bool:
+        return (
+            Config.aloc_fail_threshold != 0
+            and self.results.aloc_percentage > Config.aloc_fail_threshold
+        )
+
+    @property
     def fail_message(self) -> str:
         message = ("-" * 40) + " ALOC DETAILS " + ("-" * 40) + "\n\n"
         message += (
-            f"ALOC percentage {self.aloc_percentage:.2f}% exceeds "
+            f"ALOC percentage {self.results.aloc_percentage:.2f}% exceeds "
             f"the fail threshold of {Config.aloc_fail_threshold}%. "
             "Reduce the number of functions and classes to improve this "
             "metric.\n"
         )
-        if self.top_findings:
+        if self.results.top_findings:
             message += "Top findings for ALOC:\n"
-            for finding in self.top_findings:
+            for finding in self.results.top_findings:
                 message += f"  {finding.filepath} -> {finding.aloc_number}\n"
         return message
-
-    @property
-    def exceeds_threshold(self) -> bool:
-        return (
-            Config.aloc_fail_threshold != 0
-            and self.aloc_percentage > Config.aloc_fail_threshold
-        )
-
-
-class AlocMetric(Metric[AlocResults]):
-    exit_code: int = 1

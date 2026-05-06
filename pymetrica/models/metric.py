@@ -17,6 +17,22 @@ class Results(BaseModel, ABC):
     def dict_(self) -> dict[str, Any]:
         raise NotImplementedError(_NIE_MSG)
 
+
+T_co = TypeVar("T_co", bound=Results, covariant=True)
+
+
+class Metric(ABC, BaseModel, Generic[T_co]):
+    name: str
+    description: str
+    results: T_co
+    exit_code: int
+
+    model_config = ConfigDict(arbitrary_types_allowed=True)
+
+    @property
+    def results_dict(self) -> dict[str, Any]:
+        return self.results.dict_
+
     @property
     @abstractmethod
     def summary(self) -> str:
@@ -24,22 +40,10 @@ class Results(BaseModel, ABC):
 
     @property
     @abstractmethod
-    def fail_message(self) -> str:
+    def exceeds_threshold(self) -> bool:
         raise NotImplementedError(_NIE_MSG)
 
     @property
     @abstractmethod
-    def exceeds_threshold(self) -> bool:
+    def fail_message(self) -> str:
         raise NotImplementedError(_NIE_MSG)
-
-
-T_co = TypeVar("T_co", bound=Results, covariant=True)
-
-
-class Metric(BaseModel, Generic[T_co]):
-    name: str
-    description: str
-    results: T_co
-    exit_code: int
-
-    model_config = ConfigDict(arbitrary_types_allowed=True)

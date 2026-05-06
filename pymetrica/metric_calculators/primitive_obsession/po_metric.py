@@ -42,15 +42,19 @@ class PrimitiveObsessionResults(Results):
     def json_(self) -> str:
         return json.dumps(self.json_)
 
+
+class PrimitiveObsessionMetric(Metric[PrimitiveObsessionResults]):
+    exit_code: int = 16
+
     @property
     def summary(self) -> str:
         summary = (
-            f"\nTotal codebase primitives: {self.all_primitives} "
-            f"({self.all_primitives_percent:.2f}%) "
-            f"with {self.targeted_primitives} critically loose "
-            f"({self.targeted_primitives_percent:.2f}%)\n"
+            f"\nTotal codebase primitives: {self.results.all_primitives} "
+            f"({self.results.all_primitives_percent:.2f}%) "
+            f"with {self.results.targeted_primitives} critically loose "
+            f"({self.results.targeted_primitives_percent:.2f}%)\n"
         )
-        for layer in self.po_per_layer:
+        for layer in self.results.po_per_layer:
             summary += (
                 f"  Layer {layer.name}: "
                 f"{layer.all_primitives} ({layer.targeted_primitives})\n"
@@ -58,48 +62,48 @@ class PrimitiveObsessionResults(Results):
         return summary
 
     @property
+    def exceeds_threshold(self) -> bool:
+        self.results.all_primitives_failed = (
+            Config.po_all_fail_threshold != 0
+            and self.results.all_primitives_percent > Config.po_all_fail_threshold
+        )
+        self.results.targeted_primitives_failed = (
+            Config.po_targeted_fail_threshold != 0
+            and self.results.targeted_primitives_percent
+            > Config.po_targeted_fail_threshold
+        )
+        return (
+            self.results.all_primitives_failed
+            or self.results.targeted_primitives_failed
+        )
+
+    @property
     def fail_message(self) -> str:
         message = ("-" * 40) + " PO DETAILS " + ("-" * 40) + "\n\n"
-        if self.all_primitives_failed:
+        if self.results.all_primitives_failed:
             message += (
                 "Primitives found are "
-                f"{self.all_primitives_percent:.2f}% of codebase "
+                f"{self.results.all_primitives_percent:.2f}% of codebase "
                 f"exceeding the fail threshold of {Config.po_all_fail_threshold}%."
                 "Consider using type aliases or other data structures.\n"
             )
-            if self.top_findings_all:
+            if self.results.top_findings_all:
                 message += "Top findings for ALL:\n"
-                for finding in self.top_findings_all:
+                for finding in self.results.top_findings_all:
                     message += f"  {finding.filepath} -> {finding.all_primitives}\n"
-        if self.targeted_primitives_failed:
+        if self.results.targeted_primitives_failed:
             if message:
                 message += "\n"
             message += (
                 "Critical primitives found are "
-                f"{self.targeted_primitives_percent:.2f}% of codebase "
+                f"{self.results.targeted_primitives_percent:.2f}% of codebase "
                 f"exceeding the fail threshold of {Config.po_targeted_fail_threshold}%. "
                 "Consider using more classes.\n"
             )
-            if self.top_findings_targeted:
+            if self.results.top_findings_targeted:
                 message += "Top findings for CRITICAL:\n"
-                for finding in self.top_findings_targeted:
+                for finding in self.results.top_findings_targeted:
                     message += (
                         f"  {finding.filepath} -> {finding.targeted_primitives}\n"
                     )
         return message
-
-    @property
-    def exceeds_threshold(self) -> bool:
-        self.all_primitives_failed = (
-            Config.po_all_fail_threshold != 0
-            and self.all_primitives_percent > Config.po_all_fail_threshold
-        )
-        self.targeted_primitives_failed = (
-            Config.po_targeted_fail_threshold != 0
-            and self.targeted_primitives_percent > Config.po_targeted_fail_threshold
-        )
-        return self.all_primitives_failed or self.targeted_primitives_failed
-
-
-class PrimitiveObsessionMetric(Metric[PrimitiveObsessionResults]):
-    exit_code: int = 16

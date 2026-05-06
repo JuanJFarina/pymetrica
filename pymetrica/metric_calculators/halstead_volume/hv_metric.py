@@ -26,10 +26,17 @@ class HalsteadVolumeResults(Results):
     def json_(self) -> str:
         return self.json_
 
+
+class HalsteadVolumeMetric(Metric[HalsteadVolumeResults]):
+    exit_code: int = 4
+
     @property
     def summary(self) -> str:
-        summary = f"\nHalstead Volume: {self.hv_number:.2f} ({self.hv_per_lloc:.2f} per LLOC)\n"
-        for layer in self.hv_per_layer:
+        summary = (
+            f"\nHalstead Volume: {self.results.hv_number:.2f} "
+            f"({self.results.hv_per_lloc:.2f} per LLOC)\n"
+        )
+        for layer in self.results.hv_per_layer:
             summary += (
                 f"  Layer {layer.name}: {layer.hv_number:.2f} "
                 f"({layer.hv_per_lloc:.2f} per LLOC)\n"
@@ -37,27 +44,23 @@ class HalsteadVolumeResults(Results):
         return summary
 
     @property
+    def exceeds_threshold(self) -> bool:
+        return (
+            Config.hv_fail_threshold != 0
+            and self.results.hv_per_lloc > Config.hv_fail_threshold
+        )
+
+    @property
     def fail_message(self) -> str:
         message = ("-" * 40) + " HV DETAILS " + ("-" * 40) + "\n\n"
         message += (
-            f"Halstead Volume per LLOC {self.hv_per_lloc:.2f} exceeds "
+            f"Halstead Volume per LLOC {self.results.hv_per_lloc:.2f} exceeds "
             f"the fail threshold of {Config.hv_fail_threshold}. "
             "Reduce the number of unique operators and operands, and the "
             "overall size of the program.\n"
         )
-        if self.top_findings:
+        if self.results.top_findings:
             message += "Top findings for HV:\n"
-            for finding in self.top_findings:
+            for finding in self.results.top_findings:
                 message += f"  {finding.filepath} -> {finding.hv_number:.2f}\n"
         return message
-
-    @property
-    def exceeds_threshold(self) -> bool:
-        return (
-            Config.hv_fail_threshold != 0
-            and self.hv_per_lloc > Config.hv_fail_threshold
-        )
-
-
-class HalsteadVolumeMetric(Metric[HalsteadVolumeResults]):
-    exit_code: int = 4

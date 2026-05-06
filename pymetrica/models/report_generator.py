@@ -36,15 +36,11 @@ class ReportGenerator(ABC):
     @property
     def exit_status(self) -> int:
         return sum(
-            metric.exit_code
-            for metric in self.metrics
-            if metric.results.exceeds_threshold
+            metric.exit_code for metric in self.metrics if metric.exceeds_threshold
         )
 
     @property
     def fail_messages(self) -> str:
         return "\n".join(
-            metric.results.fail_message
-            for metric in self.metrics
-            if metric.results.exceeds_threshold
+            metric.fail_message for metric in self.metrics if metric.exceeds_threshold
         )

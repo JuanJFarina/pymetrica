@@ -13,7 +13,7 @@ class BasicTerminalReport(ReportGenerator):
         content += "-" * 100
         for metric in self.metrics:
             content += f"\nMetric: {metric.name}\n"
-            results = metric.results.dict_
+            results = metric.results_dict
             for key, value in results.items():
                 content += f"{key}: {value}\n"
             content += "-" * 100
@@ -25,7 +25,7 @@ class BasicTerminalReport(ReportGenerator):
         for metric in self.metrics:
             content += f"Metric: {metric.name}\n"
             content += f"Description: {metric.description}\n"
-            content += f"Summary: {metric.results.summary}\n"
+            content += f"Summary: {metric.summary}\n"
             content += "-" * 100
             content += "\n"
         return Report(content=content)
