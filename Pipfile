@@ -8,6 +8,7 @@ pydantic = ">=2.13.3"
 click = ">=8.3.3"
 loguru = ">=0.7.3"
 tomli = ">=2.4.1"
+python-dotenv = ">=1.2.2"
 
 [dev-packages]
 pytest = ">=8.4.1"
@@ -15,7 +16,6 @@ pre-commit = ">=4.6.0"
 fastapi = ">=0.136.1"
 uvicorn = ">=0.46.0"
 pytest-cov = ">=7.0.0"
-python-dotenv = ">=1.2.2"
 
 [requires]
 python_version = "3.10"
