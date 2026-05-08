@@ -2,6 +2,13 @@
 
 
 
+## v1.5.4 (2026-05-08)
+
+### Fix
+
+* fix(config): add audit flag to get top findings regardless of thresholds ([`7f62f48`](https://github.com/JuanJFarina/pymetrica/commit/7f62f48decdcd191edbb03e5c4a27e339f60cbdb))
+
+
 ## v1.5.3 (2026-05-06)
 
 ### Fix

@@ -10,16 +10,23 @@ cc_calculator: CCCalculator = CCCalculator()
 
 
 @click.command()
-@click.argument("dir_path")
+@click.option(
+    "-a",
+    "--audit",
+    is_flag=True,
+    help="Whether to get top findings regardless of threshold values.",
+)
 @click.option("-rt", "--report-type", type=str, default="BASIC_TERMINAL")
+@click.argument("dir_path")
 @run_profiler
 def cc(
     dir_path: str,
     report_type: str,
+    audit: bool = False,
 ) -> None:
     codebase = parse_codebase(dir_path)
     cc_metric = cc_calculator.calculate_metric(codebase)
     report_generator = REPORTS_MAPPING[report_type]([cc_metric])
-    report = report_generator.long_report
+    report = report_generator.long_report(audit)
 
     report.echo_and_exit()

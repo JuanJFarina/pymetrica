@@ -24,16 +24,24 @@ instability_calculator: InstabilityCalculator = InstabilityCalculator()
 
 @click.command()
 @click.option(
+    "-a",
+    "--audit",
+    is_flag=True,
+    help="Whether to get top findings regardless of threshold values.",
+)
+@click.option(
+    "-lr",
     "--long-report",
     is_flag=True,
     help="Whether to generate a long summary report for each metric.",
 )
-@click.argument("dir_path")
 @click.option("-rt", "--report-type", type=str, default="BASIC_TERMINAL")
+@click.argument("dir_path")
 @run_profiler
 def run_all(
     dir_path: str,
     report_type: str,
+    audit: bool = False,
     long_report: bool = False,
 ) -> None:
     codebase = parse_codebase(dir_path)
@@ -48,8 +56,8 @@ def run_all(
     report_generator = REPORTS_MAPPING[report_type](metrics)
 
     if long_report:
-        report = report_generator.long_report
+        report = report_generator.long_report(audit)
     else:
-        report = report_generator.short_report
+        report = report_generator.short_report(audit)
 
     report.echo_and_exit()

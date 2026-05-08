@@ -27,11 +27,10 @@ class InstabilityMetric(Metric[InstabilityResults]):
         return summary
 
     @property
-    def exceeds_threshold(self) -> bool:
-        log.debug("Instability metric does not have a fail threshold.")
-        return False
-
-    @property
     def fail_message(self) -> str:
         log.debug("Instability metric does not have a fail threshold.")
         return ""
+
+    def exceeds_threshold(self, audit: bool = False) -> bool:
+        log.debug("Instability metric does not have a fail threshold.")
+        return False

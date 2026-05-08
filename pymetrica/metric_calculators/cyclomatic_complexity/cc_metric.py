@@ -44,13 +44,6 @@ class CCMetric(Metric[CCResults]):
         return summary
 
     @property
-    def exceeds_threshold(self) -> bool:
-        return (
-            Config.cc_fail_threshold != 0
-            and self.results.lloc_per_cc < Config.cc_fail_threshold
-        )
-
-    @property
     def fail_message(self) -> str:
         message = ("-" * 40) + " CC DETAILS " + ("-" * 40) + "\n\n"
         message += (
@@ -65,3 +58,9 @@ class CCMetric(Metric[CCResults]):
             for finding in self.results.top_findings:
                 message += f"  {finding.filepath} -> {finding.cc_number}\n"
         return message
+
+    def exceeds_threshold(self, audit: bool = False) -> bool:
+        return audit or (
+            Config.cc_fail_threshold != 0
+            and self.results.lloc_per_cc < Config.cc_fail_threshold
+        )

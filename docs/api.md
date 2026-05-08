@@ -36,7 +36,7 @@ metrics = [
 ]
 
 report_generator = REPORTS_MAPPING["BASIC_TERMINAL"](metrics)
-print(report_generator.long_report.content)
+print(report_generator.long_report().content)
 
 create_diagram(codebase, filename="architecture.mmd")
 ```
@@ -53,10 +53,10 @@ The most useful public extension points are:
 - `ReportGenerator` subclasses for adding new report backends
 - `REPORTS_MAPPING` for registering report backends under `-rt` names
 
-Bundled report backends are `BASIC_TERMINAL` for normal terminal output and
-`BASIC_HOOK` for pre-commit style output that only shows failed metrics and
-returns threshold-based exit statuses. Instantiate a backend with a metric
-sequence and then read its `short_report` or `long_report` property.
+Bundled report backends are `BASIC_TERMINAL` for terminal output and
+`BASIC_HOOK` for pre-commit style output that only shows failed metrics by
+default and returns threshold-based exit statuses. Instantiate a backend with a
+metric sequence and then call its `short_report()` or `long_report()` method.
 
 ## Models
 

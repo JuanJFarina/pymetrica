@@ -44,13 +44,6 @@ class AlocMetric(Metric[AlocResults]):
         return summary
 
     @property
-    def exceeds_threshold(self) -> bool:
-        return (
-            Config.aloc_fail_threshold != 0
-            and self.results.aloc_percentage > Config.aloc_fail_threshold
-        )
-
-    @property
     def fail_message(self) -> str:
         message = ("-" * 40) + " ALOC DETAILS " + ("-" * 40) + "\n\n"
         message += (
@@ -64,3 +57,9 @@ class AlocMetric(Metric[AlocResults]):
             for finding in self.results.top_findings:
                 message += f"  {finding.filepath} -> {finding.aloc_number}\n"
         return message
+
+    def exceeds_threshold(self, audit: bool = False) -> bool:
+        return audit or (
+            Config.aloc_fail_threshold != 0
+            and self.results.aloc_percentage > Config.aloc_fail_threshold
+        )

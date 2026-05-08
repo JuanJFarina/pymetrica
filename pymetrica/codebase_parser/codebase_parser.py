@@ -7,8 +7,6 @@ from pymetrica.models import Code, Codebase
 from pymetrica.utils import is_comment_line, is_logical_line_of_code, log
 from pymetrica.utils.settings import Config
 
-# TODO ignore folders inside .gitignore
-
 
 def parse_codebase(dir_path: str) -> Codebase:  # pylint: disable=too-many-locals
     base = get_base_path(dir_path)

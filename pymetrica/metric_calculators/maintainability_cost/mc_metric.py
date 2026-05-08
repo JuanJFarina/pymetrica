@@ -44,13 +44,6 @@ class MaintainabilityCostMetric(Metric[MaintainabilityCostResults]):
         return summary
 
     @property
-    def exceeds_threshold(self) -> bool:
-        return (
-            Config.mc_fail_threshold != 0
-            and self.results.maintainability_cost > Config.mc_fail_threshold
-        )
-
-    @property
     def fail_message(self) -> str:
         message = ("-" * 40) + " MC DETAILS " + ("-" * 40) + "\n\n"
         message += (
@@ -76,3 +69,9 @@ class MaintainabilityCostMetric(Metric[MaintainabilityCostResults]):
                     f"  {finding.filepath} -> {finding.maintainability_cost:.2f}\n"
                 )
         return message
+
+    def exceeds_threshold(self, audit: bool = False) -> bool:
+        return audit or (
+            Config.mc_fail_threshold != 0
+            and self.results.maintainability_cost > Config.mc_fail_threshold
+        )

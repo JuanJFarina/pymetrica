@@ -54,7 +54,7 @@ Pymetrica health check passed. All systems operational.
 Runs the full metrics pipeline across the target codebase.
 
 ```bash
-pymetrica run-all [--long-report] [-rt BASIC_TERMINAL|BASIC_HOOK] DIR_PATH
+pymetrica run-all [-a|--audit] [-lr|--long-report] [-rt BASIC_TERMINAL|BASIC_HOOK] DIR_PATH
 ```
 
 What it does:
@@ -62,8 +62,8 @@ What it does:
 - Parses the codebase.
 - Computes `ALOC`, `CC`, `HV`, `Primitive Obsession`,
   `Maintainability Cost`, and `Instability`.
-- Prints a short summary by default, or a longer descriptive report when
-  `--long-report` is set.
+- Uses the longer descriptive layout when `--long-report` is set.
+- Includes top findings regardless of threshold values when `--audit` is set.
 - Returns a composite non-zero exit code if any configured thresholds fail when
   `-rt BASIC_HOOK` is used.
 
@@ -114,6 +114,9 @@ The output includes:
 - `classes_number`
 - `functions_number`
 
+The CLI label `comment_line_ratio` corresponds to the `comment_lloc_ratio`
+field on the `Codebase` model.
+
 Examples:
 
 ```bash
@@ -136,7 +139,7 @@ single-metric equivalent of `run-all --long-report`.
 ### `aloc`
 
 ```bash
-pymetrica aloc [-rt BASIC_TERMINAL|BASIC_HOOK] DIR_PATH
+pymetrica aloc [-a|--audit] [-rt BASIC_TERMINAL|BASIC_HOOK] DIR_PATH
 ```
 
 Reports the `Abstract Lines Of Code` metric. With `BASIC_HOOK`, exits with `1`
@@ -145,7 +148,7 @@ when `aloc_fail_threshold` is positive and exceeded.
 ### `cc`
 
 ```bash
-pymetrica cc [-rt BASIC_TERMINAL|BASIC_HOOK] DIR_PATH
+pymetrica cc [-a|--audit] [-rt BASIC_TERMINAL|BASIC_HOOK] DIR_PATH
 ```
 
 Reports `Cyclomatic Complexity`. With `BASIC_HOOK`, exits with `2` when
@@ -154,7 +157,7 @@ Reports `Cyclomatic Complexity`. With `BASIC_HOOK`, exits with `2` when
 ### `hv`
 
 ```bash
-pymetrica hv [-rt BASIC_TERMINAL|BASIC_HOOK] DIR_PATH
+pymetrica hv [-a|--audit] [-rt BASIC_TERMINAL|BASIC_HOOK] DIR_PATH
 ```
 
 Reports `Halstead Volume`. With `BASIC_HOOK`, exits with `4` when
@@ -163,7 +166,7 @@ Reports `Halstead Volume`. With `BASIC_HOOK`, exits with `4` when
 ### `po`
 
 ```bash
-pymetrica po [-rt BASIC_TERMINAL|BASIC_HOOK] DIR_PATH
+pymetrica po [-a|--audit] [-rt BASIC_TERMINAL|BASIC_HOOK] DIR_PATH
 ```
 
 Reports `Primitive Obsession`. With `BASIC_HOOK`, exits with `16` when either
@@ -173,7 +176,7 @@ exceeded.
 ### `mc`
 
 ```bash
-pymetrica mc [-rt BASIC_TERMINAL|BASIC_HOOK] DIR_PATH
+pymetrica mc [-a|--audit] [-rt BASIC_TERMINAL|BASIC_HOOK] DIR_PATH
 ```
 
 Reports `Maintainability Cost`. With `BASIC_HOOK`, exits with `8` when
@@ -186,7 +189,7 @@ pymetrica li [-rt BASIC_TERMINAL|BASIC_HOOK] DIR_PATH
 ```
 
 Reports layer instability values. This command does not currently enforce a
-threshold-based failure status.
+threshold-based failure status and does not expose `-a` / `--audit` on the CLI.
 
 ## Standalone Console Scripts
 

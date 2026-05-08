@@ -6,8 +6,7 @@ T = TypeVar("T", bound=Results)
 
 
 class BasicTerminalReport(ReportGenerator):
-    @property
-    def short_report(self) -> Report:
+    def short_report(self, audit: bool = False) -> Report:
         content = "-" * 100
         content += "\nShort Report\n"
         content += "-" * 100
@@ -17,10 +16,10 @@ class BasicTerminalReport(ReportGenerator):
             for key, value in results.items():
                 content += f"{key}: {value}\n"
             content += "-" * 100
+        content = content[:-100] + self.fail_messages(audit) if audit else ""
         return Report(content=content)
 
-    @property
-    def long_report(self) -> Report:
+    def long_report(self, audit: bool = False) -> Report:
         content = ""
         for metric in self.metrics:
             content += f"Metric: {metric.name}\n"
@@ -28,4 +27,5 @@ class BasicTerminalReport(ReportGenerator):
             content += f"Summary: {metric.summary}\n"
             content += "-" * 100
             content += "\n"
+        content = content[:-100] + self.fail_messages(audit) if audit else ""
         return Report(content=content)

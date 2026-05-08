@@ -44,6 +44,11 @@ pre-commit try-repo . pymetrica-mc --all-files
 - improve parsing and architecture analysis
 - expand test coverage around edge cases
 
+The repository root `TODO.md` tracks known follow-ups such as `.gitignore`
+handling, excluded-layer behavior, and maintainability-cost layer consistency.
+Check it before starting cleanup or parser work so docs, code, and roadmap
+stay aligned.
+
 ## Pull Requests
 
 When opening a pull request:
