@@ -27,7 +27,7 @@ instability_calculator: InstabilityCalculator = InstabilityCalculator()
     "-a",
     "--audit",
     is_flag=True,
-    help="Whether to generate an audit report.",
+    help="Whether to get top findings regardless of threshold values.",
 )
 @click.option(
     "-lr",

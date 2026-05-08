@@ -14,7 +14,7 @@ cc_calculator: CCCalculator = CCCalculator()
     "-a",
     "--audit",
     is_flag=True,
-    help="Whether to generate an audit report.",
+    help="Whether to get top findings regardless of threshold values.",
 )
 @click.option("-rt", "--report-type", type=str, default="BASIC_TERMINAL")
 @click.argument("dir_path")
