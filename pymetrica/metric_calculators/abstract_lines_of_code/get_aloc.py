@@ -10,16 +10,23 @@ aloc_calculator: AlocCalculator = AlocCalculator()
 
 
 @click.command()
-@click.argument("dir_path")
+@click.option(
+    "-a",
+    "--audit",
+    is_flag=True,
+    help="Whether to generate an audit report.",
+)
 @click.option("-rt", "--report-type", type=str, default="BASIC_TERMINAL")
+@click.argument("dir_path")
 @run_profiler
 def aloc(
     dir_path: str,
     report_type: str,
+    audit: bool = False,
 ) -> None:
     codebase = parse_codebase(dir_path)
     aloc_metric = aloc_calculator.calculate_metric(codebase)
     report_generator = REPORTS_MAPPING[report_type]([aloc_metric])
-    report = report_generator.long_report
+    report = report_generator.long_report(audit)
 
     report.echo_and_exit()

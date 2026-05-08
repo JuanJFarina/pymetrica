@@ -5,6 +5,8 @@ from pydantic import BaseModel, Field
 from pymetrica.models import Code, Metric, Results
 from pymetrica.utils.settings import Config
 
+Percent = float
+
 
 class LayerPO(BaseModel):
     name: str
@@ -15,8 +17,8 @@ class LayerPO(BaseModel):
 class PrimitiveObsessionResults(Results):
     all_primitives: int
     targeted_primitives: int
-    all_primitives_percent: float
-    targeted_primitives_percent: float
+    all_primitives_percent: Percent
+    targeted_primitives_percent: Percent
     po_per_layer: list[LayerPO]
     top_findings_all: list[Code] = Field(default_factory=list[Code])
     top_findings_targeted: list[Code] = Field(default_factory=list[Code])
@@ -25,16 +27,16 @@ class PrimitiveObsessionResults(Results):
     targeted_primitives_failed: bool = False
 
     @property
-    def dict_(self) -> dict[str, int]:
+    def dict_(self) -> dict[str, Percent]:
         return self.model_dump(
             exclude={
                 "all_primitives",
                 "targeted_primitives",
-                "all_primitives_failed",
-                "targeted_primitives_failed",
                 "po_per_layer",
                 "top_findings_all",
                 "top_findings_targeted",
+                "all_primitives_failed",
+                "targeted_primitives_failed",
             },
         )
 
@@ -62,29 +64,13 @@ class PrimitiveObsessionMetric(Metric[PrimitiveObsessionResults]):
         return summary
 
     @property
-    def exceeds_threshold(self) -> bool:
-        self.results.all_primitives_failed = (
-            Config.po_all_fail_threshold != 0
-            and self.results.all_primitives_percent > Config.po_all_fail_threshold
-        )
-        self.results.targeted_primitives_failed = (
-            Config.po_targeted_fail_threshold != 0
-            and self.results.targeted_primitives_percent
-            > Config.po_targeted_fail_threshold
-        )
-        return (
-            self.results.all_primitives_failed
-            or self.results.targeted_primitives_failed
-        )
-
-    @property
     def fail_message(self) -> str:
         message = ("-" * 40) + " PO DETAILS " + ("-" * 40) + "\n\n"
         if self.results.all_primitives_failed:
             message += (
                 "Primitives found are "
                 f"{self.results.all_primitives_percent:.2f}% of codebase "
-                f"exceeding the fail threshold of {Config.po_all_fail_threshold}%."
+                f"exceeding the fail threshold of {Config.po_all_fail_threshold}%. "
                 "Consider using type aliases or other data structures.\n"
             )
             if self.results.top_findings_all:
@@ -107,3 +93,18 @@ class PrimitiveObsessionMetric(Metric[PrimitiveObsessionResults]):
                         f"  {finding.filepath} -> {finding.targeted_primitives}\n"
                     )
         return message
+
+    def exceeds_threshold(self, audit: bool = False) -> bool:
+        self.results.all_primitives_failed = audit or (
+            Config.po_all_fail_threshold != 0
+            and self.results.all_primitives_percent > Config.po_all_fail_threshold
+        )
+        self.results.targeted_primitives_failed = audit or (
+            Config.po_targeted_fail_threshold != 0
+            and self.results.targeted_primitives_percent
+            > Config.po_targeted_fail_threshold
+        )
+        return (
+            self.results.all_primitives_failed
+            or self.results.targeted_primitives_failed
+        )

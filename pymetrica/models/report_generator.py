@@ -27,27 +27,26 @@ class ReportGenerator(ABC):
     metrics: Sequence[Metric[Any]]
 
     @property
-    @abstractmethod
-    def short_report(self) -> Report:
-        raise NotImplementedError(
-            "Subclasses of ReportGenerator must implement this method.",
-        )
-
-    @property
-    @abstractmethod
-    def long_report(self) -> Report:
-        raise NotImplementedError(
-            "Subclasses of ReportGenerator must implement this method.",
-        )
-
-    @property
     def exit_status(self) -> int:
         return sum(
-            metric.exit_code for metric in self.metrics if metric.exceeds_threshold
+            metric.exit_code for metric in self.metrics if metric.exceeds_threshold()
         )
 
-    @property
-    def fail_messages(self) -> str:
+    def fail_messages(self, audit: bool = False) -> str:
         return "\n".join(
-            metric.fail_message for metric in self.metrics if metric.exceeds_threshold
+            metric.fail_message
+            for metric in self.metrics
+            if metric.exceeds_threshold(audit)
+        )
+
+    @abstractmethod
+    def short_report(self, audit: bool = False) -> Report:
+        raise NotImplementedError(
+            "Subclasses of ReportGenerator must implement this method.",
+        )
+
+    @abstractmethod
+    def long_report(self, audit: bool = False) -> Report:
+        raise NotImplementedError(
+            "Subclasses of ReportGenerator must implement this method.",
         )

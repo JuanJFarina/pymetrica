@@ -40,10 +40,9 @@ class Metric(ABC, BaseModel, Generic[T_co]):
 
     @property
     @abstractmethod
-    def exceeds_threshold(self) -> bool:
+    def fail_message(self) -> str:
         raise NotImplementedError(_NIE_MSG)
 
-    @property
     @abstractmethod
-    def fail_message(self) -> str:
+    def exceeds_threshold(self, audit: bool = False) -> bool:
         raise NotImplementedError(_NIE_MSG)

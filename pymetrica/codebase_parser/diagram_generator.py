@@ -116,7 +116,7 @@ def is_component(file_path: str, layer_name: str) -> bool:
 
 
 def is_python_file_not_dunder(file_path: str) -> bool:
-    return not file_path.endswith("__.py") and file_path.endswith(".py")
+    return not file_path.endswith(("__.py", ".py"))
 
 
 class DependenciesVisitor(ast.NodeVisitor):
