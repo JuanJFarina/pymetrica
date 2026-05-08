@@ -109,9 +109,26 @@ BASIC_HOOK
 ```
 
 These values are accepted by the `-rt` / `--report-type` option on the
-reporting commands. `BASIC_TERMINAL` is the normal CLI output and exits with
-`0`. `BASIC_HOOK` is used by the published pre-commit hooks, reports only
-failed metrics, and returns the threshold-based exit status.
+reporting commands. `BASIC_TERMINAL` exits with `0`. `BASIC_HOOK` is used by the
+published pre-commit hooks, reports only failed metrics by default, and returns
+the threshold-based exit status.
+
+## Audit Mode
+
+`-a` / `--audit` is a CLI flag, not a `pyproject.toml` setting. It requests top
+findings and metric guidance regardless of threshold values. It is available on
+`run-all`, `aloc`, `cc`, `hv`, `po`, and `mc`. It is not exposed by `status`,
+`base-stats`, or `li`.
+
+Audit mode affects report content:
+
+- with `BASIC_TERMINAL`, audit mode includes top findings and guidance for
+  threshold-capable metrics regardless of whether they failed
+- with `BASIC_HOOK`, audit mode includes the same findings and guidance even
+  for metrics that pass their thresholds
+
+Audit mode does not change hook exit status. `BASIC_HOOK` exit codes are still
+computed from actual threshold failures.
 
 ## CI Usage
 
@@ -137,7 +154,7 @@ threshold-capable single-metric commands:
 ```yaml
 repos:
   - repo: https://github.com/JuanJFarina/pymetrica
-    rev: v1.5.2
+    rev: v1.5.4
     hooks:
       - id: pymetrica
       - id: pymetrica-mc

@@ -52,10 +52,10 @@ You can combine it with `--long-report` if you want the longer failure output.
 Any configured `[tool.pymetrica].exclude` patterns are applied before the
 codebase is parsed.
 
-### Example Short Report
+### Example Short Report Excerpt
 
-This example comes from the bundled sample codebase under
-`tests/sample_codebases/small_codebase`:
+This excerpt comes from running `pymetrica run-all` against the bundled sample
+codebase under `tests/sample_codebases/small_codebase`:
 
 ```text
 ----------------------------------------------------------------------------------------------------

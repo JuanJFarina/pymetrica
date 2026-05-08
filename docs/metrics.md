@@ -155,8 +155,9 @@ Important implementation details:
 ## Short Report vs Long Report
 
 The short report is optimized for compact terminal output. It prints only the
-values returned by each metric's `dict_` property. Use `-rt BASIC_HOOK` when you
-want threshold failures to affect the process exit status in CI or hooks.
+values returned by each metric's `dict_` property when report content is
+rendered. Use `-rt BASIC_HOOK` when you want threshold failures to affect the
+process exit status in CI or hooks.
 
 That means:
 
@@ -169,6 +170,6 @@ That means:
 Use `pymetrica run-all --long-report DIR_PATH` when you want the descriptive
 summaries and per-layer breakdowns.
 
-The individual `aloc`, `cc`, `hv`, `po`, `mc`, and `li` commands already use the
+The individual `aloc`, `cc`, `hv`, `po`, and `mc` commands already use the
 descriptive report format because they operate on one metric at a time. They do
 not expose a separate `--long-report` switch.

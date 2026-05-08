@@ -349,7 +349,7 @@ Pymetrica also publishes `pre-commit` hooks:
 ```yaml
 repos:
   - repo: https://github.com/JuanJFarina/pymetrica
-    rev: v1.5.2
+    rev: v1.5.4
     hooks:
       - id: pymetrica
       - id: pymetrica-mc
@@ -465,7 +465,7 @@ metrics = [
 ]
 
 report_generator = REPORTS_MAPPING["BASIC_TERMINAL"](metrics)
-print(report_generator.long_report.content)
+print(report_generator.long_report().content)
 
 create_diagram(codebase, filename="architecture.mmd")
 ```
@@ -496,7 +496,8 @@ omitted, and `__init__.py`-style files are not emitted as components.
 
 # Testing
 
-Tests are implemented using **pytest** and mirror the project structure.
+Tests are implemented using **pytest** and cover the parser, core metric
+calculators, diagram generation, and bundled sample codebases.
 
 Run tests with:
 
