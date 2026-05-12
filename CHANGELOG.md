@@ -2,6 +2,13 @@
 
 
 
+## v1.5.5 (2026-05-12)
+
+### Fix
+
+* fix(config): change maintainability cost findings to not use averages ([`2f8e970`](https://github.com/JuanJFarina/pymetrica/commit/2f8e970adb2c8031f12c0739eb6d23600330f2b9))
+
+
 ## v1.5.4 (2026-05-08)
 
 ### Fix
