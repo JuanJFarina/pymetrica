@@ -2,6 +2,13 @@
 
 
 
+## v1.5.6 (2026-05-13)
+
+### Fix
+
+* fix(config): fix bug introduced with audit flag ([`fb8c630`](https://github.com/JuanJFarina/pymetrica/commit/fb8c630ed836c56df2b3c37bf67b0c87ca21e665))
+
+
 ## v1.5.5 (2026-05-12)
 
 ### Fix

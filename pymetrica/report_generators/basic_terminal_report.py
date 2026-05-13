@@ -16,7 +16,7 @@ class BasicTerminalReport(ReportGenerator):
             for key, value in results.items():
                 content += f"{key}: {value}\n"
             content += "-" * 100
-        content = content[:-100] + self.fail_messages(audit) if audit else ""
+        content = content[:-100] + self.fail_messages(audit) if audit else content
         return Report(content=content)
 
     def long_report(self, audit: bool = False) -> Report:
@@ -27,5 +27,5 @@ class BasicTerminalReport(ReportGenerator):
             content += f"Summary: {metric.summary}\n"
             content += "-" * 100
             content += "\n"
-        content = content[:-100] + self.fail_messages(audit) if audit else ""
+        content = content[:-100] + self.fail_messages(audit) if audit else content
         return Report(content=content)
