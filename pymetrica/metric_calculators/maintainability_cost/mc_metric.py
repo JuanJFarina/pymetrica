@@ -47,8 +47,8 @@ class MaintainabilityCostMetric(Metric[MaintainabilityCostResults]):
     def fail_message(self) -> str:
         message = ("-" * 40) + " MC DETAILS " + ("-" * 40) + "\n\n"
         message += (
-            f"Maintainability Cost {self.results.maintainability_cost:.2f}% exceeds "
-            f"the fail threshold of {Config.mc_fail_threshold}%. "
+            f"Maintainability Cost {self.results.maintainability_cost:.2f} exceeds "
+            f"the fail threshold of {Config.mc_fail_threshold}. "
         )
         if self.results.raw_line_cost <= (self.results.maintainability_cost / 2):
             message += (
