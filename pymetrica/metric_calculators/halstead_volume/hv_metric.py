@@ -55,7 +55,7 @@ class HalsteadVolumeMetric(Metric[HalsteadVolumeResults]):
         if self.results.top_findings:
             message += "Top findings for HV:\n"
             for finding in self.results.top_findings:
-                message += f"  {finding.filepath} -> {finding.hv_number:.2f}\n"
+                message += f"  {finding.filepath} -> {finding.hv_number:.0f}\n"
         return message
 
     def exceeds_threshold(self, audit: bool = False) -> bool:
