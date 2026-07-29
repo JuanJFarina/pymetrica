@@ -2,6 +2,15 @@
 
 
 
+## v1.5.7 (2026-07-29)
+
+### Fix
+
+* fix(config): improve visualization of mc and hv findings ([`48ddca3`](https://github.com/JuanJFarina/pymetrica/commit/48ddca3cf34432367e8814ec0dff48f680561297))
+
+* fix(config): change mc from percent to fixed numbers ([`5428ca9`](https://github.com/JuanJFarina/pymetrica/commit/5428ca92a159d8781240011d71c3746f1629fbd1))
+
+
 ## v1.5.6 (2026-05-13)
 
 ### Fix
