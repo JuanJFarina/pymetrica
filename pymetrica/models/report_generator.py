@@ -2,14 +2,11 @@ import sys
 from abc import ABC, abstractmethod
 from collections.abc import Sequence
 from dataclasses import dataclass
-from typing import Any, TypeVar
 
 import click
 from pydantic import BaseModel
 
-from .metric import Metric, Results
-
-T = TypeVar("T", bound=Results)
+from .metric import ReportableMetric
 
 
 class Report(BaseModel):
@@ -24,7 +21,7 @@ class Report(BaseModel):
 
 @dataclass
 class ReportGenerator(ABC):
-    metrics: Sequence[Metric[Any]]
+    metrics: Sequence[ReportableMetric]
 
     @property
     def exit_status(self) -> int:

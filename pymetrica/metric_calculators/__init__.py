@@ -1,4 +1,5 @@
 from .abstract_lines_of_code import AlocCalculator, aloc
+from .base_stats import BaseStatsCalculator, BaseStatsResults
 from .cyclomatic_complexity import CCCalculator, cc
 from .halstead_volume import HalsteadVolumeCalculator, hv
 from .instability import (
@@ -19,6 +20,8 @@ from .primitive_obsession import (
 
 __all__ = [
     "AlocCalculator",
+    "BaseStatsCalculator",
+    "BaseStatsResults",
     "CCCalculator",
     "HalsteadVolumeCalculator",
     "InstabilityCalculator",
