@@ -7,6 +7,7 @@ from pymetrica.utils.profiler import run_profiler
 
 from .metric_calculators import (
     AlocCalculator,
+    BaseStatsCalculator,
     CCCalculator,
     HalsteadVolumeCalculator,
     InstabilityCalculator,
@@ -14,6 +15,7 @@ from .metric_calculators import (
     PrimitiveObsessionCalculator,
 )
 
+base_stats_calculator: BaseStatsCalculator = BaseStatsCalculator()
 aloc_calculator: AlocCalculator = AlocCalculator()
 cc_calculator: CCCalculator = CCCalculator()
 hv_calculator: HalsteadVolumeCalculator = HalsteadVolumeCalculator()
@@ -46,6 +48,7 @@ def run_all(
 ) -> None:
     codebase = parse_codebase(dir_path)
     metrics = list[Metric[Results]]()
+    metrics.append(base_stats_calculator.calculate_metric(codebase))
     metrics.append(aloc_calculator.calculate_metric(codebase))
     metrics.append(cc_calculator.calculate_metric(codebase))
     metrics.append(hv_calculator.calculate_metric(codebase))
