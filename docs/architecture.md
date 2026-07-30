@@ -100,11 +100,12 @@ Current behavior to know about:
 
 ## Reporting Model
 
-Pymetrica currently ships with two report backends:
+Pymetrica currently ships with three report backends:
 
 ```text
 BASIC_TERMINAL
 BASIC_HOOK
+JSON
 ```
 
 The terminal backend supports:
@@ -118,6 +119,10 @@ The hook backend is used by the published pre-commit hooks and reports only
 failed metrics, or a success message when all thresholds pass. It is the backend
 that returns threshold-based exit statuses for CI and hooks.
 
+The JSON backend produces machine-readable short and long reports. It remains
+informational with a zero process exit status while exposing the corresponding
+threshold status in `threshold_exit_status`.
+
 ## Current Scope and Limits
 
 The current architecture is intentionally small and focused. That means a few
@@ -126,7 +131,7 @@ important limits are worth documenting:
 - layer analysis is based on top-level folders, not arbitrary architectural
   boundaries
 - coupling analysis currently inspects `ImportFrom` relationships
-- only the basic terminal and hook report generators are implemented today
+- file-based report output is not implemented today
 
 Those constraints are useful to keep in mind when interpreting results or
 planning future extensions.

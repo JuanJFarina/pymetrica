@@ -431,8 +431,10 @@ Currently supported:
   zero exit status
 * `BASIC_HOOK` hook-oriented reports that show only failed metrics and return
   threshold-based exit statuses
+* `JSON` machine-readable reports that expose threshold status while retaining
+  a zero process exit status
 
-Future formats may include JSON, Markdown, or CI-friendly outputs.
+Future formats may include Markdown or file-based outputs.
 
 ---
 

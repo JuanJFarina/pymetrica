@@ -53,10 +53,11 @@ The most useful public extension points are:
 - `ReportGenerator` subclasses for adding new report backends
 - `REPORTS_MAPPING` for registering report backends under `-rt` names
 
-Bundled report backends are `BASIC_TERMINAL` for terminal output and
-`BASIC_HOOK` for pre-commit style output that only shows failed metrics by
-default and returns threshold-based exit statuses. Instantiate a backend with a
-metric sequence and then call its `short_report()` or `long_report()` method.
+Bundled report backends are `BASIC_TERMINAL` for terminal output, `BASIC_HOOK`
+for pre-commit style output that only shows failed metrics and returns
+threshold-based exit statuses, and `JSON` for informational machine-readable
+output. Instantiate a backend with a metric sequence and then call its
+`short_report()` or `long_report()` method.
 
 ## Models
 
@@ -83,10 +84,10 @@ more detailed result and layer models live in each metric's submodule.
 ## Report Generators
 
 The report layer is small today. `REPORTS_MAPPING` is the registry used by the
-CLI. It includes the normal terminal backend and the hook-oriented backend used
-by the published pre-commit hooks. `BasicTerminalReport` is exported directly
-from this package; the hook backend is available through the registry and its
-submodule.
+CLI. It includes the normal terminal backend, the hook-oriented backend used by
+the published pre-commit hooks, and the optional JSON backend.
+`BasicTerminalReport` and `JsonReport` are exported directly from this package;
+the hook backend is available through the registry and its submodule.
 
 ::: pymetrica.report_generators
 
