@@ -14,6 +14,8 @@ Co-authored-by: Cursor &lt;cursoragent@cursor.com&gt; ([`96f1bc4`](https://githu
 
 ### Fix
 
+* fix(config): fix base stats test ([`667a0fe`](https://github.com/JuanJFarina/pymetrica/commit/667a0fe8b1e13a9f85f829b171e9430c608eccf2))
+
 * fix(config): improve visualization of mc and hv findings ([`48ddca3`](https://github.com/JuanJFarina/pymetrica/commit/48ddca3cf34432367e8814ec0dff48f680561297))
 
 * fix(config): change mc from percent to fixed numbers ([`5428ca9`](https://github.com/JuanJFarina/pymetrica/commit/5428ca92a159d8781240011d71c3746f1629fbd1))
