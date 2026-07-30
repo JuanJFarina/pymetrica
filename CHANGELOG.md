@@ -2,13 +2,27 @@
 
 
 
-## v1.5.7 (2026-07-29)
+## v1.6.0 (2026-07-30)
+
+### Feature
+
+* feat(metric): expose base stats through run-all
+
+Integrate parser statistics with standard reports and use a safe reporting protocol for heterogeneous metrics.
+
+Co-authored-by: Cursor &lt;cursoragent@cursor.com&gt; ([`96f1bc4`](https://github.com/JuanJFarina/pymetrica/commit/96f1bc4d2666652c738723be05f087ef4af55122))
 
 ### Fix
 
 * fix(config): improve visualization of mc and hv findings ([`48ddca3`](https://github.com/JuanJFarina/pymetrica/commit/48ddca3cf34432367e8814ec0dff48f680561297))
 
 * fix(config): change mc from percent to fixed numbers ([`5428ca9`](https://github.com/JuanJFarina/pymetrica/commit/5428ca92a159d8781240011d71c3746f1629fbd1))
+
+### Unknown
+
+* create command inside metric ([`e7260a8`](https://github.com/JuanJFarina/pymetrica/commit/e7260a87aac39502a067a351e411ec71a2f4be8a))
+
+* make comments changes ([`ad3a532`](https://github.com/JuanJFarina/pymetrica/commit/ad3a53243104947777d196a3dc796c029fe8fc50))
 
 
 ## v1.5.6 (2026-05-13)
