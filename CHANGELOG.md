@@ -6,6 +6,8 @@
 
 ### Feature
 
+* feat(config): add monorepo support ([`72fc8b2`](https://github.com/JuanJFarina/pymetrica/commit/72fc8b2314a8cc8aa7f7bbd7c4913dc9c1c80360))
+
 * feat(reporting): add optional JSON reports
 
 Expose machine-readable metric output without changing existing report defaults, and keep metric generics valid under strict type checking.
