@@ -35,7 +35,7 @@ repos:
     hooks:
       - id: pymetrica
         name: pymetrica
-        entry: pymetrica run-all . --report-type BASIC_HOOK
+        entry: pymetrica run-all --report-type BASIC_HOOK
         language: python
         pass_filenames: false
         additional_dependencies: ["."]

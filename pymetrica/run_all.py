@@ -4,6 +4,7 @@ from pymetrica.codebase_parser import parse_codebase
 from pymetrica.models.metric import Metric, Results
 from pymetrica.report_generators.reports_mapping import REPORTS_MAPPING
 from pymetrica.utils.profiler import run_profiler
+from pymetrica.utils.settings import update_config_from_pyproject
 
 from .metric_calculators import (
     AlocCalculator,
@@ -38,7 +39,7 @@ instability_calculator: InstabilityCalculator = InstabilityCalculator()
     help="Whether to generate a long summary report for each metric.",
 )
 @click.option("-rt", "--report-type", type=str, default="BASIC_TERMINAL")
-@click.argument("dir_path")
+@click.argument("dir_path", default=".")
 @run_profiler
 def run_all(
     dir_path: str,
@@ -46,6 +47,7 @@ def run_all(
     audit: bool = False,
     long_report: bool = False,
 ) -> None:
+    update_config_from_pyproject(dir_path)
     codebase = parse_codebase(dir_path)
     metrics = list[Metric[Results]]()
     metrics.append(base_stats_calculator.calculate_metric(codebase))

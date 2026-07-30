@@ -3,6 +3,7 @@ import click
 from pymetrica.codebase_parser import parse_codebase
 from pymetrica.report_generators import REPORTS_MAPPING
 from pymetrica.utils import run_profiler
+from pymetrica.utils.settings import update_config_from_pyproject
 
 from .base_stats_calculator import BaseStatsCalculator
 from .diagram_generator import create_diagram
@@ -24,6 +25,7 @@ def base_stats(
     diagram: bool = False,
     diagram_filename: str | None = None,
 ) -> None:
+    update_config_from_pyproject(dir_path)
     codebase = parse_codebase(dir_path)
     if diagram:
         create_diagram(codebase, filename=diagram_filename)
