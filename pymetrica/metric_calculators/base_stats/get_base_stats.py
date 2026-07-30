@@ -17,7 +17,7 @@ base_stats_calculator = BaseStatsCalculator()
     is_flag=True,
     help="Whether to generate a diagram of the codebase structure.",
 )
-@click.argument("dir_path")
+@click.argument("dir_path", default=".")
 @click.argument("diagram_filename", required=False)
 @run_profiler
 def base_stats(
