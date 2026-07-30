@@ -6,6 +6,12 @@
 
 ### Feature
 
+* feat(reporting): add optional JSON reports
+
+Expose machine-readable metric output without changing existing report defaults, and keep metric generics valid under strict type checking.
+
+Co-authored-by: Cursor &lt;cursoragent@cursor.com&gt; ([`fda192f`](https://github.com/JuanJFarina/pymetrica/commit/fda192f129cd022c7faafe21378c8817bda00c78))
+
 * feat(metric): expose base stats through run-all
 
 Integrate parser statistics with standard reports and use a safe reporting protocol for heterogeneous metrics.
@@ -13,6 +19,8 @@ Integrate parser statistics with standard reports and use a safe reporting proto
 Co-authored-by: Cursor &lt;cursoragent@cursor.com&gt; ([`96f1bc4`](https://github.com/JuanJFarina/pymetrica/commit/96f1bc4d2666652c738723be05f087ef4af55122))
 
 ### Fix
+
+* fix(config): restore results type and add reports to init ([`3e47d38`](https://github.com/JuanJFarina/pymetrica/commit/3e47d3873858c0ad6facf9ab5f5bcd7e4504b790))
 
 * fix(config): fix base stats test ([`667a0fe`](https://github.com/JuanJFarina/pymetrica/commit/667a0fe8b1e13a9f85f829b171e9430c608eccf2))
 
