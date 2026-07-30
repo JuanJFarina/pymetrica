@@ -1,11 +1,9 @@
 ## UPCOMING FEATURES
 
 - Add FileReportGenerator
-- Add JSONReportGenerator
 - Add token size to base-stats
 - LoD Metric
 - Agent configuration export (LLMs)
--
 
 ## BUGS TO FIX
 
@@ -13,9 +11,3 @@
   a layer as if it was the 'codebase', these should be the same value ideally
 - Correctly exclude "layers" if they are an excluded directory
 - Exclude .gitignore directories by default
--
-
-## QUALITY OF LIFE IDEAS
-
-- Convert base-stats in a proper metric so it can be used inside run-all
--

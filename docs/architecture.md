@@ -7,6 +7,7 @@ Pydantic models and metric calculators.
 
 ```text
 DIR_PATH
+  -> load the nearest project configuration
   -> resolve the base directory
   -> parse Python files into Code objects
   -> assemble a Codebase model
@@ -19,6 +20,10 @@ At a high level:
 - `codebase_parser` discovers files and builds the `Codebase` model
 - `metric_calculators` produce `Metric` objects from that codebase
 - `report_generators` turn those metrics into terminal output
+
+CLI configuration discovery starts at `DIR_PATH` and walks toward the Git
+repository root. Direct Python API usage can perform the same step with
+`update_config_from_pyproject()` before parsing.
 
 ## Base-Path Resolution
 
@@ -64,9 +69,13 @@ analysis.
 The central models are:
 
 - `Code` for one Python file and its parsed source metadata
-- `Codebase` for the analyzed project structure
+- `CodebaseStats` for parser-level aggregate values
+- `Codebase` for the analyzed project structure and files
 - `Metric` and `Results` for structured metric output
 - `MetricCalculator` and `ReportGenerator` as extension points
+
+`BaseStatsCalculator` exposes the `CodebaseStats` values as the first metric in
+`run-all`. It is informational and does not participate in threshold failures.
 
 See [API Reference](api.md) for the exported Python interfaces.
 
@@ -79,7 +88,8 @@ pymetrica base-stats --diagram path/to/project architecture.mmd
 ```
 
 The generated diagram groups components by top-level layer and adds edges for
-detected cross-layer dependencies.
+detected cross-layer dependencies. Its Python helper is
+`pymetrica.metric_calculators.base_stats.create_diagram`.
 
 Current behavior to know about:
 
@@ -100,11 +110,12 @@ Current behavior to know about:
 
 ## Reporting Model
 
-Pymetrica currently ships with two report backends:
+Pymetrica currently ships with three report backends:
 
 ```text
 BASIC_TERMINAL
 BASIC_HOOK
+JSON
 ```
 
 The terminal backend supports:
@@ -118,6 +129,10 @@ The hook backend is used by the published pre-commit hooks and reports only
 failed metrics, or a success message when all thresholds pass. It is the backend
 that returns threshold-based exit statuses for CI and hooks.
 
+The JSON backend produces machine-readable short and long reports. It remains
+informational with a zero process exit status while exposing the corresponding
+threshold status in `threshold_exit_status`.
+
 ## Current Scope and Limits
 
 The current architecture is intentionally small and focused. That means a few
@@ -126,7 +141,7 @@ important limits are worth documenting:
 - layer analysis is based on top-level folders, not arbitrary architectural
   boundaries
 - coupling analysis currently inspects `ImportFrom` relationships
-- only the basic terminal and hook report generators are implemented today
+- file-based report output is not implemented today
 
 Those constraints are useful to keep in mind when interpreting results or
 planning future extensions.
