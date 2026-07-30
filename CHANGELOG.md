@@ -22,6 +22,8 @@ Co-authored-by: Cursor &lt;cursoragent@cursor.com&gt; ([`96f1bc4`](https://githu
 
 ### Fix
 
+* fix(config): add default dir to base stats ([`270a068`](https://github.com/JuanJFarina/pymetrica/commit/270a068b1b6b45805d78b8a0be1fbbe035194417))
+
 * fix(config): move diagram creation to base stats metric ([`8e973ac`](https://github.com/JuanJFarina/pymetrica/commit/8e973acab2b88e909f945beb4583a8b148475def))
 
 * fix(config): restore results type and add reports to init ([`3e47d38`](https://github.com/JuanJFarina/pymetrica/commit/3e47d3873858c0ad6facf9ab5f5bcd7e4504b790))
