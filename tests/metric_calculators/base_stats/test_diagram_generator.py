@@ -3,7 +3,7 @@ from contextlib import redirect_stdout
 
 import pytest
 
-from pymetrica.codebase_parser.diagram_generator import create_diagram
+from pymetrica.metric_calculators.base_stats import create_diagram
 from pymetrica.models import Codebase
 
 

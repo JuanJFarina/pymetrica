@@ -1,10 +1,11 @@
 import click
 
-from pymetrica.codebase_parser import create_diagram, parse_codebase
+from pymetrica.codebase_parser import parse_codebase
 from pymetrica.report_generators import REPORTS_MAPPING
 from pymetrica.utils import run_profiler
 
 from .base_stats_calculator import BaseStatsCalculator
+from .diagram_generator import create_diagram
 
 base_stats_calculator = BaseStatsCalculator()
 
