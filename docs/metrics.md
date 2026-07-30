@@ -1,11 +1,25 @@
 # Metrics
 
-Pymetrica reports six metrics today: `ALOC`, `CC`, `HV`, `Primitive Obsession`,
-`Maintainability Cost`, and `Instability`.
+Pymetrica reports seven metrics today: `Base Stats`, `ALOC`, `CC`, `HV`,
+`Primitive Obsession`, `Maintainability Cost`, and `Instability`.
 
 In the default short report, Pymetrica prints only the top-level values returned
 by each metric. The long report adds descriptive summaries and, where
 implemented, per-layer breakdowns.
+
+## Base Stats
+
+Base Stats exposes parser-level information about the resolved analysis root:
+
+- root folder path and name
+- folder and Python file counts
+- logical lines of code and logical lines per file
+- comment count and comment-to-LLOC ratio
+- class and function counts
+
+It is included in `run-all` and is also available through the dedicated
+`base-stats` command. Base Stats is informational, has an exit code of `0`, and
+never fails a threshold.
 
 ## Abstract Lines Of Code (ALOC)
 
@@ -161,14 +175,16 @@ process exit status in CI or hooks.
 
 That means:
 
+- Base Stats short output includes all parser-level fields
 - ALOC, CC, HV, PO, and MC short reports omit their per-layer lists
 - PO short reports also omit raw counts and failure flags, leaving only the two
   percentage fields
 - instability short output already includes the layer map, because its result is
   itself a dictionary of layer names to scores
 
-Use `pymetrica run-all --long-report DIR_PATH` when you want the descriptive
-summaries and per-layer breakdowns.
+Use `pymetrica run-all --long-report [DIR_PATH]` when you want the descriptive
+summaries and per-layer breakdowns. If omitted, `DIR_PATH` defaults to the
+current directory.
 
 The individual `aloc`, `cc`, `hv`, `po`, and `mc` commands already use the
 descriptive report format because they operate on one metric at a time. They do

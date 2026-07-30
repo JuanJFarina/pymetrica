@@ -42,11 +42,19 @@ when you want descriptive summaries and per-layer breakdowns. Use
 `-rt BASIC_HOOK` when you want thresholds to produce a non-zero exit status
 for CI or pre-commit.
 
-Example short report:
+Example short report (abridged):
 
 ```
 ----------------------------------------------------------------------------------------------------
 Short Report
+----------------------------------------------------------------------------------------------------
+Metric: Base Stats
+root_folder_path: /path/to/project
+root_folder_name: project
+folders_number: 0
+files_number: 1
+lloc_number: 40
+...
 ----------------------------------------------------------------------------------------------------
 Metric: Abstract Lines Of Code
 aloc_number: 6
@@ -132,7 +140,16 @@ This makes it useful not only for measuring complexity, but also for analyzing *
 
 # Metrics
 
-Pymetrica implements several classical software engineering metrics.
+`run-all` reports parser-level Base Stats followed by six software engineering
+metrics.
+
+## Base Stats
+
+Summarizes the resolved analysis root, folder and file counts, logical lines of
+code, comments, classes, and functions. Base Stats is informational and never
+contributes to a threshold exit status.
+
+---
 
 ## Abstract Lines of Code (ALOC)
 
@@ -256,6 +273,12 @@ Analyze a Python project:
 pymetrica run-all path/to/project
 ```
 
+All analysis commands default to the current directory, so this is also valid:
+
+```bash
+pymetrica run-all
+```
+
 Configured `[tool.pymetrica].exclude` patterns are applied before the codebase
 is parsed. To enforce thresholds in automation, use the hook report backend:
 
@@ -266,7 +289,7 @@ pymetrica run-all -rt BASIC_HOOK path/to/project
 For an initial overview of a codebase:
 
 ```bash
-pymetrica base-stats path/to/project
+pymetrica base-stats
 ```
 
 To focus on one metric, run its dedicated command:
@@ -296,11 +319,12 @@ pymetrica run-all
 Typical usage pattern:
 
 ```
-pymetrica <command> DIR_PATH
+pymetrica <command> [DIR_PATH]
 ```
 
 Notes:
 
+* `DIR_PATH` defaults to the current directory
 * `run-all` supports `--long-report` for descriptive summaries and per-layer detail
 * `aloc`, `cc`, `hv`, `po`, `mc`, and `li` always emit the descriptive report format
 * all parsing commands honor `[tool.pymetrica].exclude` patterns
@@ -323,6 +347,12 @@ mc_fail_threshold = 25
 exclude = ["generated/*", "vendor/*"]
 top_findings = 5
 ```
+
+For CLI commands, configuration discovery starts at `DIR_PATH` and walks toward
+the Git repository root. The nearest `pyproject.toml` containing
+`[tool.pymetrica]` wins. This allows packages inside a monorepo to define their
+own settings. Without a `.git` marker, the search can continue to the filesystem
+root.
 
 Built-in threshold defaults are active: `30` for ALOC, `7` for CC, `30` for
 HV, `10` for all primitives, `2` for targeted primitives, and `25` for MC.
@@ -349,7 +379,7 @@ Pymetrica also publishes `pre-commit` hooks:
 ```yaml
 repos:
   - repo: https://github.com/JuanJFarina/pymetrica
-    rev: v1.5.4
+    rev: v1.6.0
     hooks:
       - id: pymetrica
       - id: pymetrica-mc
@@ -444,20 +474,26 @@ The CLI and the Python API share the same parser, calculators, and report
 registry. A typical programmatic workflow is:
 
 ```python
-from pymetrica.codebase_parser import create_diagram, parse_codebase
+from pymetrica.codebase_parser import parse_codebase
 from pymetrica.metric_calculators import (
     AlocCalculator,
+    BaseStatsCalculator,
     CCCalculator,
     HalsteadVolumeCalculator,
     InstabilityCalculator,
     MaintainabilityCostCalculator,
     PrimitiveObsessionCalculator,
 )
+from pymetrica.metric_calculators.base_stats import create_diagram
 from pymetrica.report_generators import REPORTS_MAPPING
+from pymetrica.utils.settings import update_config_from_pyproject
 
-codebase = parse_codebase("path/to/project")
+project_path = "path/to/project"
+update_config_from_pyproject(project_path)
+codebase = parse_codebase(project_path)
 
 metrics = [
+    BaseStatsCalculator().calculate_metric(codebase),
     AlocCalculator().calculate_metric(codebase),
     CCCalculator().calculate_metric(codebase),
     HalsteadVolumeCalculator().calculate_metric(codebase),
@@ -472,8 +508,9 @@ print(report_generator.long_report().content)
 create_diagram(codebase, filename="architecture.mmd")
 ```
 
-`parse_codebase()` uses the same exclusion rules as the CLI, so configured
-`[tool.pymetrica].exclude` patterns still apply.
+The CLI loads project configuration automatically. Library callers should call
+`update_config_from_pyproject()` before `parse_codebase()` when they want the
+target project's thresholds and exclusion patterns.
 
 ---
 

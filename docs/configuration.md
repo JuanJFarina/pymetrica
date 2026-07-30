@@ -5,12 +5,30 @@ Pymetrica reads optional threshold and exclusion settings from
 
 ## Where Configuration Comes From
 
-Configuration is loaded from the current working directory at command startup.
-In practice, that means you should run Pymetrica from the repository whose
-`pyproject.toml` contains the thresholds you want to enforce.
+CLI commands resolve configuration from the directory being analyzed. Discovery
+starts at `DIR_PATH` and walks through its parents until the Git repository root.
+The nearest `pyproject.toml` containing `[tool.pymetrica]` wins. A
+`pyproject.toml` without that section is skipped while the search continues.
+When no `.git` marker is present, discovery can continue to the filesystem root.
 
-If no `pyproject.toml` or `[tool.pymetrica]` section is found, Pymetrica uses
-its built-in defaults.
+This supports monorepos: a package can use its own configuration while another
+package falls back to a shared repository-level configuration. If no matching
+section is found, the loader leaves the in-process `Config` unchanged. In a
+fresh CLI process, those values are the built-in defaults.
+
+For example:
+
+```text
+repository/
+  pyproject.toml
+  packages/
+    billing/
+      pyproject.toml
+```
+
+`pymetrica run-all packages/billing` uses the billing configuration when it
+contains `[tool.pymetrica]`; otherwise discovery continues to the repository
+configuration.
 
 ## Supported Settings
 
@@ -116,6 +134,9 @@ the threshold-based exit status. `JSON` returns machine-readable output and
 exits with `0`; its `threshold_exit_status` field contains the status that
 threshold enforcement would return.
 
+See [CLI Reference](cli.md#json-report-shape) for the JSON payload and the
+difference between short and long reports.
+
 ## Audit Mode
 
 `-a` / `--audit` is a CLI flag, not a `pyproject.toml` setting. It requests top
@@ -159,7 +180,7 @@ threshold-capable single-metric commands:
 ```yaml
 repos:
   - repo: https://github.com/JuanJFarina/pymetrica
-    rev: v1.5.4
+    rev: v1.6.0
     hooks:
       - id: pymetrica
       - id: pymetrica-mc
@@ -179,6 +200,23 @@ These hooks analyze the repository root (`.`) and ignore the filename list that
 `pre-commit` normally passes to hooks. Thresholds and exclusions still come
 from the repository's own `pyproject.toml`.
 
+## Python API Configuration
+
+CLI commands load configuration automatically. Direct library usage must load
+the target configuration explicitly before parsing:
+
+```python
+from pymetrica.codebase_parser import parse_codebase
+from pymetrica.utils.settings import update_config_from_pyproject
+
+project_path = "path/to/project"
+update_config_from_pyproject(project_path)
+codebase = parse_codebase(project_path)
+```
+
+Without that call, `parse_codebase()` uses the current in-process `Config`
+values, which are the built-in defaults in a fresh process.
+
 ## Practical Notes
 
 - Threshold evaluation uses the metrics as Pymetrica reports them today. For
@@ -186,9 +224,9 @@ from the repository's own `pyproject.toml`.
   fails when `lloc_per_cc` is below the configured threshold.
 - `PYMETRICA_LOG_LEVEL` can be set to `DEBUG`, `INFO`, `WARNING`, or `ERROR`.
   Invalid or missing values fall back to `WARNING`.
-- Because configuration is resolved from the current working directory, running
-  `pymetrica path/to/other/project` from outside that project will not use the
-  other project's thresholds unless you change into that directory first.
+- Analysis commands default `DIR_PATH` to the current directory, but an explicit
+  target can be analyzed from anywhere. Configuration discovery starts from
+  that target rather than the shell's working directory.
 - Exclusion patterns are evaluated relative to the resolved analysis root. When
   `pymetrica run-all .` auto-detects `src/`, `app/`, or a matching package
   directory, patterns are relative to that detected folder.

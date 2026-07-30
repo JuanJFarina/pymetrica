@@ -23,10 +23,10 @@ Available commands:
 
 ## Shared Conventions
 
-- `DIR_PATH` is the directory Pymetrica will analyze.
+- `DIR_PATH` is the directory Pymetrica will analyze and defaults to `"."`.
 - `-rt` / `--report-type` supports `BASIC_TERMINAL`, `BASIC_HOOK`, and `JSON`.
-- All parsing commands honor `[tool.pymetrica].exclude` patterns from the
-  current repository configuration.
+- All parsing commands honor `[tool.pymetrica].exclude` patterns discovered
+  from `DIR_PATH`.
 - `BASIC_TERMINAL` prints metric values and exits with `0`.
 - `BASIC_HOOK` enforces thresholds and returns non-zero exit statuses when
   metrics fail.
@@ -36,6 +36,32 @@ Available commands:
   the descriptive report format.
 - `li` reports instability, but it is not threshold-gated.
 - `BASIC_HOOK` is intended for pre-commit hooks and reports only failed metrics.
+
+### JSON Report Shape
+
+The short JSON report contains a list of metric names and results:
+
+```json
+{
+  "metrics": [
+    {
+      "name": "Cyclomatic Complexity",
+      "results": {
+        "cc_number": 23,
+        "lloc_per_cc": 1.7391304347826086
+      }
+    }
+  ],
+  "threshold_exit_status": 2,
+  "failures": "Cyclomatic Complexity threshold details..."
+}
+```
+
+The long JSON report adds `description` and `summary` to every metric object.
+`threshold_exit_status` contains the status that `BASIC_HOOK` would return, but
+the JSON process itself exits with `0`. `failures` is a single human-readable
+string and is empty when no threshold fails. Audit mode includes guidance in
+that string without changing `threshold_exit_status`.
 
 ## `status`
 
@@ -56,13 +82,13 @@ Pymetrica health check passed. All systems operational.
 Runs the full metrics pipeline across the target codebase.
 
 ```bash
-pymetrica run-all [-a|--audit] [-lr|--long-report] [-rt BASIC_TERMINAL|BASIC_HOOK|JSON] DIR_PATH
+pymetrica run-all [-a|--audit] [-lr|--long-report] [-rt BASIC_TERMINAL|BASIC_HOOK|JSON] [DIR_PATH]
 ```
 
 What it does:
 
 - Parses the codebase.
-- Computes `ALOC`, `CC`, `HV`, `Primitive Obsession`,
+- Computes `Base Stats`, `ALOC`, `CC`, `HV`, `Primitive Obsession`,
   `Maintainability Cost`, and `Instability`.
 - Uses the longer descriptive layout when `--long-report` is set.
 - Includes top findings regardless of threshold values when `--audit` is set.
@@ -72,6 +98,7 @@ What it does:
 Examples:
 
 ```bash
+pymetrica run-all
 pymetrica run-all .
 pymetrica run-all --long-report path/to/project
 pymetrica run-all -rt BASIC_TERMINAL path/to/project
@@ -101,7 +128,7 @@ included in the report, but it does not contribute to the exit code.
 Parses the target codebase and prints parser-level statistics.
 
 ```bash
-pymetrica base-stats [--diagram] DIR_PATH [DIAGRAM_FILENAME]
+pymetrica base-stats [--diagram] [DIR_PATH] [DIAGRAM_FILENAME]
 ```
 
 The output includes:
@@ -113,23 +140,25 @@ The output includes:
 - `lloc_number`
 - `lloc_file_ratio`
 - `comments_number`
-- `comment_line_ratio`
+- `comment_lloc_ratio`
 - `classes_number`
 - `functions_number`
 
-The CLI label `comment_line_ratio` corresponds to the `comment_lloc_ratio`
-field on the `Codebase` model.
+Base Stats always uses the descriptive terminal report and never contributes to
+a threshold exit status.
 
 Examples:
 
 ```bash
+pymetrica base-stats
 pymetrica base-stats .
 pymetrica base-stats --diagram .
 pymetrica base-stats --diagram path/to/project architecture.mmd
 ```
 
 When `--diagram` is enabled without `DIAGRAM_FILENAME`, Pymetrica writes a file
-named `architecture_diagram_<UTC timestamp>.mmd`.
+named `architecture_diagram_<UTC timestamp>.mmd`. Supply `DIR_PATH` before
+`DIAGRAM_FILENAME` when choosing a filename.
 
 ## Single-Metric Commands
 
@@ -142,7 +171,7 @@ single-metric equivalent of `run-all --long-report`.
 ### `aloc`
 
 ```bash
-pymetrica aloc [-a|--audit] [-rt BASIC_TERMINAL|BASIC_HOOK|JSON] DIR_PATH
+pymetrica aloc [-a|--audit] [-rt BASIC_TERMINAL|BASIC_HOOK|JSON] [DIR_PATH]
 ```
 
 Reports the `Abstract Lines Of Code` metric. With `BASIC_HOOK`, exits with `1`
@@ -151,7 +180,7 @@ when `aloc_fail_threshold` is positive and exceeded.
 ### `cc`
 
 ```bash
-pymetrica cc [-a|--audit] [-rt BASIC_TERMINAL|BASIC_HOOK|JSON] DIR_PATH
+pymetrica cc [-a|--audit] [-rt BASIC_TERMINAL|BASIC_HOOK|JSON] [DIR_PATH]
 ```
 
 Reports `Cyclomatic Complexity`. With `BASIC_HOOK`, exits with `2` when
@@ -160,7 +189,7 @@ Reports `Cyclomatic Complexity`. With `BASIC_HOOK`, exits with `2` when
 ### `hv`
 
 ```bash
-pymetrica hv [-a|--audit] [-rt BASIC_TERMINAL|BASIC_HOOK|JSON] DIR_PATH
+pymetrica hv [-a|--audit] [-rt BASIC_TERMINAL|BASIC_HOOK|JSON] [DIR_PATH]
 ```
 
 Reports `Halstead Volume`. With `BASIC_HOOK`, exits with `4` when
@@ -169,7 +198,7 @@ Reports `Halstead Volume`. With `BASIC_HOOK`, exits with `4` when
 ### `po`
 
 ```bash
-pymetrica po [-a|--audit] [-rt BASIC_TERMINAL|BASIC_HOOK|JSON] DIR_PATH
+pymetrica po [-a|--audit] [-rt BASIC_TERMINAL|BASIC_HOOK|JSON] [DIR_PATH]
 ```
 
 Reports `Primitive Obsession`. With `BASIC_HOOK`, exits with `16` when either
@@ -179,7 +208,7 @@ exceeded.
 ### `mc`
 
 ```bash
-pymetrica mc [-a|--audit] [-rt BASIC_TERMINAL|BASIC_HOOK|JSON] DIR_PATH
+pymetrica mc [-a|--audit] [-rt BASIC_TERMINAL|BASIC_HOOK|JSON] [DIR_PATH]
 ```
 
 Reports `Maintainability Cost`. With `BASIC_HOOK`, exits with `8` when
@@ -188,7 +217,7 @@ Reports `Maintainability Cost`. With `BASIC_HOOK`, exits with `8` when
 ### `li`
 
 ```bash
-pymetrica li [-rt BASIC_TERMINAL|BASIC_HOOK|JSON] DIR_PATH
+pymetrica li [-rt BASIC_TERMINAL|BASIC_HOOK|JSON] [DIR_PATH]
 ```
 
 Reports layer instability values. This command does not currently enforce a
