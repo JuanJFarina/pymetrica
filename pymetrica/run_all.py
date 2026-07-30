@@ -1,7 +1,7 @@
 import click
 
 from pymetrica.codebase_parser import parse_codebase
-from pymetrica.models.metric import ReportableMetric
+from pymetrica.models.metric import Metric, Results
 from pymetrica.report_generators.reports_mapping import REPORTS_MAPPING
 from pymetrica.utils.profiler import run_profiler
 
@@ -47,7 +47,7 @@ def run_all(
     long_report: bool = False,
 ) -> None:
     codebase = parse_codebase(dir_path)
-    metrics = list[ReportableMetric]()
+    metrics = list[Metric[Results]]()
     metrics.append(base_stats_calculator.calculate_metric(codebase))
     metrics.append(aloc_calculator.calculate_metric(codebase))
     metrics.append(cc_calculator.calculate_metric(codebase))

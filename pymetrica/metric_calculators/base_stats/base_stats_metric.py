@@ -1,27 +1,11 @@
 import json
 
-from pymetrica.models import Metric, Results
-
-StatisticText = str
-StatisticCount = int
-AuditEnabled = bool
-BaseStatsMapping = dict[StatisticText, StatisticCount | StatisticText]
+from pymetrica.models import CodebaseStats, Metric, NonNegativeInt, Results
 
 
-class BaseStatsResults(Results):
-    root_folder_path: StatisticText
-    root_folder_name: StatisticText
-    folders_number: StatisticCount
-    files_number: StatisticCount
-    lloc_number: StatisticCount
-    lloc_file_ratio: StatisticText
-    comments_number: StatisticCount
-    comment_line_ratio: StatisticText
-    classes_number: StatisticCount
-    functions_number: StatisticCount
-
+class BaseStatsResults(Results, CodebaseStats):
     @property
-    def dict_(self) -> BaseStatsMapping:
+    def dict_(self) -> dict[str, object]:
         return {
             "root_folder_path": self.root_folder_path,
             "root_folder_name": self.root_folder_name,
@@ -30,28 +14,29 @@ class BaseStatsResults(Results):
             "lloc_number": self.lloc_number,
             "lloc_file_ratio": self.lloc_file_ratio,
             "comments_number": self.comments_number,
-            "comment_line_ratio": self.comment_line_ratio,
+            "comment_lloc_ratio": self.comment_lloc_ratio,
             "classes_number": self.classes_number,
             "functions_number": self.functions_number,
         }
 
     @property
-    def json_(self) -> StatisticText:
+    def json_(self) -> str:
         return json.dumps(self.dict_)
 
 
 class BaseStatsMetric(Metric[BaseStatsResults]):
-    exit_code: StatisticCount = 0
+    exit_code: NonNegativeInt = 0
 
     @property
-    def summary(self) -> StatisticText:
-        return "\n".join(
-            f"{name}: {value}" for name, value in self.results_dict.items()
-        )
+    def summary(self) -> str:
+        summary = "\nBase Stats:\n"
+        for name, value in self.results_dict.items():
+            summary += f"  {name}: {value}\n"
+        return summary
 
     @property
-    def fail_message(self) -> StatisticText:
+    def fail_message(self) -> str:
         return ""
 
-    def exceeds_threshold(self, audit: AuditEnabled = False) -> AuditEnabled:
+    def exceeds_threshold(self, audit: bool = False) -> bool:
         return False

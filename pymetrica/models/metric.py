@@ -1,6 +1,5 @@
 from abc import ABC, abstractmethod
-from collections.abc import Mapping
-from typing import Any, Generic, Protocol, TypeVar
+from typing import Any, Generic, TypeVar
 
 from pydantic import BaseModel, ConfigDict
 
@@ -19,35 +18,13 @@ class Results(BaseModel, ABC):
         raise NotImplementedError(_NIE_MSG)
 
 
-T = TypeVar("T", bound=Results)
+T_co = TypeVar("T_co", bound=Results, covariant=True)
 
 
-class ReportableMetric(Protocol):
-    @property
-    def name(self) -> str: ...
-
-    @property
-    def description(self) -> str: ...
-
-    @property
-    def exit_code(self) -> int: ...
-
-    @property
-    def results_dict(self) -> Mapping[str, object]: ...
-
-    @property
-    def summary(self) -> str: ...
-
-    @property
-    def fail_message(self) -> str: ...
-
-    def exceeds_threshold(self, audit: bool = False) -> bool: ...
-
-
-class Metric(ABC, BaseModel, Generic[T]):
+class Metric(ABC, BaseModel, Generic[T_co]):
     name: str
     description: str
-    results: T
+    results: T_co
     exit_code: int
 
     model_config = ConfigDict(arbitrary_types_allowed=True)
