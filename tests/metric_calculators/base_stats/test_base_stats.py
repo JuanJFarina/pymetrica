@@ -15,7 +15,7 @@ def test_calculate_base_stats(codebase: Codebase) -> None:
         "lloc_number": codebase.lloc_number,
         "lloc_file_ratio": codebase.lloc_file_ratio,
         "comments_number": codebase.comments_number,
-        "comment_line_ratio": codebase.comment_lloc_ratio,
+        "comment_lloc_ratio": codebase.comment_lloc_ratio,
         "classes_number": codebase.classes_number,
         "functions_number": codebase.functions_number,
     }
