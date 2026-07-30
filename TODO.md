@@ -1,7 +1,6 @@
 ## UPCOMING FEATURES
 
 - Add FileReportGenerator
-- Add JSONReportGenerator
 - Add token size to base-stats
 - LoD Metric
 - Agent configuration export (LLMs)

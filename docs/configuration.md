@@ -101,17 +101,20 @@ The `li` command does not currently support a threshold setting.
 
 ## Report Type
 
-Pymetrica currently ships with two report backends:
+Pymetrica currently ships with three report backends:
 
 ```text
 BASIC_TERMINAL
 BASIC_HOOK
+JSON
 ```
 
 These values are accepted by the `-rt` / `--report-type` option on the
 reporting commands. `BASIC_TERMINAL` exits with `0`. `BASIC_HOOK` is used by the
 published pre-commit hooks, reports only failed metrics by default, and returns
-the threshold-based exit status.
+the threshold-based exit status. `JSON` returns machine-readable output and
+exits with `0`; its `threshold_exit_status` field contains the status that
+threshold enforcement would return.
 
 ## Audit Mode
 
@@ -126,9 +129,11 @@ Audit mode affects report content:
   threshold-capable metrics regardless of whether they failed
 - with `BASIC_HOOK`, audit mode includes the same findings and guidance even
   for metrics that pass their thresholds
+- with `JSON`, audit mode includes the same guidance in the `failures` field
 
 Audit mode does not change hook exit status. `BASIC_HOOK` exit codes are still
-computed from actual threshold failures.
+computed from actual threshold failures, while `JSON` continues to exit with
+`0`.
 
 ## CI Usage
 

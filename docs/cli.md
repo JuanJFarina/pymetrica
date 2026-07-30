@@ -24,12 +24,14 @@ Available commands:
 ## Shared Conventions
 
 - `DIR_PATH` is the directory Pymetrica will analyze.
-- `-rt` / `--report-type` supports `BASIC_TERMINAL` and `BASIC_HOOK`.
+- `-rt` / `--report-type` supports `BASIC_TERMINAL`, `BASIC_HOOK`, and `JSON`.
 - All parsing commands honor `[tool.pymetrica].exclude` patterns from the
   current repository configuration.
 - `BASIC_TERMINAL` prints metric values and exits with `0`.
 - `BASIC_HOOK` enforces thresholds and returns non-zero exit statuses when
   metrics fail.
+- `JSON` returns machine-readable output and exits with `0`, while its
+  `threshold_exit_status` field exposes the corresponding threshold status.
 - Only `run-all` supports `--long-report`. Single-metric commands always print
   the descriptive report format.
 - `li` reports instability, but it is not threshold-gated.
@@ -54,7 +56,7 @@ Pymetrica health check passed. All systems operational.
 Runs the full metrics pipeline across the target codebase.
 
 ```bash
-pymetrica run-all [-a|--audit] [-lr|--long-report] [-rt BASIC_TERMINAL|BASIC_HOOK] DIR_PATH
+pymetrica run-all [-a|--audit] [-lr|--long-report] [-rt BASIC_TERMINAL|BASIC_HOOK|JSON] DIR_PATH
 ```
 
 What it does:
@@ -73,6 +75,7 @@ Examples:
 pymetrica run-all .
 pymetrica run-all --long-report path/to/project
 pymetrica run-all -rt BASIC_TERMINAL path/to/project
+pymetrica run-all -rt JSON path/to/project
 ```
 
 ### `run-all` Exit Codes
@@ -139,7 +142,7 @@ single-metric equivalent of `run-all --long-report`.
 ### `aloc`
 
 ```bash
-pymetrica aloc [-a|--audit] [-rt BASIC_TERMINAL|BASIC_HOOK] DIR_PATH
+pymetrica aloc [-a|--audit] [-rt BASIC_TERMINAL|BASIC_HOOK|JSON] DIR_PATH
 ```
 
 Reports the `Abstract Lines Of Code` metric. With `BASIC_HOOK`, exits with `1`
@@ -148,7 +151,7 @@ when `aloc_fail_threshold` is positive and exceeded.
 ### `cc`
 
 ```bash
-pymetrica cc [-a|--audit] [-rt BASIC_TERMINAL|BASIC_HOOK] DIR_PATH
+pymetrica cc [-a|--audit] [-rt BASIC_TERMINAL|BASIC_HOOK|JSON] DIR_PATH
 ```
 
 Reports `Cyclomatic Complexity`. With `BASIC_HOOK`, exits with `2` when
@@ -157,7 +160,7 @@ Reports `Cyclomatic Complexity`. With `BASIC_HOOK`, exits with `2` when
 ### `hv`
 
 ```bash
-pymetrica hv [-a|--audit] [-rt BASIC_TERMINAL|BASIC_HOOK] DIR_PATH
+pymetrica hv [-a|--audit] [-rt BASIC_TERMINAL|BASIC_HOOK|JSON] DIR_PATH
 ```
 
 Reports `Halstead Volume`. With `BASIC_HOOK`, exits with `4` when
@@ -166,7 +169,7 @@ Reports `Halstead Volume`. With `BASIC_HOOK`, exits with `4` when
 ### `po`
 
 ```bash
-pymetrica po [-a|--audit] [-rt BASIC_TERMINAL|BASIC_HOOK] DIR_PATH
+pymetrica po [-a|--audit] [-rt BASIC_TERMINAL|BASIC_HOOK|JSON] DIR_PATH
 ```
 
 Reports `Primitive Obsession`. With `BASIC_HOOK`, exits with `16` when either
@@ -176,7 +179,7 @@ exceeded.
 ### `mc`
 
 ```bash
-pymetrica mc [-a|--audit] [-rt BASIC_TERMINAL|BASIC_HOOK] DIR_PATH
+pymetrica mc [-a|--audit] [-rt BASIC_TERMINAL|BASIC_HOOK|JSON] DIR_PATH
 ```
 
 Reports `Maintainability Cost`. With `BASIC_HOOK`, exits with `8` when
@@ -185,7 +188,7 @@ Reports `Maintainability Cost`. With `BASIC_HOOK`, exits with `8` when
 ### `li`
 
 ```bash
-pymetrica li [-rt BASIC_TERMINAL|BASIC_HOOK] DIR_PATH
+pymetrica li [-rt BASIC_TERMINAL|BASIC_HOOK|JSON] DIR_PATH
 ```
 
 Reports layer instability values. This command does not currently enforce a

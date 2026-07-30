@@ -1,4 +1,5 @@
 from .basic_terminal_report import BasicTerminalReport
+from .json_report import JsonReport
 from .reports_mapping import REPORTS_MAPPING
 
-__all__ = ["REPORTS_MAPPING", "BasicTerminalReport"]
+__all__ = ["REPORTS_MAPPING", "BasicTerminalReport", "JsonReport"]

@@ -18,13 +18,13 @@ class Results(BaseModel, ABC):
         raise NotImplementedError(_NIE_MSG)
 
 
-T_co = TypeVar("T_co", bound=Results, covariant=True)
+T = TypeVar("T", bound=Results)
 
 
-class Metric(ABC, BaseModel, Generic[T_co]):
+class Metric(ABC, BaseModel, Generic[T]):
     name: str
     description: str
-    results: T_co
+    results: T
     exit_code: int
 
     model_config = ConfigDict(arbitrary_types_allowed=True)
