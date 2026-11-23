@@ -64,7 +64,7 @@ def create_diagram(
 def write_diagram(
     codebase: Codebase,
     layers: Layers,
-    write_function: Callable[..., None | int],
+    write_function: Callable[..., int | None],
 ) -> None:
     write_function(
         '%%{init: {"themeCSS": ".edgeLabel {font-size: 30px;} .cluster-label {font-size: 20px !important;}"}}%%\n\n',  # pylint: disable=line-too-long
@@ -128,7 +128,7 @@ class DependenciesVisitor(ast.NodeVisitor):
         self.current_component: str = ""
 
     def visit_ImportFrom(self, node: ast.ImportFrom) -> None:  # pylint: disable=invalid-name
-        module_name = node.module if node.module else "relative import"
+        module_name = node.module or "relative import"
         split_module_name = module_name.rsplit(".")
         if len(split_module_name) >= 2:
             imported_layer = split_module_name[1]
