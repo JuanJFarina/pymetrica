@@ -8,7 +8,7 @@ Files = list[Code]
 
 
 def clean_layer_name(layer_path: str) -> str:
-    return " " + layer_path.rsplit(sep)[-2] + "." + layer_path.rsplit(sep)[-1]
+    return " " + layer_path.rsplit(sep)[-2] + "." + layer_path.rsplit(sep, maxsplit=1)[-1]
 
 
 def calculate_instability(
@@ -55,7 +55,7 @@ class InstabilityVisitor(ast.NodeVisitor):
             self.look_for_efferent = False
 
     def visit_ImportFrom(self, node: ast.ImportFrom) -> None:  # pylint: disable=invalid-name
-        module_name = node.module if node.module else "relative import"
+        module_name = node.module or "relative import"
         module_name = " " + module_name + " "
         if self.look_for_efferent:
             for layer in self.all_layers:

@@ -44,13 +44,11 @@ def gather_loc_and_classes(files: list[Code]) -> PreliminaryResults:  # pylint: 
             # Function defs and decorators
             if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
                 file_abs.add(node.lineno)
-                for dec in node.decorator_list:
-                    file_abs.add(dec.lineno)
+                file_abs.update(dec.lineno for dec in node.decorator_list)
             # Class defs and decorators
             if isinstance(node, ast.ClassDef):
                 file_abs.add(node.lineno)
-                for dec in node.decorator_list:
-                    file_abs.add(dec.lineno)
+                file_abs.update(dec.lineno for dec in node.decorator_list)
             # # Any call TODO this was removed because many calls may be done in one single line
             # if isinstance(node, ast.Call):
             #     file_abs.add(node.lineno)
