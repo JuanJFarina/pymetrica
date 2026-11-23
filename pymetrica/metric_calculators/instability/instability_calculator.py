@@ -10,7 +10,7 @@ Files = list[Code]
 
 
 def get_layer_name(layer_path: str) -> str:
-    return layer_path.rsplit(sep)[-1]
+    return layer_path.rsplit(sep, maxsplit=1)[-1]
 
 
 class InstabilityCalculator(MetricCalculator[InstabilityResults]):
