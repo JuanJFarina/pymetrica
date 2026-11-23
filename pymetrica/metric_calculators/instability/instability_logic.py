@@ -8,7 +8,9 @@ Files = list[Code]
 
 
 def clean_layer_name(layer_path: str) -> str:
-    return " " + layer_path.rsplit(sep)[-2] + "." + layer_path.rsplit(sep, maxsplit=1)[-1]
+    return (
+        " " + layer_path.rsplit(sep)[-2] + "." + layer_path.rsplit(sep, maxsplit=1)[-1]
+    )
 
 
 def calculate_instability(
