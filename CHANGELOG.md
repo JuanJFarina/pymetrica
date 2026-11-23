@@ -2,6 +2,45 @@
 
 
 
+## v1.6.0 (2026-07-30)
+
+### Feature
+
+* feat(config): add monorepo support ([`72fc8b2`](https://github.com/JuanJFarina/pymetrica/commit/72fc8b2314a8cc8aa7f7bbd7c4913dc9c1c80360))
+
+* feat(reporting): add optional JSON reports
+
+Expose machine-readable metric output without changing existing report defaults, and keep metric generics valid under strict type checking.
+
+Co-authored-by: Cursor &lt;cursoragent@cursor.com&gt; ([`fda192f`](https://github.com/JuanJFarina/pymetrica/commit/fda192f129cd022c7faafe21378c8817bda00c78))
+
+* feat(metric): expose base stats through run-all
+
+Integrate parser statistics with standard reports and use a safe reporting protocol for heterogeneous metrics.
+
+Co-authored-by: Cursor &lt;cursoragent@cursor.com&gt; ([`96f1bc4`](https://github.com/JuanJFarina/pymetrica/commit/96f1bc4d2666652c738723be05f087ef4af55122))
+
+### Fix
+
+* fix(config): add default dir to base stats ([`270a068`](https://github.com/JuanJFarina/pymetrica/commit/270a068b1b6b45805d78b8a0be1fbbe035194417))
+
+* fix(config): move diagram creation to base stats metric ([`8e973ac`](https://github.com/JuanJFarina/pymetrica/commit/8e973acab2b88e909f945beb4583a8b148475def))
+
+* fix(config): restore results type and add reports to init ([`3e47d38`](https://github.com/JuanJFarina/pymetrica/commit/3e47d3873858c0ad6facf9ab5f5bcd7e4504b790))
+
+* fix(config): fix base stats test ([`667a0fe`](https://github.com/JuanJFarina/pymetrica/commit/667a0fe8b1e13a9f85f829b171e9430c608eccf2))
+
+* fix(config): improve visualization of mc and hv findings ([`48ddca3`](https://github.com/JuanJFarina/pymetrica/commit/48ddca3cf34432367e8814ec0dff48f680561297))
+
+* fix(config): change mc from percent to fixed numbers ([`5428ca9`](https://github.com/JuanJFarina/pymetrica/commit/5428ca92a159d8781240011d71c3746f1629fbd1))
+
+### Unknown
+
+* create command inside metric ([`e7260a8`](https://github.com/JuanJFarina/pymetrica/commit/e7260a87aac39502a067a351e411ec71a2f4be8a))
+
+* make comments changes ([`ad3a532`](https://github.com/JuanJFarina/pymetrica/commit/ad3a53243104947777d196a3dc796c029fe8fc50))
+
+
 ## v1.5.6 (2026-05-13)
 
 ### Fix
