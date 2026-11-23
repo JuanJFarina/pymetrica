@@ -64,7 +64,7 @@ def create_diagram(
 def write_diagram(
     codebase: Codebase,
     layers: Layers,
-    write_function: Callable[..., None | int],
+    write_function: Callable[..., int | None],
 ) -> None:
     write_function(
         '%%{init: {"themeCSS": ".edgeLabel {font-size: 30px;} .cluster-label {font-size: 20px !important;}"}}%%\n\n',  # pylint: disable=line-too-long
