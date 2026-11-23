@@ -2,6 +2,7 @@ import click
 
 from pymetrica.metric_calculators import (
     aloc,
+    base_stats,
     cc,
     hv,
     li,
@@ -9,7 +10,6 @@ from pymetrica.metric_calculators import (
     po,
 )
 
-from .codebase_parser import base_stats
 from .run_all import run_all
 from .status import status
 

@@ -9,11 +9,12 @@ and coupling.
 
 ## What You Can Do
 
-- Run a full metrics sweep with `pymetrica run-all`.
+- Run Base Stats and all six code-quality metrics with `pymetrica run-all`.
 - Inspect parser and codebase statistics with `pymetrica base-stats`.
 - Generate Mermaid `.mmd` dependency diagrams for a codebase.
 - Fail CI with the `BASIC_HOOK` report backend and configurable thresholds from
   `pyproject.toml`.
+- Produce machine-readable output with the `JSON` report backend.
 - Reuse the parser and metric calculators directly from Python.
 - Install bundled `pre-commit` hooks for automated metric checks.
 - Drill into individual metrics such as ALOC, CC, HV, PO, MC, and instability.
@@ -22,9 +23,10 @@ and coupling.
 
 ```bash
 pip install pymetrica
-pymetrica run-all path/to/project
+pymetrica run-all
 ```
 
+Analysis commands default to the current directory when no path is supplied.
 Pymetrica requires Python 3.10 or newer.
 
 ## Read Next

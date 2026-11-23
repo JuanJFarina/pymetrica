@@ -38,9 +38,15 @@ Analyze a Python project with the full metrics pipeline:
 pymetrica run-all path/to/project
 ```
 
+Omit the path to analyze the current directory:
+
+```bash
+pymetrica run-all
+```
+
 The default output is a short terminal report with the top-level values for
-every metric. Use `--long-report` when you want the descriptive summaries and
-per-layer breakdown.
+Base Stats and every code-quality metric. Use `--long-report` when you want the
+descriptive summaries and per-layer breakdown.
 
 Thresholds are enforced when you use the hook report backend:
 
@@ -54,12 +60,20 @@ codebase is parsed.
 
 ### Example Short Report Excerpt
 
-This excerpt comes from running `pymetrica run-all` against the bundled sample
-codebase under `tests/sample_codebases/small_codebase`:
+This abridged excerpt comes from running `pymetrica run-all` against the bundled
+sample codebase under `tests/sample_codebases/small_codebase`:
 
 ```text
 ----------------------------------------------------------------------------------------------------
 Short Report
+----------------------------------------------------------------------------------------------------
+Metric: Base Stats
+root_folder_path: /path/to/small_codebase
+root_folder_name: small_codebase
+folders_number: 0
+files_number: 1
+lloc_number: 40
+...
 ----------------------------------------------------------------------------------------------------
 Metric: Abstract Lines Of Code
 aloc_number: 6
@@ -96,10 +110,11 @@ If you want a parser-level overview before running the full metrics set, start
 with `base-stats`:
 
 ```bash
-pymetrica base-stats path/to/project
+pymetrica base-stats
 ```
 
-To also write a Mermaid diagram file:
+Pass an explicit path when you want to inspect another project. To also write a
+Mermaid diagram file:
 
 ```bash
 pymetrica base-stats --diagram path/to/project architecture.mmd
@@ -110,14 +125,18 @@ When `--diagram` is set without a filename, Pymetrica writes
 
 ## Understand the Main Output Areas
 
-Pymetrica currently exposes six metrics:
+`run-all` exposes Base Stats and six code-quality metrics:
 
+- `Base Stats` for parser-level structure and source counts.
 - `ALOC` for abstraction-heavy lines and unused concrete class bodies.
 - `CC` for cyclomatic complexity.
 - `HV` for Halstead volume.
 - `PO` for primitive obsession in type annotations.
 - `MC` for maintainability cost.
 - `Instability` for layer-level coupling.
+
+Base Stats and Instability are informational. They never contribute to a
+threshold exit status.
 
 See [Metrics](metrics.md) for the full definitions and reporting details.
 
