@@ -48,7 +48,7 @@ def graph_to_mermaid(graph: Graph) -> str:
             ),
         )
     }
-    lines = ["flowchart LR"]
+    lines = ["flowchart TB"]
 
     def render_package(package: PackagePath, indent: int) -> None:
         prefix = "    " * indent
