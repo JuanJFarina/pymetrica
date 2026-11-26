@@ -2,6 +2,7 @@ import click
 
 from pymetrica.metric_calculators import (
     aloc,
+    architecture_stats,
     base_stats,
     cc,
     hv,
@@ -27,6 +28,7 @@ main.add_command(hv)
 main.add_command(mc)
 main.add_command(li)
 main.add_command(po)
+main.add_command(architecture_stats)
 
 if __name__ == "__main__":
     main()

@@ -52,16 +52,16 @@ def parse_codebase(dir_path: str) -> Codebase:  # pylint: disable=too-many-local
                 break
         if list_reference is None:
             list_reference = root_files
-        list_reference.append(
-            Code(
-                filepath=str(path),
-                filename=path.name,
-                lloc_number=file_lloc,
-                comments_number=file_comments,
-                code_lines=lines,
-                code=source,
-            ),
+        module = Code(
+            filepath=str(path),
+            filename=path.name,
+            lloc_number=file_lloc,
+            comments_number=file_comments,
+            code_lines=lines,
+            code=source,
         )
+        log.debug(f"parse_codebase.{module = }")
+        list_reference.append(module)
 
     total_files = sum(len(files) for files in layers.values()) + len(root_files)
 

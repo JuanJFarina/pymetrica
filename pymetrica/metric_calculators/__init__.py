@@ -1,4 +1,5 @@
 from .abstract_lines_of_code import AlocCalculator, aloc
+from .architecture_stats import architecture_stats
 from .base_stats import BaseStatsCalculator, BaseStatsResults, base_stats
 from .cyclomatic_complexity import CCCalculator, cc
 from .halstead_volume import HalsteadVolumeCalculator, hv
@@ -31,6 +32,7 @@ __all__ = [
     "PrimitiveObsessionCalculator",
     "PrimitiveObsessionResults",
     "aloc",
+    "architecture_stats",
     "base_stats",
     "cc",
     "hv",
