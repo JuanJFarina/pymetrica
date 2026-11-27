@@ -23,7 +23,12 @@ def parse_codebase(dir_path: str) -> Codebase:  # pylint: disable=too-many-local
                 f"parse_codebase.{path = } excluded by pyproject.toml configuration",
             )
             continue
-        source = path.read_text(encoding="utf-8")
+        try:
+            source = path.read_text(encoding="utf-8")
+        except UnicodeDecodeError as e:
+            log.debug(f"parse_codebase.UnicodeDecodeError.{path = }")
+            log.debug(f"parse_codebase.UnicodeDecodeError: {e = }")
+            continue
         lines = source.splitlines(keepends=True)
         try:
             tree = ast.parse(source)
