@@ -2,6 +2,23 @@
 
 
 
+## v1.7.0 (2026-11-27)
+
+### Feature
+
+* feat(code): implement architecture status metric calculator with graph and diagram generation ([`b2f6316`](https://github.com/JuanJFarina/pymetrica/commit/b2f631668b4f394b4c1e4acff52a5a4c2d8c8b05))
+
+### Fix
+
+* fix(code): catch unicode decode error in file text reading ([`f9212cf`](https://github.com/JuanJFarina/pymetrica/commit/f9212cfd9ee265ad2f43ec0923b14003d7393dec))
+
+* fix(config): make the flowchart tb instead of lr ([`e729501`](https://github.com/JuanJFarina/pymetrica/commit/e72950185f97f02f6c44b4a601a76b5e8d6aa066))
+
+### Unknown
+
+* implement architecture depth and deps grouping with hashing ([`5260a49`](https://github.com/JuanJFarina/pymetrica/commit/5260a49e3942599d82d34198733c0de5d6b8fd12))
+
+
 ## v1.6.0 (2026-07-30)
 
 ### Feature
