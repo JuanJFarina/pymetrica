@@ -1,13 +1,13 @@
 from pydantic import BaseModel
 
-from .value_objects import NonNegativeInt, StrPath
+from .value_objects import PositiveInt, StrPath
 
 
 class Code(BaseModel):
     filepath: StrPath
     filename: str
-    lloc_number: NonNegativeInt
-    comments_number: NonNegativeInt
+    lloc_number: PositiveInt
+    comments_number: PositiveInt
     code_lines: list[str]
     code: str
 

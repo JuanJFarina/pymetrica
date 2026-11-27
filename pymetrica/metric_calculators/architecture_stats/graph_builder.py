@@ -1,4 +1,5 @@
 import ast
+from hashlib import sha256
 
 from pymetrica.models import Code, Codebase, Edge, Graph, Node
 from pymetrica.utils import log
@@ -34,7 +35,13 @@ def create_graph(codebase: Codebase) -> Graph:
                 "Ignoring dependencies without graph nodes: "
                 f"{sorted(unresolved_dependencies)}",
             )
-        nodes.append(Node(name=module_name, dependencies=dependencies))
+        nodes.append(
+            Node(
+                name=module_name,
+                dependencies=dependencies,
+                code_hash=sha256(code.code.encode()).hexdigest(),
+            ),
+        )
 
     edges = [
         Edge(source=node.name, target=dependency, weight=1)

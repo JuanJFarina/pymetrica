@@ -1,6 +1,6 @@
 import json
 
-from pymetrica.models import CodebaseStats, Metric, NonNegativeInt, Results
+from pymetrica.models import CodebaseStats, Metric, PositiveInt, Results
 
 
 class BaseStatsResults(Results, CodebaseStats):
@@ -25,7 +25,7 @@ class BaseStatsResults(Results, CodebaseStats):
 
 
 class BaseStatsMetric(Metric[BaseStatsResults]):
-    exit_code: NonNegativeInt = 0
+    exit_code: PositiveInt = 0
 
     @property
     def summary(self) -> str:

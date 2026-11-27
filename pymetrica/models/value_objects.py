@@ -7,6 +7,6 @@ StrRatio = Annotated[
     str,
     StringConstraints(pattern=r"^\d+(?:\.\d+)?:\d+(?:\.\d+)?$"),
 ]
-NonNegativeInt = Annotated[int, Field(ge=0)]
+PositiveInt = Annotated[int, Field(ge=0)]
 
-__all__ = ["NonNegativeInt", "StrPath", "StrRatio"]
+__all__ = ["PositiveInt", "StrPath", "StrRatio"]

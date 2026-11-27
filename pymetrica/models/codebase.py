@@ -1,20 +1,20 @@
 from pydantic import BaseModel
 
 from .code import Code
-from .value_objects import NonNegativeInt, StrPath, StrRatio
+from .value_objects import PositiveInt, StrPath, StrRatio
 
 
 class CodebaseStats(BaseModel):
     root_folder_path: StrPath
     root_folder_name: str
-    folders_number: NonNegativeInt
-    files_number: NonNegativeInt
-    lloc_number: NonNegativeInt
+    folders_number: PositiveInt
+    files_number: PositiveInt
+    lloc_number: PositiveInt
     lloc_file_ratio: StrRatio
-    comments_number: NonNegativeInt
+    comments_number: PositiveInt
     comment_lloc_ratio: StrRatio
-    classes_number: NonNegativeInt
-    functions_number: NonNegativeInt
+    classes_number: PositiveInt
+    functions_number: PositiveInt
 
 
 class Codebase(CodebaseStats):

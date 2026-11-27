@@ -1,90 +1,106 @@
-from collections import defaultdict
 from pathlib import Path
 
-from pymetrica.models import Graph, Node
+from pymetrica.models import Component, Container
 
-PackagePath = tuple[str, ...]
-
-
-def _register_package(
-    package: PackagePath,
-    child_packages: dict[PackagePath, set[PackagePath]],
-) -> None:
-    for depth in range(1, len(package) + 1):
-        parent = package[: depth - 1]
-        child_packages.setdefault(parent, set()).add(package[:depth])
+MERMAID_INIT_DIRECTIVE = (
+    '%%{init: {"themeCSS": ".cluster rect { stroke-width: 4px !important;} '
+    ".edgeLabel {font-size: 30px;} .cluster-label "
+    '{font-size: 20px !important;}"}}%%'
+)
+COMPONENT_HASH_PREFIX_LENGTH = 16
 
 
-def _element_id(
+def _abstraction_id(
     name: str,
-    node_ids: dict[str, str],
-    package_ids: dict[PackagePath, str],
+    component_ids: dict[str, str],
+    container_ids: dict[str, str],
 ) -> str:
-    if name in node_ids:
-        return node_ids[name]
-    return package_ids[tuple(name.split("."))]
+    if name in component_ids:
+        return component_ids[name]
+    if name in container_ids:
+        return container_ids[name]
+    raise ValueError(f"Unknown architecture dependency target: {name}")
 
 
-def graph_to_mermaid(graph: Graph) -> str:
-    nodes = sorted(graph.nodes, key=lambda node: node.name)
-    node_ids = {node.name: f"module_{index}" for index, node in enumerate(nodes)}
-    modules_by_package = defaultdict[PackagePath, list[Node]](list)
-    child_packages = defaultdict[PackagePath, set[PackagePath]](set)
+def _collect_abstractions(
+    root: Container,
+) -> tuple[list[Container], list[Component]]:
+    containers = [root]
+    components = list[Component]()
+    for child in root.childs:
+        if isinstance(child, Container):
+            child_containers, child_components = _collect_abstractions(child)
+            containers.extend(child_containers)
+            components.extend(child_components)
+        else:
+            components.append(child)
+    return containers, components
 
-    for node in nodes:
-        package = tuple(node.name.split("."))[:-1]
-        modules_by_package[package].append(node)
-        _register_package(package, child_packages)
 
-    for edge in graph.edges:
-        if edge.target not in node_ids:
-            _register_package(tuple(edge.target.split(".")), child_packages)
-
-    package_ids = {
-        package: f"package_{index}"
-        for index, package in enumerate(
-            sorted(
-                package for children in child_packages.values() for package in children
-            ),
-        )
+def architecture_to_mermaid(architecture: Container) -> str:
+    containers, components = _collect_abstractions(architecture)
+    containers.sort(key=lambda container: container.name)
+    components.sort(key=lambda component: component.name)
+    container_ids = {
+        container.name: f"container_{index}"
+        for index, container in enumerate(containers)
     }
-    lines = ["flowchart TB"]
+    component_ids = {
+        component.name: (f"component_{component.hash[:COMPONENT_HASH_PREFIX_LENGTH]}")
+        for component in components
+    }
+    if len(set(component_ids.values())) != len(component_ids):
+        raise ValueError("Component hash prefix collision")
+    lines = [MERMAID_INIT_DIRECTIVE, "", "flowchart TB"]
 
-    def render_package(package: PackagePath, indent: int) -> None:
+    def render_container(container: Container, indent: int) -> None:
         prefix = "    " * indent
         lines.append(
-            f'{prefix}subgraph {package_ids[package]}["{package[-1]}"]',
+            f"{prefix}subgraph {container_ids[container.name]}"
+            f'["{container.name.rsplit(".", maxsplit=1)[-1]}"]',
         )
         lines.append(f"{prefix}    direction TB")
-
-        for node in modules_by_package[package]:
-            module_label = node.name.rsplit(".", maxsplit=1)[-1]
+        direct_components = sorted(
+            (child for child in container.childs if isinstance(child, Component)),
+            key=lambda component: component.name,
+        )
+        child_containers = sorted(
+            (child for child in container.childs if isinstance(child, Container)),
+            key=lambda child_container: child_container.name,
+        )
+        for component in direct_components:
             lines.append(
-                f'{prefix}    {node_ids[node.name]}["{module_label}"]',
+                f"{prefix}    {component_ids[component.name]}"
+                f'["{component.name.rsplit(".", maxsplit=1)[-1]}"]',
             )
-
-        for child in sorted(child_packages[package]):
-            render_package(child, indent + 1)
-
+        for child in child_containers:
+            render_container(child, indent + 1)
         lines.append(f"{prefix}end")
 
-    for node in modules_by_package[()]:
-        lines.append(f'    {node_ids[node.name]}["{node.name}"]')
-
-    for root_package in sorted(child_packages[()]):
-        render_package(root_package, indent=1)
-
-    for edge in sorted(graph.edges, key=lambda edge: (edge.source, edge.target)):
-        lines.append(
-            f"    {_element_id(edge.source, node_ids, package_ids)}"
-            f" --> {_element_id(edge.target, node_ids, package_ids)}",
-        )
+    render_container(architecture, indent=1)
+    for component in components:
+        for dependency in sorted(
+            component.dependencies,
+            key=lambda item: item.target,
+        ):
+            target_id = _abstraction_id(
+                dependency.target,
+                component_ids,
+                container_ids,
+            )
+            lines.append(
+                f"    {component_ids[component.name]}"
+                f" -->|{dependency.weight}| {target_id}",
+            )
 
     return "\n".join(lines)
 
 
-def create_diagram(graph: Graph, filename: str | None = None) -> str:
-    diagram = graph_to_mermaid(graph)
+def create_diagram(
+    architecture: Container,
+    filename: str | None = None,
+) -> str:
+    diagram = architecture_to_mermaid(architecture)
     if filename:
         Path(filename).write_text(f"{diagram}\n", encoding="utf-8")
     return diagram

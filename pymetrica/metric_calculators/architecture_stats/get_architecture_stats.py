@@ -6,6 +6,7 @@ from pymetrica.codebase_parser import parse_codebase
 from pymetrica.utils import log, run_profiler
 from pymetrica.utils.settings import update_config_from_pyproject
 
+from .architecture_builder import from_graph_to_architecture
 from .diagram_generator import create_diagram
 from .graph_builder import create_graph
 
@@ -17,18 +18,30 @@ from .graph_builder import create_graph
     help="Whether to generate a diagram of the codebase structure.",
 )
 @click.argument("dir_path", default=".")
+@click.argument("max_container_levels", default=1)
+@click.argument("group_deps_to_container", default=False)
 @click.argument("diagram_filename", required=False)
 @run_profiler
 def architecture_stats(
     dir_path: str,
     diagram: bool = False,
+    max_container_levels: int = 1,
+    group_deps_to_container: bool = False,
     diagram_filename: str | None = None,
 ) -> None:
     update_config_from_pyproject(dir_path)
     codebase = parse_codebase(dir_path)
     graph = create_graph(codebase)
+    architecture = from_graph_to_architecture(
+        graph,
+        max_container_levels,
+        group_deps_to_container,
+    )
     if diagram:
-        rendered_diagram = create_diagram(graph, filename=diagram_filename)
+        rendered_diagram = create_diagram(
+            architecture,
+            filename=diagram_filename,
+        )
         if diagram_filename is None:
             click.echo(rendered_diagram)
 

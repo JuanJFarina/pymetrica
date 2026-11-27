@@ -1,3 +1,4 @@
+from hashlib import sha256
 from pathlib import Path
 
 from pymetrica.codebase_parser import parse_codebase
@@ -63,6 +64,13 @@ def test_creates_graph_from_src_layout(tmp_path: Path) -> None:
     assert [(edge.source, edge.target) for edge in graph.edges] == [
         ("acme.main", "acme.api.routes"),
     ]
+    node_hashes = {node.name: node.code_hash for node in graph.nodes}
+    assert (
+        node_hashes["acme.api.routes"]
+        == sha256(
+            b"def create_router(): ...\n",
+        ).hexdigest()
+    )
 
 
 def test_preserves_dependency_on_symbol_defined_in_package_init(
