@@ -26,3 +26,9 @@ class Codebase(CodebaseStats):
         return self.root_files + [
             file for layer in self.layers.values() for file in layer
         ]
+
+    @property
+    def non_init_files(self) -> list[Code]:
+        return [
+            file for file in self.files if not file.filepath.endswith("__init__.py")
+        ]

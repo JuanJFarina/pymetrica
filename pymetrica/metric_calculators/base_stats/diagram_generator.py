@@ -67,7 +67,7 @@ def write_diagram(
     write_function: Callable[..., int | None],
 ) -> None:
     write_function(
-        '%%{init: {"themeCSS": ".edgeLabel {font-size: 30px;} .cluster-label {font-size: 20px !important;}"}}%%\n\n',  # pylint: disable=line-too-long
+        '%%{init: {"themeCSS": ".cluster rect { stroke-width: 4px !important;} .edgeLabel {font-size: 30px;} .cluster-label {font-size: 20px !important;}"}}%%\n\n',  # pylint: disable=line-too-long
     )
     write_function("graph TD\n")
     for layer_name, components in layers.items():
