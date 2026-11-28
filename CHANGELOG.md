@@ -2,13 +2,15 @@
 
 
 
-## v1.7.0 (2026-11-27)
+## v1.7.0 (2026-11-28)
 
 ### Feature
 
 * feat(code): implement architecture status metric calculator with graph and diagram generation ([`b2f6316`](https://github.com/JuanJFarina/pymetrica/commit/b2f631668b4f394b4c1e4acff52a5a4c2d8c8b05))
 
 ### Fix
+
+* fix(config): small tweaks ([`244b4a9`](https://github.com/JuanJFarina/pymetrica/commit/244b4a95ebdcf5e175a68c1f6812eb980849384f))
 
 * fix(code): catch unicode decode error in file text reading ([`f9212cf`](https://github.com/JuanJFarina/pymetrica/commit/f9212cfd9ee265ad2f43ec0923b14003d7393dec))
 
