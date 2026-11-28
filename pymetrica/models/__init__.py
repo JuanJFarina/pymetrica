@@ -5,7 +5,7 @@ from .graph import Edge, Graph, Node
 from .metric import Metric, Results
 from .metric_calculator import MetricCalculator
 from .report_generator import Report, ReportGenerator
-from .value_objects import PositiveInt, StrPath, StrRatio
+from .value_objects import NonNegativeInt, StrPath, StrRatio
 
 __all__ = [
     "Abstraction",
@@ -20,7 +20,7 @@ __all__ = [
     "Metric",
     "MetricCalculator",
     "Node",
-    "PositiveInt",
+    "NonNegativeInt",
     "Report",
     "ReportGenerator",
     "Results",

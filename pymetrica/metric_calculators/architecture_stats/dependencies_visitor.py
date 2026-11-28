@@ -9,7 +9,7 @@ ImportReference = tuple[str | None, int, str | None]
 
 
 def import_path_to_file_path(import_path: Path) -> Path | None:
-    log.info(f"import_path_to_file_path.{import_path = }")
+    log.debug(f"import_path_to_file_path.{import_path = }")
     package = import_path / "__init__.py"
     if package.is_file():
         return package
@@ -25,8 +25,8 @@ def get_module_path(
     module: str | None,
     level: int,
 ) -> Path | None:
-    log.info(f"get_module_path.{current_module = }")
-    log.info(f"get_module_path.{module = }")
+    log.debug(f"get_module_path.{current_module = }")
+    log.debug(f"get_module_path.{module = }")
     module_parts = module.split(".") if module else []
     if level:
         base = current_module.parent
@@ -90,7 +90,7 @@ class DependenciesVisitor(ast.NodeVisitor):
         self.resolved_symbols = dict[tuple[Path, str], Path]()
 
     def parse_module(self, module: Path) -> ast.Module | None:
-        log.info(f"parse_module.{module = }")
+        log.debug(f"parse_module.{module = }")
         if module in self.parsed_modules:
             return self.parsed_modules[module]
         try:
@@ -98,7 +98,7 @@ class DependenciesVisitor(ast.NodeVisitor):
         except (OSError, SyntaxError, UnicodeDecodeError):
             return None
         self.parsed_modules[module] = abstract_syntax_tree
-        log.info(f"parse_module.{abstract_syntax_tree = }")
+        log.debug(f"parse_module.{abstract_syntax_tree = }")
         return abstract_syntax_tree
 
     def get_symbol_file_path(
@@ -107,7 +107,7 @@ class DependenciesVisitor(ast.NodeVisitor):
         symbol: str,
         visited: set[tuple[Path, str]],
     ) -> Path | None:
-        log.info(f"get_symbol_file_path.{symbol = }")
+        log.debug(f"get_symbol_file_path.{symbol = }")
         key = (module, symbol)
         if key in self.resolved_symbols:
             return self.resolved_symbols[key]
@@ -149,7 +149,7 @@ class DependenciesVisitor(ast.NodeVisitor):
 
         visited.remove(key)
         self.resolved_symbols[key] = symbol_file_path
-        log.info(f"get_symbol_file_path.{symbol_file_path = }")
+        log.debug(f"get_symbol_file_path.{symbol_file_path = }")
         return symbol_file_path
 
     def visit_ImportFrom(self, node: ast.ImportFrom) -> None:  # pylint: disable=invalid-name
